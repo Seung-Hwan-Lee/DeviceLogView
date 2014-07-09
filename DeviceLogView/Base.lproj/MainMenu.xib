@@ -689,14 +689,14 @@
                         </connections>
                     </button>
                     <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kZO-XA-QJ7">
-                        <rect key="frame" x="20" y="20" width="1089" height="488"/>
+                        <rect key="frame" x="20" y="20" width="1089" height="550"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" ambiguous="YES" misplaced="YES" id="dtF-lL-ciW">
-                            <rect key="frame" x="1" y="17" width="1087" height="470"/>
+                            <rect key="frame" x="1" y="17" width="1087" height="532"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="Vqk-jV-MG5" id="hLr-QZ-tDw">
-                                    <rect key="frame" x="0.0" y="0.0" width="1350" height="470"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="1350" height="532"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -712,13 +712,11 @@
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                <connections>
-                                                    <binding destination="ev6-1a-9Ep" name="textColor" keyPath="selection.deviceColor" id="5AO-pb-bhb"/>
-                                                </connections>
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <connections>
                                                 <binding destination="ev6-1a-9Ep" name="value" keyPath="arrangedObjects.device" id="axp-oG-Sql"/>
+                                                <binding destination="ev6-1a-9Ep" name="textColor" keyPath="arrangedObjects.deviceColor" id="AjA-fO-Lht"/>
                                             </connections>
                                         </tableColumn>
                                         <tableColumn width="152" minWidth="10" maxWidth="3.4028234663852886e+38" id="8yE-ri-pyf">
@@ -731,13 +729,11 @@
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                <connections>
-                                                    <binding destination="ev6-1a-9Ep" name="textColor" keyPath="selection.processColor" id="bBA-eC-Wf0"/>
-                                                </connections>
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <connections>
                                                 <binding destination="ev6-1a-9Ep" name="value" keyPath="arrangedObjects.process" id="Iau-Jt-KQl"/>
+                                                <binding destination="ev6-1a-9Ep" name="textColor" keyPath="arrangedObjects.processColor" id="1vP-2W-fJU"/>
                                             </connections>
                                         </tableColumn>
                                         <tableColumn width="124" minWidth="10" maxWidth="3.4028234663852886e+38" id="xIb-5X-HGu">
@@ -750,13 +746,11 @@
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                <connections>
-                                                    <binding destination="ev6-1a-9Ep" name="textColor" keyPath="selection.statusColor" id="973-ju-ULP"/>
-                                                </connections>
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <connections>
                                                 <binding destination="ev6-1a-9Ep" name="value" keyPath="arrangedObjects.status" id="dcp-uY-7xM"/>
+                                                <binding destination="ev6-1a-9Ep" name="textColor" keyPath="arrangedObjects.statusColor" id="YTf-zZ-hbV"/>
                                             </connections>
                                         </tableColumn>
                                         <tableColumn width="859.65625" minWidth="10" maxWidth="3.4028234663852886e+38" id="pFx-lv-FW8">
@@ -769,13 +763,11 @@
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                <connections>
-                                                    <binding destination="ev6-1a-9Ep" name="textColor" keyPath="selection.logColor" id="sgM-5t-lKe"/>
-                                                </connections>
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <connections>
                                                 <binding destination="ev6-1a-9Ep" name="value" keyPath="arrangedObjects.log" id="shc-Wj-SYc"/>
+                                                <binding destination="ev6-1a-9Ep" name="textColor" keyPath="arrangedObjects.logColor" id="RqL-8D-qSK"/>
                                             </connections>
                                         </tableColumn>
                                     </tableColumns>
@@ -784,7 +776,7 @@
                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
                         <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="IQE-gF-Wmn">
-                            <rect key="frame" x="1" y="471" width="1087" height="16"/>
+                            <rect key="frame" x="1" y="533" width="1087" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Gla-ky-2n0">
@@ -804,7 +796,58 @@
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </searchFieldCell>
+                        <connections>
+                            <binding destination="ev6-1a-9Ep" name="predicate" keyPath="filterPredicate" id="Gkl-DH-VsT">
+                                <dictionary key="options">
+                                    <string key="NSDisplayName">predicate</string>
+                                    <string key="NSPredicateFormat">log contains $value</string>
+                                </dictionary>
+                            </binding>
+                        </connections>
                     </searchField>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qbj-aE-PUn">
+                        <rect key="frame" x="332" y="616" width="68" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Debug" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="36Q-5w-KJ6">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iym-zO-I4y">
+                        <rect key="frame" x="413" y="616" width="61" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Error" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ZUS-wW-yuT">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sqe-FJ-jLz">
+                        <rect key="frame" x="478" y="616" width="82" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Warning" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="qaF-pT-khs">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zfi-eU-nbi">
+                        <rect key="frame" x="564" y="616" width="75" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Notify" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="K2V-Dh-91a">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GWc-U4-Jux">
+                        <rect key="frame" x="22" y="597" width="66" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Fixed" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Vsm-ai-E4F">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <connections>
+                                <binding destination="Voe-Tx-rLC" name="value" keyPath="self.fixed" id="Sie-kn-1dX"/>
+                            </connections>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
         </window>

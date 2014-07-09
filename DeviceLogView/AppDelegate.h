@@ -9,6 +9,12 @@
 #import <Cocoa/Cocoa.h>
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
+{
+    bool fixed;
+}
+
+- (bool) fixed;
+- (void) setFixed: (bool)x;
 
 - (void)addRowData:(NSString*)device :(NSString*)process :(NSString*)status :(NSString*)log :(NSColor*)color;
 - (IBAction)ClearButton:(NSButton*)sender;

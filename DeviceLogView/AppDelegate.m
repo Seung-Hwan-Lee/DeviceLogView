@@ -29,6 +29,7 @@ static int debug;
 static CFStringRef requiredDeviceId;
 static char requiredProcessName[256];
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown);
+
 AppDelegate *sampleClass;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -45,6 +46,19 @@ AppDelegate *sampleClass;
     CFRunLoopRun();
 }
 
+
+- (bool)fixed
+{
+    NSLog(@"%d",fixed);
+    return fixed;
+}
+
+- (void) setFixed:(bool)x
+{
+    NSLog(@"%d",fixed);
+    fixed = x;
+}
+
 - (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex {
     NSTextFieldCell *cell = aCell;
 
@@ -53,6 +67,7 @@ AppDelegate *sampleClass;
 
 
 - (void)addRowData:(NSString*)device :(NSString*)process :(NSString*)status :(NSString*)log :(NSColor*) color;{
+    
     
     [_arrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                  device,@"device",
@@ -68,12 +83,10 @@ AppDelegate *sampleClass;
     NSInteger numberOfRows = [_logTable numberOfRows];
     
     
-    if(numberOfRows > 0)
+    if(numberOfRows > 0 && !fixed)
     {
-        [_logTable scrollRowToVisible:numberOfRows - 1];
         
-      
-                
+        [_logTable scrollRowToVisible:numberOfRows - 1];
     }
     
 }
