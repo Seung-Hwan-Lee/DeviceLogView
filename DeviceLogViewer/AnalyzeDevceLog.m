@@ -29,31 +29,38 @@
     self = [super init];
     if(self)
     {
-        logDataArr = [[NSArrayController alloc] init];
+        //logDataArr = [[NSArrayController alloc] init];
         processSet = [[NSMutableSet alloc] init];
         deviceSet = [[NSMutableSet alloc] init];
     }
     return self;
 }
 
+-(void) setLogDataArr: (NSArrayController*)inLogDataArr
+{
+    logDataArr = inLogDataArr;
+}
 -(NSArrayController*) getLogDataArr
 {
     return logDataArr;
 }
--(NSSet*) getProcessSet
+-(NSMutableSet*) getProcessSet
 {
     return processSet;
 }
--(NSSet*) getDeviceSet
+-(NSMutableSet*) getDeviceSet
 {
     return deviceSet;
 }
+
+
 -(void) addLogDataToArr:(LogData*)logData
 {
-    //NSLog(@"%@ This is Test", [logData log]);
-    
     [logDataArr addObject:logData];
+   // NSLog(@"%d", (int)[[logDataArr arrangedObjects] count]);
 }
+
+
 -(void) addProcessNameToSet:(NSString*)processName
 {
     [processSet addObject:processName];
@@ -61,12 +68,19 @@
     //NSLog(@"%d", (int)[arr count]);
     
 }
+
+
 -(void) addDeviceNameToSet:(NSString*)deviceName
 {
-    
+    [deviceSet addObject:deviceName];
 }
 
-
+-(void) removeAllData
+{
+    [[logDataArr content] removeAllObjects];
+    [processSet removeAllObjects];
+    [deviceSet removeAllObjects];
+}
 
 
 //Overriding Method
@@ -96,9 +110,15 @@
         
         
         // date and device name
-        device = [[NSString alloc] initWithBytes:buffer
-                                          length:space_offsets[0] encoding:NSUTF8StringEncoding];
+        date = [[NSString alloc] initWithBytes:buffer
+                                          length:16 encoding:NSUTF8StringEncoding];
         
+        device = [[NSString alloc] initWithBytes:buffer + 16
+                                        length:space_offsets[0] - 16 encoding:NSUTF8StringEncoding];
+        
+        //insert processName to Set
+        [self addDeviceNameToSet:device];
+
         
         // process
         int pos = 0;
@@ -109,20 +129,25 @@
             }
         }
         
-        if (pos && buffer[space_offsets[1]-1] == ']') {
+        /*if (pos && buffer[space_offsets[1]-1] == ']') {
             NSString* p1 = [[NSString alloc] initWithBytes:buffer+space_offsets[0]
                                                     length:pos-space_offsets[0] encoding:NSUTF8StringEncoding];
+            
+            NSLog(@"%@", p1);
+            
             NSString* p2 = [[NSString alloc] initWithBytes:buffer+pos
                                                     length:space_offsets[1]-pos encoding:NSUTF8StringEncoding];
+            NSLog(@"%@", p2);
             
             process = [NSString stringWithFormat:@"%@%@", p1, p2];
             
             
             
-        } else {
-            process = [[NSString alloc] initWithBytes:buffer+space_offsets[0]
+        } else {*/
+        process = [[NSString alloc] initWithBytes:buffer+space_offsets[0]
                                                length:space_offsets[1]-space_offsets[0] encoding:NSUTF8StringEncoding];
-        }
+       
+        //}
         
         
         //insert processName to Set

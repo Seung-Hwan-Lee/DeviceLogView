@@ -33,7 +33,14 @@
 -(void)makeLogPredicate
 {
     //make Predicate for Array filtering
-    
+    //NSString* Format;
+    LogPredicate = [NSPredicate predicateWithFormat:
+                    @"logLevel contains %@ or logLevel contains %@ or logLevel contains %@ or logLevel contains %@ or log contain %@ or process contain %@ or device contain %@"
+                    , notice?@"Notice":@""
+                    , error?@"Error":@""
+                    , warning?@"Warning":@""
+                    , debug?@"Debug":@""
+                    , sentence, process, device];
     
     
 }
@@ -44,41 +51,41 @@
 }
 
 
-- (bool) notice
+- (Boolean) notice
 {
     return notice;
 }
-- (void) setNotice: (bool)x
+- (void) setNotice: (Boolean)x
 {
     notice = x;
     [self makeLogPredicate];
 }
 
-- (bool) error
+- (Boolean) error
 {
     return error;
 }
-- (void) setError: (bool)x
+- (void) setError: (Boolean)x
 {
     error = x;
     [self makeLogPredicate];
 }
 
-- (bool) warning
+- (Boolean) warning
 {
     return warning;
 }
-- (void) setWarning: (bool)x
+- (void) setWarning: (Boolean)x
 {
     warning = x;
     [self makeLogPredicate];
 }
 
-- (bool) debug
+- (Boolean) debug
 {
     return debug;
 }
-- (void) setDebug: (bool)x
+- (void) setDebug: (Boolean)x
 {
     debug = x;
     [self makeLogPredicate];

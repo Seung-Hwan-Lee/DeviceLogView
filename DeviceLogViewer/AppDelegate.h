@@ -10,6 +10,11 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
+
+@property (weak) IBOutlet NSArrayController *logArrayController;
+
+@property (weak) IBOutlet NSMutableSet *deviceSet;
+
 @property (assign) IBOutlet NSWindow *window;
 
 @end

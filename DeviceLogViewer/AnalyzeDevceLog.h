@@ -18,8 +18,10 @@
 }
 
 -(NSArrayController*) getLogDataArr;
--(NSSet*) getProcessSet;
--(NSSet*) getDeviceSet;
+-(void)setLogDataArr: (NSArrayController*)inLogDataArr;
+-(NSMutableSet*) getProcessSet;
+-(NSMutableSet*) getDeviceSet;
+-(void) removeAllData;
 
 
 -(id)init;
