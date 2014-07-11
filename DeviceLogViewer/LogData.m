@@ -6,39 +6,55 @@
 //  Copyright (c) 2014년 line. All rights reserved.
 //
 
+
 #import "LogData.h"
 
+
 @implementation LogData
-
--(id)initWithDate:(NSString *)date Device:(NSString *)device Process:(NSString *)process LogLevel:(NSString *)logLevel Log:(NSString *)log;
 {
+    NSString *_date;
+    NSString *_device;
+    NSString *_process;
+    LogLevel _logLevel;
+    NSString *_log;
+    NSColor *_textColor;
+}
 
+
+- (id)initWithLogDataInfo:(NSDictionary *)aDataInfo
+{
     self = [super init];
-    if(self) {
-        _date = date;
-        _device = device;
-        _process = process;
-        _logLevel = logLevel;
-        _log = log;
-    }
-    
-    if(nil != logLevel)
-    {
-        if([logLevel rangeOfString:@"Notice"].location != NSNotFound)
-            _textColor = [NSColor greenColor];
-        else  if([logLevel rangeOfString:@"Debug"].location != NSNotFound)
-            _textColor = [NSColor blueColor];
-        else if([logLevel rangeOfString:@"Error"].location != NSNotFound)
-            _textColor = [NSColor redColor];
-        else  if([logLevel rangeOfString:@"Warning"].location != NSNotFound)
-            _textColor = [NSColor yellowColor];
-        else
-            _textColor = [NSColor blackColor];
+    if (self) {
+        
+        _date = [aDataInfo objectForKey:@"date"];
+        _device = [aDataInfo objectForKey:@"device"];
+        _process = [aDataInfo objectForKey:@"process"];
+        _log = [aDataInfo objectForKey:@"log"];
+
+        NSString *logLevel = [aDataInfo objectForKey:@"loglevel"];
+        if (logLevel)
+        {
+            if ([logLevel rangeOfString:@"Notice"].location != NSNotFound) {
+                _logLevel = kLogLevelNotice;
+                _textColor = [NSColor greenColor];
+            } else if([logLevel rangeOfString:@"Debug"].location != NSNotFound) {
+                _logLevel = kLogLevelDebug;
+                _textColor = [NSColor blueColor];
+            } else if([logLevel rangeOfString:@"Error"].location != NSNotFound) {
+                _logLevel = kLogLevelError;
+                _textColor = [NSColor redColor];
+            } else if([logLevel rangeOfString:@"Warning"].location != NSNotFound) {
+                _logLevel = kLogLevelWarning;
+                _textColor = [NSColor yellowColor];
+            } else {
+                _logLevel = kLogLevelNormal;
+                _textColor = [NSColor blackColor];
+            }
+        }
     }
     
     return self;
 }
-
 
 
 @end

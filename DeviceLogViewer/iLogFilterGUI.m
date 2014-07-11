@@ -10,4 +10,6 @@
 
 @implementation iLogFilterGUI
 
+//-(id)init
+
 @end

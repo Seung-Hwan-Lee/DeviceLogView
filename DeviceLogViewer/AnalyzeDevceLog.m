@@ -6,41 +6,38 @@
 //  Copyright (c) 2014년 line. All rights reserved.
 //
 
+
 #import "AnalyzeDevceLog.h"
 
 
-@interface AnalyzeDevceLog()
+@implementation AnalyzeDevceLog
 {
-    NSMutableSet *processSet;
-    NSMutableSet *deviceSet;
+    NSArrayController *_logDataArrayController;
+    NSArrayController *_processArrayController;
+    NSArrayController *_deviceArrayController;
+    LogFilter *_logFilter;
+    NSMutableSet *_processSet;
+    NSMutableSet *_deviceSet;
 }
 
--(int)findSpaceOffsetWithBuffer:(const char*)buffer AndLength:(size_t)length AndSpaceOffsetOut:(size_t *)space_offsets_out;
--(void)analizeWithLogBuffer:(const char *)buffer andSize:(NSInteger)length;
--(void) addLogDataToArr:(LogData *)logData;
--(void) addProcessNameToSet:(NSString *)processName;
--(void) addDeviceNameToSet:(NSString *)deviceName;
+
+#pragma mark -
 
 
-
-@end
-
-
-@implementation AnalyzeDevceLog
-
-
--(id)initWithLogDataArray:(NSArrayController *)inLogDataArr
-               ProcessArr:(NSArrayController *)inProcessArr DeviceArr:(NSArrayController *)inDeviceArr LogFilter:(LogFilter *)inLogFilter;
+- (id)initWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
+             processArrayController:(NSArrayController *)aProcessArrayController
+              deviceArrayController:(NSArrayController *)aDeviceArrayController
+                          logFilter:(LogFilter *)aLogFilter
 {
     self = [super init];
     if(self)
     {
-        logDataArr = inLogDataArr;
-        processArr = inProcessArr;
-        deviceArr = inDeviceArr;
-        logFilter = inLogFilter;
-        processSet = [[NSMutableSet alloc] init];
-        deviceSet = [[NSMutableSet alloc] init];
+        _logDataArrayController = aLogDataArrayController;
+        _processArrayController = aProcessArrayController;
+        _deviceArrayController = aDeviceArrayController;
+        _logFilter = aLogFilter;
+        _processSet = [[NSMutableSet alloc] init];
+        _deviceSet = [[NSMutableSet alloc] init];
         //[processSet addObject:[NSDictionary dictionaryWithObjectsAndKeys: @" All Process",@"process",nil]];
         //[deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys: @" All Device",@"device",nil]];
     }
@@ -49,60 +46,65 @@
 }
 
 
--(void) addLogDataToArr:(LogData *)logData
+#pragma mark -
+
+
+- (void)addLogDataToArrayController:(LogData *)aLogData
 {
-    [logDataArr addObject:logData];
+    [_logDataArrayController addObject:aLogData];
    // NSLog(@"%d", (int)[[logDataArr arrangedObjects] count]);
 }
 
 
--(void) addProcessNameToSet:(NSString *)processName
+- (void)addProcessNameToSet:(NSString *)aProcessName
 {
-    if(processName != nil)
-        [processSet addObject:[NSDictionary dictionaryWithObjectsAndKeys: processName,@"process",nil]];
-    [processArr setContent:processSet];
+    if(aProcessName) {
+        [_processSet addObject:[NSDictionary dictionaryWithObjectsAndKeys:aProcessName, @"process", nil]];
+    }
+    
+    [_processArrayController setContent:_processSet];
     //NSLog(@"%d", (int)[arr count]);
     //NSLog(@"%@", processSet);
 }
 
 
--(void) addDeviceNameToSet:(NSString *)deviceName
+-(void)addDeviceNameToSet:(NSString *)aDeviceName
 {
-    if(deviceName != nil)
-        [deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys: deviceName,@"device",nil]];
-    [deviceArr setContent:deviceSet];
+    if(aDeviceName) {
+        [_deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys:aDeviceName, @"device", nil]];
+    }
     
-    
+    [_deviceArrayController setContent:_deviceSet];
 }
 
 
 //Overriding Method
 //buffer: DeviceLog
--(void)analizeWithLogBuffer:(const char *)buffer andSize:(NSInteger)length{
-    NSString *date;
-    NSString *device;
-    NSString *process;
-    NSString *logLevel;
-    NSString *log;
-   
+- (void)analizeWithLogBuffer:(const char *)aBuffer andSize:(NSInteger)aLength
+{
+    NSString *date = nil;
+    NSString *device = nil;
+    NSString *process = nil;
+    NSString *logLevel = nil;
+    NSString *log = nil;
     
     LogData *analizedLogData;
     
-    if (length < 16 || buffer[15] == '=') {
+    if (aLength < 16 || aBuffer[15] == '=') {
         return;
     }
     size_t space_offsets[3];
-    int o = [self findSpaceOffsetWithBuffer:buffer AndLength:length AndSpaceOffsetOut:space_offsets];
+    NSInteger o = [self findSpaceOffsetWithBuffer:aBuffer length:aLength spaceOffsetOut:space_offsets];
     
     if (o == 3) {
         
         
         // date and device name
-        date = [[NSString alloc] initWithBytes:buffer
+        date = [[NSString alloc] initWithBytes:aBuffer
                                           length:16 encoding:NSUTF8StringEncoding];
         
         if( space_offsets[0] != 16)
-            device = [[NSString alloc] initWithBytes:buffer + 16
+            device = [[NSString alloc] initWithBytes:aBuffer + 16
                                         length:space_offsets[0] - 16 encoding:NSUTF8StringEncoding];
         
         //insert processName to Set
@@ -110,49 +112,55 @@
 
         
         
-        process = [[NSString alloc] initWithBytes:buffer+space_offsets[0]
+        process = [[NSString alloc] initWithBytes:aBuffer+space_offsets[0]
                                                length:space_offsets[1]-space_offsets[0] encoding:NSUTF8StringEncoding];
        
         
         // Log level
         size_t levelLength = space_offsets[2] - space_offsets[1];
-        NSString* s = [[NSString alloc] initWithBytes:buffer+space_offsets[1]
+        NSString* s = [[NSString alloc] initWithBytes:aBuffer+space_offsets[1]
                                                length:levelLength encoding:NSUTF8StringEncoding];
         
         logLevel = [NSString stringWithFormat:@"%@", s];
         
         
         //Log
-        log = [[NSString alloc] initWithBytes:buffer+space_offsets[2]
-                                       length:length-space_offsets[2] encoding:NSUTF8StringEncoding];
+        log = [[NSString alloc] initWithBytes:aBuffer+space_offsets[2]
+                                       length:aLength-space_offsets[2] encoding:NSUTF8StringEncoding];
         
     } else {
-        log = [[NSString alloc] initWithBytes:buffer
-                                       length:length encoding:NSUTF8StringEncoding];
+        log = [[NSString alloc] initWithBytes:aBuffer
+                                       length:aLength encoding:NSUTF8StringEncoding];
         
     }
     
-    analizedLogData = [[LogData alloc]initWithDate:date Device:device Process:process LogLevel:logLevel Log:log];
+    NSMutableDictionary *logDataInfo = [NSMutableDictionary dictionary];
+    [logDataInfo setObject:date forKey:@"date"];
+    [logDataInfo setObject:device forKey:@"device"];
+    [logDataInfo setObject:process forKey:@"process"];
+    [logDataInfo setObject:logLevel forKey:@"loglevel"];
+    [logDataInfo setObject:log forKey:@"log"];
     
+    analizedLogData = [[LogData alloc] initWithLogDataInfo:logDataInfo];
     
     [self addDeviceNameToSet:device];
     [self addProcessNameToSet:process];
-    [self addLogDataToArr:analizedLogData];
-    
+    [self addLogDataToArrayController:analizedLogData];
 }
 
--(int)findSpaceOffsetWithBuffer:(const char *)buffer AndLength:(size_t)length AndSpaceOffsetOut:(size_t*)space_offsets_out;
+- (NSInteger)findSpaceOffsetWithBuffer:(const char *)aBuffer length:(size_t)aLength spaceOffsetOut:(size_t *)aSpace_offsets_out;
 
 {
-    int o = 0;
-    for (size_t i = 16; i < length; i++) {
-        if (buffer[i] == ' ') {
-            space_offsets_out[o++] = i;
+    NSInteger o = 0;
+    for (size_t i = 16; i < aLength; i++) {
+        if (aBuffer[i] == ' ') {
+            aSpace_offsets_out[o++] = i;
             if (o == 3) {
                 break;
             }
         }
     }
+    
     return o;
 }
 

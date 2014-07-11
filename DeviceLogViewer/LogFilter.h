@@ -11,25 +11,17 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface LogFilter : NSObject
-{
-    BOOL notice;
-    BOOL error;
-    BOOL warning;
-    BOOL debug;
-    NSString *process;
-    NSString *device;
-    NSString *sentence;
-}
 
 
-- (void) setNotice: (BOOL)x;
-- (void) setError: (BOOL)x;
-- (void) setWarning: (BOOL)x;
-- (void) setDebug: (BOOL)x;
-- (void) setDevice: (NSString *)x;
-- (void) setProcess: (NSString *)x;
-- (void) setSentence: (NSString *)x;
+- (void)setNotice:(BOOL)aNotice;
+- (void)setError:(BOOL)aError;
+- (void)setWarning:(BOOL)aWarning;
+- (void)setDebug:(BOOL)aDebug;
+- (void)setDevice:(NSString *)aDevice;
+- (void)setProcess:(NSString *)aProcess;
+- (void)setSentence:(NSString *)aSentence;
 
 
 @end

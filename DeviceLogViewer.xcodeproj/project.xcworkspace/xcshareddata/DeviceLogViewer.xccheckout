@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>9859190B-D845-4474-84B9-22021047947F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>DeviceLogViewer</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>22FE647F-7BD0-470B-8824-06CA734B2D48</key>
+		<string>https://github.com/gmggae/DeviceLogView.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>DeviceLogViewer.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>22FE647F-7BD0-470B-8824-06CA734B2D48</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/gmggae/DeviceLogView.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>22FE647F-7BD0-470B-8824-06CA734B2D48</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>22FE647F-7BD0-470B-8824-06CA734B2D48</string>
+			<key>IDESourceControlWCCName</key>
+			<string>DeviceLogView</string>
+		</dict>
+	</array>
+</dict>
+</plist>

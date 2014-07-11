@@ -9,5 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface iLogFilterGUI : NSObject
+{
+    NSWindow *window;
+}
 
 @end

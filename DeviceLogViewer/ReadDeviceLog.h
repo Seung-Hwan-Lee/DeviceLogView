@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface ReadDeviceLog : NSObject
 
+
 -(void)startLogging;
+
 
 @end

@@ -6,17 +6,23 @@
 //  Copyright (c) 2014년 line. All rights reserved.
 //
 
+
 #import <Foundation/Foundation.h>
+
+
+typedef NS_ENUM (NSUInteger, LogLevel) {
+    kLogLevelNormal = 0,
+    kLogLevelNotice,
+    kLogLevelDebug,
+    kLogLevelError,
+    kLogLevelWarning
+};
+
 
 @interface LogData : NSObject
 
-@property (strong) NSString *date;
-@property (strong) NSString *device;
-@property (strong) NSString *process;
-@property (strong) NSString *logLevel;
-@property (strong) NSString *log;
-@property (strong) NSColor *textColor;
 
--(id)initWithDate:(NSString *)date Device:(NSString *)device Process:(NSString *)process LogLevel:(NSString *)logLevel Log:(NSString *)log;
+- (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;
+
 
 @end

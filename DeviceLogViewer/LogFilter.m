@@ -9,61 +9,72 @@
 #import "LogFilter.h"
 
 
-@interface LogFilter()
-
-//-(void)makeLogPredicate;
-
-@end
-
 @implementation LogFilter
+{
+    BOOL _notice;
+    BOOL _error;
+    BOOL _warning;
+    BOOL _debug;
+    NSString *_process;
+    NSString *_device;
+    NSString *_sentence;
+}
 
--(id)init
+
+#pragma mark -
+
+
+- (id)init
 {
     self = [super init];
     if(self) {
-        notice = true;
-        error = true;
-        warning = true;
-        debug = true;
+        _notice = TRUE;
+        _error = TRUE;
+        _warning = TRUE;
+        _debug = TRUE;
     }
+    
     return self;
 }
 
 
-
-- (void) setNotice: (BOOL)x
-{
-    notice = x;
-}
-
-- (void) setError: (BOOL)x
-{
-    error = x;
-}
-
-- (void) setWarning: (BOOL)x
-{
-    warning = x;
-}
+#pragma mark -
 
 
-- (void) setDebug: (BOOL)x
+- (void)setNotice:(BOOL)aNotice
 {
-    debug = x;
-}
-- (void) setDevice: (NSString *)x
-{
-    device = x;
+    _notice = aNotice;
 }
 
-- (void) setProcess: (NSString *)x
+- (void)setError:(BOOL)aError
 {
-    process = x;
+    _error = aError;
 }
 
-- (void) setSentence: (NSString *)x
+- (void)setWarning:(BOOL)aWarning
 {
-    sentence = x;
+    _warning = aWarning;
 }
+
+- (void)setDebug:(BOOL)aDebug
+{
+    _debug = aDebug;
+}
+
+- (void)setDevice:(NSString *)aDevice
+{
+    _device = aDevice;
+}
+
+- (void)setProcess:(NSString *)aProcess
+{
+    _process = aProcess;
+}
+
+- (void)setSentence:(NSString *)aSentence
+{
+    _sentence = aSentence;
+}
+
 
 @end

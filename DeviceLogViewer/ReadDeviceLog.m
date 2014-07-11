@@ -11,12 +11,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-@interface ReadDeviceLog()
-// Have to Ovveride in child class
--(void)analizeWithLogBuffer:(const char *)buffer andSize:(NSInteger)length;
-@end
-
-@implementation ReadDeviceLog
 
 typedef struct {
     service_conn_t connection;
@@ -24,15 +18,23 @@ typedef struct {
     CFRunLoopSourceRef source;
 } DeviceConsoleConnection;
 
+
+@implementation ReadDeviceLog
+
+
 static CFMutableDictionaryRef liveConnections = nil;
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown);
 //static int debug2 = 1;
 //static CFStringRef requiredDeviceId;
 
-ReadDeviceLog *ReadDeviceLogObject;
+ReadDeviceLog *gReadDeviceLogObject = nil;
 
--(id)init{
-    
+
+#pragma mark -
+
+
+- (id)init
+{
     if ([self class] == [ReadDeviceLog class]) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                        reason:@"Error, attempting to instantiate AbstractClass directly." userInfo:nil];
@@ -40,12 +42,14 @@ ReadDeviceLog *ReadDeviceLogObject;
     
     self = [super init];
     if(self) {
-        ReadDeviceLogObject = self;
+        gReadDeviceLogObject = self;
     }
+    
     return self;
 }
 
--(void)startLogging{
+- (void)startLogging
+{
     
     liveConnections = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
     am_device_notification *notification;
@@ -54,7 +58,12 @@ ReadDeviceLog *ReadDeviceLogObject;
     CFRunLoopRun();
 }
 
--(void)analizeWithLogBuffer:(const char *)buffer andSize:(NSInteger)length{
+
+#pragma mark -
+
+
+- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength
+{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass",
                                            NSStringFromSelector(_cmd)]
@@ -63,6 +72,10 @@ ReadDeviceLog *ReadDeviceLogObject;
 
 
 @end
+
+
+#pragma mark - Socket Callback
+
 
 static void SocketCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info)
 {
@@ -83,12 +96,16 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef a
         }
         
             //Override method
-        [ReadDeviceLogObject analizeWithLogBuffer:buffer andSize:(int)extentLength];
+        [gReadDeviceLogObject analizeWithLogBuffer:buffer length:(int)extentLength];
 
         length -= extentLength;
         buffer += extentLength;
     }
 }
+
+
+#pragma mark - Device Callback
+
 
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown)
 {
