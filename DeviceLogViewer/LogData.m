@@ -11,14 +11,6 @@
 
 
 @implementation LogData
-{
-    NSString *_date;
-    NSString *_device;
-    NSString *_process;
-    LogLevel _logLevel;
-    NSString *_log;
-    NSColor *_textColor;
-}
 
 
 - (id)initWithLogDataInfo:(NSDictionary *)aDataInfo

@@ -11,4 +11,6 @@
 @interface ILogFilterGUI : NSObject <NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate>
 
 -(id)initWithWindow:(NSWindow *)aWindow;
+-(void)LogArrayController:(NSArrayController *)aLogArrayController;
+
 @end

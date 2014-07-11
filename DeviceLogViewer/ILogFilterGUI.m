@@ -8,6 +8,7 @@
 
 #import "ILogFilterGUI.h"
 
+
 @implementation ILogFilterGUI
 {
     NSWindow *_window;
@@ -30,10 +31,20 @@
     }
     
     [_window setDelegate:self];
-    [self makeLogTable];
+   
     
     return self;
 }
+
+#pragma mark -
+
+-(void)LogArrayController:(NSArrayController *)aLogArrayController
+{
+    _logArrayController = aLogArrayController;
+     
+     [self makeLogTable];
+}
+
 
 #pragma mark -
 
@@ -63,8 +74,10 @@
     [logColumn setWidth:198];
     
     
-    //[dateColumn bind:<#(NSString *)#> toObject:_logArrayController withKeyPath:<#(NSString *)#> options:<#(NSDictionary *)#>]
+        
+    [dateColumn bind:NSValueBinding toObject:_logArrayController.arrangedObjects withKeyPath:@"date" options:nil];
     
+        
     // add column
     [_logTableView addTableColumn:dateColumn];
     [_logTableView addTableColumn:deviceColumn];
@@ -86,7 +99,7 @@
     
 }
 
-/*
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return [tableView numberOfRows];
@@ -94,9 +107,9 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    
+    return tableView;
 }
- */
+
 
 #pragma mark -
 

@@ -50,7 +50,15 @@
 
 - (void)addLogDataToArrayController:(LogData *)aLogData
 {
-    [_logDataArrayController addObject:aLogData];
+    
+    //[_logDataArrayController addObject:aLogData];
+    [_logDataArrayController addObject:[[NSObjectController alloc] initWithContent:aLogData]];
+
+    
+    
+    NSLog(@"%@",_logDataArrayController.arrangedObjects);
+    
+
    // NSLog(@"%d", (int)[[logDataArr arrangedObjects] count]);
 }
 
@@ -63,7 +71,7 @@
     
     [_processArrayController setContent:_processSet];
     //NSLog(@"%d", (int)[arr count]);
-    //NSLog(@"%@", processSet);
+    //NSLog(@"%@", _processSet);
 }
 
 
@@ -79,7 +87,7 @@
 
 //Overriding Method
 //buffer: DeviceLog
-- (void)analizeWithLogBuffer:(const char *)aBuffer andSize:(NSInteger)aLength
+- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength
 {
     NSString *date = nil;
     NSString *device = nil;
@@ -109,9 +117,8 @@
         //insert processName to Set
         [self addDeviceNameToSet:device];
 
-        
-        
-        process = [[NSString alloc] initWithBytes:aBuffer+space_offsets[0]
+        if (aBuffer[space_offsets[1]-1] == ']')
+            process = [[NSString alloc] initWithBytes:aBuffer+space_offsets[0]
                                                length:space_offsets[1]-space_offsets[0] encoding:NSUTF8StringEncoding];
        
         
@@ -134,11 +141,13 @@
     }
     
     NSMutableDictionary *logDataInfo = [NSMutableDictionary dictionary];
-    [logDataInfo setObject:date forKey:@"date"];
-    [logDataInfo setObject:device forKey:@"device"];
-    [logDataInfo setObject:process forKey:@"process"];
-    [logDataInfo setObject:logLevel forKey:@"loglevel"];
-    [logDataInfo setObject:log forKey:@"log"];
+    if (date != nil && device != nil && process != nil && logLevel != nil && log != nil){
+        [logDataInfo setObject:date forKey:@"date"];
+        [logDataInfo setObject:device forKey:@"device"];
+        [logDataInfo setObject:process forKey:@"process"];
+        [logDataInfo setObject:logLevel forKey:@"loglevel"];
+        [logDataInfo setObject:log forKey:@"log"];
+    }
     
     analizedLogData = [[LogData alloc] initWithLogDataInfo:logDataInfo];
     

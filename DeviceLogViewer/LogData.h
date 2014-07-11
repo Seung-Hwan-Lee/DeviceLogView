@@ -19,8 +19,16 @@ typedef NS_ENUM (NSUInteger, LogLevel) {
 };
 
 
+
 @interface LogData : NSObject
 
+
+@property NSString *date;
+@property NSString *device;
+@property NSString *process;
+@property LogLevel logLevel;
+@property NSString *log;
+@property NSColor *textColor;
 
 - (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;
 
