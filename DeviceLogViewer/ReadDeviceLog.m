@@ -12,7 +12,8 @@
 #include <unistd.h>
 
 @interface ReadDeviceLog()
--(void)analizeWithLogBuffer:(const char*)buffer andSize:(int)length;
+// Have to Ovveride in child class
+-(void)analizeWithLogBuffer:(const char *)buffer andSize:(NSInteger)length;
 @end
 
 @implementation ReadDeviceLog
@@ -23,14 +24,12 @@ typedef struct {
     CFRunLoopSourceRef source;
 } DeviceConsoleConnection;
 
-
-
-static CFMutableDictionaryRef liveConnections;
-static int debug2;
-static CFStringRef requiredDeviceId;
+static CFMutableDictionaryRef liveConnections = nil;
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown);
+//static int debug2 = 1;
+//static CFStringRef requiredDeviceId;
 
-ReadDeviceLog* this;
+ReadDeviceLog *ReadDeviceLogObject;
 
 -(id)init{
     
@@ -41,7 +40,7 @@ ReadDeviceLog* this;
     
     self = [super init];
     if(self) {
-        this = self;
+        ReadDeviceLogObject = self;
     }
     return self;
 }
@@ -55,7 +54,7 @@ ReadDeviceLog* this;
     CFRunLoopRun();
 }
 
--(void)analizeWithLogBuffer:(const char *)buffer andSize:(int)length{
+-(void)analizeWithLogBuffer:(const char *)buffer andSize:(NSInteger)length{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass",
                                            NSStringFromSelector(_cmd)]
@@ -84,7 +83,7 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef a
         }
         
             //Override method
-        [this analizeWithLogBuffer:buffer andSize:(int)extentLength];
+        [ReadDeviceLogObject analizeWithLogBuffer:buffer andSize:(int)extentLength];
 
         length -= extentLength;
         buffer += extentLength;
@@ -97,21 +96,7 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
     struct am_device *device = info->dev;
     switch (info->msg) {
         case ADNCI_MSG_CONNECTED: {
-            if (debug2) {
-                CFStringRef deviceId = AMDeviceCopyDeviceIdentifier(device);
-                CFStringRef str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, CFSTR("deviceconsole connected: %@"), deviceId);
-                CFRelease(deviceId);
-                CFShow(str);
-                CFRelease(str);
-            }
-            if (requiredDeviceId) {
-                CFStringRef deviceId = AMDeviceCopyDeviceIdentifier(device);
-                Boolean isRequiredDevice = CFEqual(deviceId, requiredDeviceId);
-                CFRelease(deviceId);
-                if (!isRequiredDevice)
-                    break;
-            }
-            if (AMDeviceConnect(device) == MDERR_OK) {
+                       if (AMDeviceConnect(device) == MDERR_OK) {
                 if (AMDeviceIsPaired(device) && (AMDeviceValidatePairing(device) == MDERR_OK)) {
                     if (AMDeviceStartSession(device) == MDERR_OK) {
                         service_conn_t connection;
@@ -140,13 +125,6 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
             break;
         }
         case ADNCI_MSG_DISCONNECTED: {
-            if (debug2) {
-                CFStringRef deviceId = AMDeviceCopyDeviceIdentifier(device);
-                CFStringRef str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, CFSTR("deviceconsole disconnected: %@"), deviceId);
-                CFRelease(deviceId);
-                CFShow(str);
-                CFRelease(str);
-            }
             DeviceConsoleConnection *data = (DeviceConsoleConnection *)CFDictionaryGetValue(liveConnections, device);
             if (data) {
                 CFDictionaryRemoveValue(liveConnections, device);

@@ -9,22 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @interface LogData : NSObject
-{
-    NSString* date;
-    NSString* device;
-    NSString* process;
-    NSString* logLevel;
-    NSString* log;
-    NSColor* textColor;
-}
 
-@property NSString* date;
-@property NSString* device;
-@property NSString* process;
-@property NSString* logLevel;
-@property NSString* log;
-@property NSColor* textColor;
+@property (strong) NSString *date;
+@property (strong) NSString *device;
+@property (strong) NSString *process;
+@property (strong) NSString *logLevel;
+@property (strong) NSString *log;
+@property (strong) NSColor *textColor;
 
--(id)initWithDate:(NSString*)inDate andDevice:(NSString*)inDevice andProcess:(NSString*)inProcess andLogLevel:(NSString*)inLogLevel andLog:(NSString*)inLog;
+-(id)initWithDate:(NSString *)date Device:(NSString *)device Process:(NSString *)process LogLevel:(NSString *)logLevel Log:(NSString *)log;
 
 @end

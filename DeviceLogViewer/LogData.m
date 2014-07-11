@@ -10,37 +10,30 @@
 
 @implementation LogData
 
-@synthesize date;
-@synthesize device;
-@synthesize process;
-@synthesize logLevel;
-@synthesize log;
-@synthesize textColor;
-
--(id)initWithDate:(NSString*)inDate andDevice:(NSString*)inDevice andProcess:(NSString*)inProcess andLogLevel:(NSString*)inLogLevel andLog:(NSString*)inLog;
+-(id)initWithDate:(NSString *)date Device:(NSString *)device Process:(NSString *)process LogLevel:(NSString *)logLevel Log:(NSString *)log;
 {
 
     self = [super init];
     if(self) {
-        date = inDate;
-        device = inDevice;
-        process = inProcess;
-        logLevel = inLogLevel;
-        log = inLog;
+        _date = date;
+        _device = device;
+        _process = process;
+        _logLevel = logLevel;
+        _log = log;
     }
     
     if(nil != logLevel)
     {
         if([logLevel rangeOfString:@"Notice"].location != NSNotFound)
-            textColor = [NSColor greenColor];
+            _textColor = [NSColor greenColor];
         else  if([logLevel rangeOfString:@"Debug"].location != NSNotFound)
-            textColor = [NSColor blueColor];
+            _textColor = [NSColor blueColor];
         else if([logLevel rangeOfString:@"Error"].location != NSNotFound)
-            textColor = [NSColor redColor];
+            _textColor = [NSColor redColor];
         else  if([logLevel rangeOfString:@"Warning"].location != NSNotFound)
-            textColor = [NSColor yellowColor];
+            _textColor = [NSColor yellowColor];
         else
-            textColor = [NSColor blackColor];
+            _textColor = [NSColor blackColor];
     }
     
     return self;

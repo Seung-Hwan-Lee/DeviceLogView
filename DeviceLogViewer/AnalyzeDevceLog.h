@@ -9,21 +9,17 @@
 #import <Foundation/Foundation.h>
 #import "ReadDeviceLog.h"
 #import "LogData.h"
+#import "LogFilter.h"
 
 @interface AnalyzeDevceLog : ReadDeviceLog
 {
-    NSArrayController* logDataArr;
-    NSMutableSet* processSet;
-    NSMutableSet* deviceSet;
+    NSArrayController *logDataArr;
+    NSArrayController *processArr;
+    NSArrayController *deviceArr;
+    LogFilter *logFilter;
 }
 
--(NSArrayController*) getLogDataArr;
--(void)setLogDataArr: (NSArrayController*)inLogDataArr;
--(NSMutableSet*) getProcessSet;
--(NSMutableSet*) getDeviceSet;
--(void) removeAllData;
-
-
--(id)init;
+-(id)initWithLogDataArray:(NSArrayController *)inLogDataArr
+               ProcessArr:(NSArrayController *)inProcessArr DeviceArr:(NSArrayController *)inDeviceArr LogFilter:(LogFilter *)inLogFilter;
 
 @end

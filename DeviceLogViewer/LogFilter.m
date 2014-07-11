@@ -11,7 +11,7 @@
 
 @interface LogFilter()
 
--(void)makeLogPredicate;
+//-(void)makeLogPredicate;
 
 @end
 
@@ -25,100 +25,45 @@
         error = true;
         warning = true;
         debug = true;
-        [self makeLogPredicate];
     }
     return self;
 }
 
--(void)makeLogPredicate
-{
-    //make Predicate for Array filtering
-    //NSString* Format;
-    LogPredicate = [NSPredicate predicateWithFormat:
-                    @"logLevel contains %@ or logLevel contains %@ or logLevel contains %@ or logLevel contains %@ or log contain %@ or process contain %@ or device contain %@"
-                    , notice?@"Notice":@""
-                    , error?@"Error":@""
-                    , warning?@"Warning":@""
-                    , debug?@"Debug":@""
-                    , sentence, process, device];
-    
-    
-}
-
--(NSPredicate *)getLogPredicate
-{
-    return LogPredicate;
-}
 
 
-- (Boolean) notice
-{
-    return notice;
-}
-- (void) setNotice: (Boolean)x
+- (void) setNotice: (BOOL)x
 {
     notice = x;
-    [self makeLogPredicate];
 }
 
-- (Boolean) error
-{
-    return error;
-}
-- (void) setError: (Boolean)x
+- (void) setError: (BOOL)x
 {
     error = x;
-    [self makeLogPredicate];
 }
 
-- (Boolean) warning
-{
-    return warning;
-}
-- (void) setWarning: (Boolean)x
+- (void) setWarning: (BOOL)x
 {
     warning = x;
-    [self makeLogPredicate];
 }
 
-- (Boolean) debug
-{
-    return debug;
-}
-- (void) setDebug: (Boolean)x
+
+- (void) setDebug: (BOOL)x
 {
     debug = x;
-    [self makeLogPredicate];
 }
-
-- (NSString*) device
-{
-    return device;
-}
-- (void) setDevice: (NSString*)x
+- (void) setDevice: (NSString *)x
 {
     device = x;
-    [self makeLogPredicate];
 }
 
-- (NSString*) process
-{
-    return process;
-}
-- (void) setProcess: (NSString*)x
+- (void) setProcess: (NSString *)x
 {
     process = x;
-    [self makeLogPredicate];
 }
 
-- (NSString*) sentence
-{
-    return sentence;
-}
-- (void) setSentence: (NSString*)x
+- (void) setSentence: (NSString *)x
 {
     sentence = x;
-    [self makeLogPredicate];
 }
 
 @end

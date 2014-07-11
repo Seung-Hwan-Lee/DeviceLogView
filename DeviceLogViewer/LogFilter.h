@@ -13,25 +13,23 @@
 
 @interface LogFilter : NSObject
 {
-    Boolean notice;
-    Boolean error;
-    Boolean warning;
-    Boolean debug;
-    NSString* process;
-    NSString* device;
-    NSString* sentence;
-    NSPredicate* LogPredicate;
+    BOOL notice;
+    BOOL error;
+    BOOL warning;
+    BOOL debug;
+    NSString *process;
+    NSString *device;
+    NSString *sentence;
 }
 
-@property Boolean notice;
-@property Boolean error;
-@property Boolean warning;
-@property Boolean debug;
-@property NSString* process;
-@property NSString* device;
-@property NSString* sentence;
 
+- (void) setNotice: (BOOL)x;
+- (void) setError: (BOOL)x;
+- (void) setWarning: (BOOL)x;
+- (void) setDebug: (BOOL)x;
+- (void) setDevice: (NSString *)x;
+- (void) setProcess: (NSString *)x;
+- (void) setSentence: (NSString *)x;
 
--(NSPredicate*)getLogPredicate; 
 
 @end

@@ -11,27 +11,21 @@
 
 @implementation AppDelegate
 
+@synthesize logFilter;
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Insert code here to initialize your application
-    
-    AnalyzeDevceLog* start = [[AnalyzeDevceLog alloc] init];
-    [start setLogDataArr:_logArrayController];
-   
-  
-    [_deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"abc",@"device",nil]];
-    [_deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"abdc",@"device",nil]];
-    [_deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"abc",@"device",nil]];
-    
-    NSLog(@"%d %@", (int)3, _deviceSet);
-    
-    
+    AnalyzeDevceLog* start = [[AnalyzeDevceLog alloc] initWithLogDataArray:_logArrayController ProcessArr:_processArrayController DeviceArr:_deviceArrayController LogFilter:logFilter];
     [start startLogging];
     
+}
+
+-(void) removeAllData
+{
     
+    [[_logArrayController content] removeAllObjects];
+    [[_processArrayController content] removeAllObjects];
+    [[_deviceArrayController content] removeAllObjects];
 }
 
 @end

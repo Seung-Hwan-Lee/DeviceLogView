@@ -91,6 +91,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4FB1B250196FB81E00F0EB53 /* DataClass */ = {
+			isa = PBXGroup;
+			children = (
+				4FBFEEF6196E6541002DF74F /* LogData.h */,
+				4FBFEEF7196E6541002DF74F /* LogData.m */,
+				4FBFEEF9196E6564002DF74F /* LogFilter.h */,
+				4FBFEEFA196E6564002DF74F /* LogFilter.m */,
+			);
+			name = DataClass;
+			sourceTree = "<group>";
+		};
+		4FB1B251196FB98900F0EB53 /* DataController */ = {
+			isa = PBXGroup;
+			children = (
+				4FBFEF02196E74C5002DF74F /* MobileDevice.h */,
+				4FBFEEFC196E6580002DF74F /* ReadDeviceLog.h */,
+				4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */,
+				4FBFEEFF196E65A7002DF74F /* AnalyzeDevceLog.h */,
+				4FBFEF00196E65A7002DF74F /* AnalyzeDevceLog.m */,
+			);
+			name = DataController;
+			sourceTree = "<group>";
+		};
 		4FBFEEB6196E651D002DF74F = {
 			isa = PBXGroup;
 			children = (
@@ -134,20 +157,13 @@
 		4FBFEEC8196E651D002DF74F /* DeviceLogViewer */ = {
 			isa = PBXGroup;
 			children = (
-				4FBFEF02196E74C5002DF74F /* MobileDevice.h */,
+				4FB1B251196FB98900F0EB53 /* DataController */,
+				4FB1B250196FB81E00F0EB53 /* DataClass */,
 				4FBFEED4196E651D002DF74F /* AppDelegate.h */,
 				4FBFEED5196E651D002DF74F /* AppDelegate.m */,
 				4FBFEED7196E651D002DF74F /* MainMenu.xib */,
 				4FBFEEDA196E651D002DF74F /* Images.xcassets */,
 				4FBFEEC9196E651D002DF74F /* Supporting Files */,
-				4FBFEEF6196E6541002DF74F /* LogData.h */,
-				4FBFEEF7196E6541002DF74F /* LogData.m */,
-				4FBFEEF9196E6564002DF74F /* LogFilter.h */,
-				4FBFEEFA196E6564002DF74F /* LogFilter.m */,
-				4FBFEEFC196E6580002DF74F /* ReadDeviceLog.h */,
-				4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */,
-				4FBFEEFF196E65A7002DF74F /* AnalyzeDevceLog.h */,
-				4FBFEF00196E65A7002DF74F /* AnalyzeDevceLog.m */,
 			);
 			path = DeviceLogViewer;
 			sourceTree = "<group>";
@@ -506,6 +522,7 @@
 				4FBFEEF2196E651D002DF74F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4FBFEEF3196E651D002DF74F /* Build configuration list for PBXNativeTarget "DeviceLogViewerTests" */ = {
 			isa = XCConfigurationList;
@@ -514,6 +531,7 @@
 				4FBFEEF5196E651D002DF74F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
