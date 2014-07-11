@@ -11,15 +11,6 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-
-- (void)removeAllData;
-
-
-@property (weak) IBOutlet NSArrayController *deviceArrayController;
-@property (weak) IBOutlet NSArrayController *logArrayController;
-@property (weak) IBOutlet NSArrayController *processArrayController;
-@property (weak) IBOutlet NSTableView *deviceTableView;
 @property (assign) IBOutlet NSWindow *window;
-@property LogFilter* logFilter;
 
 @end

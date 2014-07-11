@@ -24,8 +24,6 @@ typedef struct {
 
 static CFMutableDictionaryRef liveConnections = nil;
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown);
-//static int debug2 = 1;
-//static CFStringRef requiredDeviceId;
 
 ReadDeviceLog *gReadDeviceLogObject = nil;
 

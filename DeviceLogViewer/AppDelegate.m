@@ -8,29 +8,19 @@
 
 
 #import "AppDelegate.h"
-#import "AnalyzeDevceLog.h"
+#import "ILogFilterGUI.h"
 
 
 @implementation AppDelegate
+{
+    ILogFilterGUI *_gui;
+}
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    AnalyzeDevceLog *analyzeDeviceLog = [[AnalyzeDevceLog alloc] initWithLogDataArrayController:_logArrayController
-                                                                         processArrayController:_processArrayController
-                                                                          deviceArrayController:_deviceArrayController
-                                                                                      logFilter:_logFilter];
-    [analyzeDeviceLog startLogging];
-    
+    _gui = [[ILogFilterGUI alloc] initWithWindow:_window];
+   
 }
-
-
-- (void)removeAllData
-{
-    [[_logArrayController content] removeAllObjects];
-    [[_processArrayController content] removeAllObjects];
-    [[_deviceArrayController content] removeAllObjects];
-}
-
 
 @end

@@ -38,8 +38,7 @@
         _logFilter = aLogFilter;
         _processSet = [[NSMutableSet alloc] init];
         _deviceSet = [[NSMutableSet alloc] init];
-        //[processSet addObject:[NSDictionary dictionaryWithObjectsAndKeys: @" All Process",@"process",nil]];
-        //[deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys: @" All Device",@"device",nil]];
+
     }
     return self;
 

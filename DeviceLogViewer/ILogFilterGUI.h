@@ -8,9 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface iLogFilterGUI : NSObject
-{
-    NSWindow *window;
-}
+@interface ILogFilterGUI : NSObject <NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate>
 
+-(id)initWithWindow:(NSWindow *)aWindow;
 @end
