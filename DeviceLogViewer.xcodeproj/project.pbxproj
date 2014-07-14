@@ -22,7 +22,7 @@
 		4FBFEEF8196E6541002DF74F /* LogData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEEF7196E6541002DF74F /* LogData.m */; };
 		4FBFEEFB196E6564002DF74F /* LogFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEEFA196E6564002DF74F /* LogFilter.m */; };
 		4FBFEEFE196E6580002DF74F /* ReadDeviceLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */; };
-		4FBFEF01196E65A7002DF74F /* AnalyzeDevceLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEF00196E65A7002DF74F /* AnalyzeDevceLog.m */; };
+		4FBFEF01196E65A7002DF74F /* AnalyzeDeviceLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */; };
 		4FBFEF04196E74E6002DF74F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBFEF03196E74E6002DF74F /* CoreFoundation.framework */; };
 		4FBFEF06196E74F2002DF74F /* MobileDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBFEF05196E74F2002DF74F /* MobileDevice.framework */; };
 /* End PBXBuildFile section */
@@ -64,8 +64,8 @@
 		4FBFEEFA196E6564002DF74F /* LogFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogFilter.m; sourceTree = "<group>"; };
 		4FBFEEFC196E6580002DF74F /* ReadDeviceLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadDeviceLog.h; sourceTree = "<group>"; };
 		4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadDeviceLog.m; sourceTree = "<group>"; };
-		4FBFEEFF196E65A7002DF74F /* AnalyzeDevceLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyzeDevceLog.h; sourceTree = "<group>"; };
-		4FBFEF00196E65A7002DF74F /* AnalyzeDevceLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyzeDevceLog.m; sourceTree = "<group>"; };
+		4FBFEEFF196E65A7002DF74F /* AnalyzeDeviceLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyzeDeviceLog.h; sourceTree = "<group>"; };
+		4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyzeDeviceLog.m; sourceTree = "<group>"; };
 		4FBFEF02196E74C5002DF74F /* MobileDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MobileDevice.h; sourceTree = "<group>"; };
 		4FBFEF03196E74E6002DF74F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4FBFEF05196E74F2002DF74F /* MobileDevice.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MobileDevice.framework; sourceTree = "<group>"; };
@@ -111,8 +111,8 @@
 				4FBFEF02196E74C5002DF74F /* MobileDevice.h */,
 				4FBFEEFC196E6580002DF74F /* ReadDeviceLog.h */,
 				4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */,
-				4FBFEEFF196E65A7002DF74F /* AnalyzeDevceLog.h */,
-				4FBFEF00196E65A7002DF74F /* AnalyzeDevceLog.m */,
+				4FBFEEFF196E65A7002DF74F /* AnalyzeDeviceLog.h */,
+				4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */,
 			);
 			name = DataController;
 			sourceTree = "<group>";
@@ -312,7 +312,7 @@
 				4FBFEED6196E651D002DF74F /* AppDelegate.m in Sources */,
 				4FBFEECF196E651D002DF74F /* main.m in Sources */,
 				4FBFEEFB196E6564002DF74F /* LogFilter.m in Sources */,
-				4FBFEF01196E65A7002DF74F /* AnalyzeDevceLog.m in Sources */,
+				4FBFEF01196E65A7002DF74F /* AnalyzeDeviceLog.m in Sources */,
 				4FB1B255196FC50100F0EB53 /* ILogFilterGUI.m in Sources */,
 				4FBFEEF8196E6541002DF74F /* LogData.m in Sources */,
 				4FBFEEFE196E6580002DF74F /* ReadDeviceLog.m in Sources */,

@@ -10,27 +10,16 @@
 #import <Foundation/Foundation.h>
 
 
-typedef NS_ENUM (NSUInteger, LogLevel) {
-    kLogLevelNormal = 0,
-    kLogLevelNotice,
-    kLogLevelDebug,
-    kLogLevelError,
-    kLogLevelWarning
-};
-
-
-
 @interface LogData : NSObject
 
 
 @property NSString *date;
 @property NSString *device;
 @property NSString *process;
-@property LogLevel logLevel;
+@property NSString *logLevel;
 @property NSString *log;
 @property NSColor *textColor;
 
 - (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;
-
 
 @end

@@ -9,7 +9,7 @@
 
 #import "AppDelegate.h"
 #import "ILogFilterGUI.h"
-#import "AnalyzeDevceLog.h"
+#import "AnalyzeDeviceLog.h"
 
 
 @implementation AppDelegate
@@ -22,6 +22,9 @@
 }
 
 
+
+#pragma mark - 
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     
@@ -31,11 +34,32 @@
     
     
     _gui = [[ILogFilterGUI alloc] initWithWindow:_window];
-    [_gui LogArrayController:_logArrayController];
+    [_gui makeLogTableWithLogArrayController:_logArrayController];
+    [_gui makeDeviceTableWithDeviceArrayController:_deviceArrayController];
+    [_gui makeProcessTable:_processArrayController];
     
    
-    AnalyzeDevceLog *test =[[AnalyzeDevceLog alloc] initWithLogDataArrayController:_logArrayController processArrayController:_processArrayController deviceArrayController:_deviceArrayController logFilter:nil];
+    AnalyzeDeviceLog *test =[[AnalyzeDeviceLog alloc] initWithLogDataArrayController:_logArrayController processArrayController:_processArrayController deviceArrayController:_deviceArrayController];
+    
+    test.delegate = self;
+    
     [test startLogging];
+    
 }
+
+
+
+#pragma mark -
+
+-(void) ModifiedArrayControllerWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
+                                   processArrayController:(NSArrayController *)aProcessArrayController
+                                    deviceArrayController:(NSArrayController *)aDeviceArrayController
+{
+    //NSLog(@"%@", _logArrayController.arrangedObjects);
+    
+}
+
+
+
 
 @end

@@ -13,20 +13,19 @@
 {
     NSWindow *_window;
     NSTableView *_logTableView;
-    NSArrayController *_logArrayController;
-    NSArrayController *_deviceArrayController;
-    NSArrayController *_processArrayController;
+    NSTableView *_deviceTableView;
+    NSTableView *_processTableView;
 }
 
 
-#pragma mark -
 
+
+#pragma mark -
 
 -(id)initWithWindow:(NSWindow *)aWindow
 {
     self = [super init];
     if (self) {
-        
         _window = aWindow;
     }
     
@@ -36,25 +35,20 @@
     return self;
 }
 
-#pragma mark -
 
--(void)LogArrayController:(NSArrayController *)aLogArrayController
-{
-    _logArrayController = aLogArrayController;
-     
-     [self makeLogTable];
-}
+
 
 
 #pragma mark -
 
-- (void)makeLogTable
+- (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController
+
 {
     NSSize windowSize = _window.frame.size;
-    // create a table view and a scroll view
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 200)];
     _logTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
-    // create columns for our table
+    [_logTableView setIdentifier:@"LogTable"];
+   
     NSTableColumn *dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
     NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
@@ -71,11 +65,32 @@
     [deviceColumn setWidth:100];
     [processColumn setWidth:100];
     [logLevelColumn setWidth:100];
-    [logColumn setWidth:198];
+    [logColumn setWidth:windowSize.width];
     
     
-        
-    [dateColumn bind:NSValueBinding toObject:_logArrayController.arrangedObjects withKeyPath:@"date" options:nil];
+
+    
+    [dateColumn bind:NSValueBinding toObject:aLogArrayController
+       withKeyPath:@"arrangedObjects.date" options:nil];
+    [dateColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    
+    [deviceColumn bind:NSValueBinding toObject:aLogArrayController
+         withKeyPath:@"arrangedObjects.device" options:nil];
+    [deviceColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+
+    [processColumn bind:NSValueBinding toObject:aLogArrayController
+            withKeyPath:@"arrangedObjects.process" options:nil];
+    [processColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    
+    [logLevelColumn bind:NSValueBinding toObject:aLogArrayController
+         withKeyPath:@"arrangedObjects.logLevel" options:nil];
+    [logLevelColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    
+    [logColumn bind:NSValueBinding toObject:aLogArrayController
+         withKeyPath:@"arrangedObjects.log" options:nil];
+    [logColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+
+    
     
         
     // add column
@@ -100,15 +115,100 @@
 }
 
 
+
+
+
+#pragma mark -
+
+- (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController
+{
+    NSSize windowSize = _window.frame.size;
+    // create a table view and a scroll view
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 180, 120, 150)];
+    _deviceTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 180, 120, 150)];
+    [_deviceTableView setIdentifier:@"deviceSet"];
+    [_deviceTableView setHeaderView: nil];
+    
+    
+    NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
+    [deviceColumn setWidth:100];
+    [deviceColumn bind:NSValueBinding toObject:aDeviceArrayController
+         withKeyPath:@"arrangedObjects.device" options:nil];
+    
+    
+    // add column
+    [_deviceTableView addTableColumn:deviceColumn];
+    [_deviceTableView setDelegate:self ];
+    [_deviceTableView setDataSource:self];
+    [_deviceTableView reloadData];
+    
+    
+    [tableContainer setDocumentView:_deviceTableView];
+    [tableContainer setHasVerticalScroller:YES];
+    
+    [_window.contentView addSubview:tableContainer];
+    
+    
+}
+
+
+
+
+
+#pragma mark -
+
+- (void)makeProcessTable:(NSArrayController *)aProcessArrayController
+{
+    NSSize windowSize = _window.frame.size;
+    // create a table view and a scroll view
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 180, 150, 150)];
+    _processTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 180, 150, 150)];
+    [_processTableView setIdentifier:@"processSet"];
+    [_processTableView setHeaderView: nil];
+    
+    
+    NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
+    [processColumn setWidth:150];
+    [processColumn bind:NSValueBinding toObject:aProcessArrayController
+           withKeyPath:@"arrangedObjects.process" options:nil];
+    
+    
+    // add column
+    [_processTableView addTableColumn:processColumn];
+    [_processTableView setDelegate:self ];
+    [_processTableView setDataSource:self];
+    [_processTableView reloadData];
+    
+    
+    [tableContainer setDocumentView:_processTableView];
+    [tableContainer setHasVerticalScroller:YES];
+    
+    [_window.contentView addSubview:tableContainer];
+    
+    
+}
+
+
+
+#pragma mark -
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return [tableView numberOfRows];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+
+
+
+#pragma mark -
+
+- (id) tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    return tableView;
+    //NSLog(@"%@",[[tableColumn dataCellForRow:0] objectAtIndex:0]);
+    return nil;
 }
+
+
 
 
 #pragma mark -
@@ -117,9 +217,13 @@
 {
     //NSLog(@"resizing");
     [self resizingLogTable:frameSize];
-    
+    [self resizingDeviceTable:frameSize];
+    [self resizingProcessTable:frameSize];
+
     return frameSize;
 }
+
+
 
 #pragma mark -
 
@@ -130,8 +234,37 @@
     
     [[_logTableView enclosingScrollView] setFrameSize: frameSize];
     [[_logTableView enclosingScrollView] setNeedsDisplay: YES];
+    
+    //[[_deviceTableView enclosingScrollView] setFrameSize: frameSize];
+    //[[_deviceTableView enclosingScrollView] setNeedsDisplay: YES];
 
 }
+
+
+
+#pragma mark -
+
+- (void)resizingDeviceTable:(NSSize)frameSize
+{
+    CGRect frame = _deviceTableView.frame;
+    frame.origin.y = frameSize.height - 180;
+    
+    [[_deviceTableView enclosingScrollView] setFrame: frame];
+    [[_deviceTableView enclosingScrollView] setNeedsDisplay: YES];
+}
+
+#pragma mark -
+
+- (void)resizingProcessTable:(NSSize)frameSize
+{
+    CGRect frame = _processTableView.frame;
+    frame.origin.y = frameSize.height - 180;
+    
+    [[_processTableView enclosingScrollView] setFrame: frame];
+    [[_processTableView enclosingScrollView] setNeedsDisplay: YES];
+}
+
+
 
 
 @end

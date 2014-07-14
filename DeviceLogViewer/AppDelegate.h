@@ -8,8 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import "LogFilter.h"
+#import "AnalyzeDeviceLog.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, AnalyzeDeviceLogDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
 

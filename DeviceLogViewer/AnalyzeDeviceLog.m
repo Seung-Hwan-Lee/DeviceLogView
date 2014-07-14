@@ -1,5 +1,5 @@
 //
-//  AnalyzeDevceLog.m
+//  AnalyzeDeviceLog.m
 //  DeviceLogViewer
 //
 //  Created by LINEPLUS on 2014. 7. 10..
@@ -7,15 +7,14 @@
 //
 
 
-#import "AnalyzeDevceLog.h"
+#import "AnalyzeDeviceLog.h"
 
 
-@implementation AnalyzeDevceLog
+@implementation AnalyzeDeviceLog
 {
     NSArrayController *_logDataArrayController;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
-    LogFilter *_logFilter;
     NSMutableSet *_processSet;
     NSMutableSet *_deviceSet;
 }
@@ -27,7 +26,6 @@
 - (id)initWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
              processArrayController:(NSArrayController *)aProcessArrayController
               deviceArrayController:(NSArrayController *)aDeviceArrayController
-                          logFilter:(LogFilter *)aLogFilter
 {
     self = [super init];
     if(self)
@@ -35,7 +33,6 @@
         _logDataArrayController = aLogDataArrayController;
         _processArrayController = aProcessArrayController;
         _deviceArrayController = aDeviceArrayController;
-        _logFilter = aLogFilter;
         _processSet = [[NSMutableSet alloc] init];
         _deviceSet = [[NSMutableSet alloc] init];
 
@@ -51,15 +48,9 @@
 - (void)addLogDataToArrayController:(LogData *)aLogData
 {
     
-    //[_logDataArrayController addObject:aLogData];
-    [_logDataArrayController addObject:[[NSObjectController alloc] initWithContent:aLogData]];
+    [_logDataArrayController addObject:aLogData];
 
     
-    
-    NSLog(@"%@",_logDataArrayController.arrangedObjects);
-    
-
-   // NSLog(@"%d", (int)[[logDataArr arrangedObjects] count]);
 }
 
 
@@ -95,7 +86,7 @@
     NSString *logLevel = nil;
     NSString *log = nil;
     
-    LogData *analizedLogData;
+    //LogData *analizedLogData;
     
     if (aLength < 16 || aBuffer[15] == '=') {
         return;
@@ -140,21 +131,30 @@
         
     }
     
-    NSMutableDictionary *logDataInfo = [NSMutableDictionary dictionary];
+    
+    
     if (date != nil && device != nil && process != nil && logLevel != nil && log != nil){
+        NSMutableDictionary *logDataInfo = [NSMutableDictionary dictionary];
         [logDataInfo setObject:date forKey:@"date"];
         [logDataInfo setObject:device forKey:@"device"];
         [logDataInfo setObject:process forKey:@"process"];
-        [logDataInfo setObject:logLevel forKey:@"loglevel"];
+        [logDataInfo setObject:logLevel forKey:@"logLevel"];
         [logDataInfo setObject:log forKey:@"log"];
+        [self addDeviceNameToSet:device];
+        [self addProcessNameToSet:process];
+        [self addLogDataToArrayController:[[LogData alloc] initWithLogDataInfo:logDataInfo]];
     }
     
-    analizedLogData = [[LogData alloc] initWithLogDataInfo:logDataInfo];
+    //analizedLogData = [[LogData alloc] initWithLogDataInfo:logDataInfo];
     
-    [self addDeviceNameToSet:device];
-    [self addProcessNameToSet:process];
-    [self addLogDataToArrayController:analizedLogData];
+    
+    
+    [self.delegate ModifiedArrayControllerWithLogDataArrayController:_logDataArrayController processArrayController:_processArrayController deviceArrayController:_deviceArrayController];
+    
+    
 }
+
+#pragma mark -
 
 - (NSInteger)findSpaceOffsetWithBuffer:(const char *)aBuffer length:(size_t)aLength spaceOffsetOut:(size_t *)aSpace_offsets_out;
 
