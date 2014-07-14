@@ -14,23 +14,21 @@
 
 @protocol AnalyzeDeviceLogDelegate;
 
-@interface AnalyzeDeviceLog : ReadDeviceLog
+@interface AnalyzeDeviceLog:NSObject <ReadDeviceLogDelegate>
 
 @property id<AnalyzeDeviceLogDelegate> delegate;
 
--(id)initWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
+- (id)initWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
              processArrayController:(NSArrayController *)aProcessArrayController
               deviceArrayController:(NSArrayController *)aDeviceArrayController;
 
+- (void)startLogging;
+
 @end
 
-@protocol AnalyzeDeviceLogDelegate<NSObject>;
 
+@protocol AnalyzeDeviceLogDelegate<NSObject>;
 @required
 
--(void) ModifiedArrayControllerWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
-                                   processArrayController:(NSArrayController *)aProcessArrayController
-                                    deviceArrayController:(NSArrayController *)aDeviceArrayController;
-
-
+-(void) ModifiedCallBack;
 @end

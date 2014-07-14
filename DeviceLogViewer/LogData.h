@@ -19,6 +19,8 @@
 @property NSString *logLevel;
 @property NSString *log;
 @property NSColor *textColor;
+@property NSString *deviceID;
+
 
 - (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;
 

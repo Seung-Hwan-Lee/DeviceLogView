@@ -15,8 +15,12 @@
     BOOL _error;
     BOOL _warning;
     BOOL _debug;
+    BOOL _emergency;
+    BOOL _alert;
+    BOOL _critical;
+    BOOL _info;
     NSString *_process;
-    NSString *_device;
+    NSString *_deviceID;
     NSString *_sentence;
 }
 
@@ -32,9 +36,48 @@
         _error = TRUE;
         _warning = TRUE;
         _debug = TRUE;
+        _emergency = TRUE;
+        _alert = TRUE;
+        _critical = TRUE;
+        _info = TRUE;
+        _deviceID = nil;
+        _process = nil;
+        _sentence = nil;
+        
     }
     
     return self;
+}
+
+
+- (NSPredicate *)processPredicate
+{
+    NSPredicate *processPredicate;
+    
+    if( _deviceID != nil) {
+         processPredicate = [NSPredicate predicateWithFormat:@"deviceID contains %@ or process contains %@", _deviceID, @"All Process"];
+    }
+   
+    
+    return processPredicate;
+}
+
+
+- (NSPredicate *)logPredicate
+{
+    NSPredicate *logPredicate;
+    if( _deviceID != nil && _process != nil) {
+        logPredicate = [NSPredicate predicateWithFormat:@"deviceID contains %@ and process contains %@", _deviceID, _process];
+    }
+    else if( _deviceID != nil) {
+        logPredicate = [NSPredicate predicateWithFormat:@"deviceID contains %@", _deviceID];
+
+    }
+    else if( _process != nil) {
+        logPredicate = [NSPredicate predicateWithFormat:@"process contains %@", _process];
+    }
+    
+    return logPredicate;
 }
 
 
@@ -61,9 +104,9 @@
     _debug = aDebug;
 }
 
-- (void)setDevice:(NSString *)aDevice
+- (void)setDeviceID:(NSString *)aDeviceID
 {
-    _device = aDevice;
+    _deviceID = aDeviceID;
 }
 
 - (void)setProcess:(NSString *)aProcess

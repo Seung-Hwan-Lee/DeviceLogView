@@ -19,9 +19,12 @@
 - (void)setError:(BOOL)aError;
 - (void)setWarning:(BOOL)aWarning;
 - (void)setDebug:(BOOL)aDebug;
-- (void)setDevice:(NSString *)aDevice;
+- (void)setDeviceID:(NSString *)aDeviceID;
 - (void)setProcess:(NSString *)aProcess;
 - (void)setSentence:(NSString *)aSentence;
+
+- (NSPredicate *)processPredicate;
+- (NSPredicate *)logPredicate;
 
 
 @end

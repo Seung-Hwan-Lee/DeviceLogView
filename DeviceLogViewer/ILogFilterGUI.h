@@ -16,6 +16,7 @@
 - (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController;
 - (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController;
 - (void)makeProcessTable:(NSArrayController *)aProcessArrayController;
+- (void)updateTable;
 
 
 @end

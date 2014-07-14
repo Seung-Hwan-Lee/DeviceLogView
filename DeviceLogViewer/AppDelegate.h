@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "LogFilter.h"
+#import "ILogFilterGUI.h"
 #import "AnalyzeDeviceLog.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, AnalyzeDeviceLogDelegate>

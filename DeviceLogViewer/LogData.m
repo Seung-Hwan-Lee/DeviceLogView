@@ -23,6 +23,8 @@
         _process = [aDataInfo objectForKey:@"process"];
         _log = [aDataInfo objectForKey:@"log"];
         _logLevel = [aDataInfo objectForKey:@"logLevel"];
+        _deviceID = [aDataInfo objectForKey:@"deviceID"];
+        
 
        // NSString *logLevel = [aDataInfo objectForKey:@"loglevel"];
         if (_logLevel)

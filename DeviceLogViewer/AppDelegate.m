@@ -8,8 +8,7 @@
 
 
 #import "AppDelegate.h"
-#import "ILogFilterGUI.h"
-#import "AnalyzeDeviceLog.h"
+
 
 
 @implementation AppDelegate
@@ -22,8 +21,6 @@
 }
 
 
-
-#pragma mark - 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -51,12 +48,11 @@
 
 #pragma mark -
 
--(void) ModifiedArrayControllerWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
-                                   processArrayController:(NSArrayController *)aProcessArrayController
-                                    deviceArrayController:(NSArrayController *)aDeviceArrayController
+-(void) ModifiedCallBack
 {
-    //NSLog(@"%@", _logArrayController.arrangedObjects);
-    
+    [_gui updateTable];
+     
+    //[aProcessArrayController ]
 }
 
 

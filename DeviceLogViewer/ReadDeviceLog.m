@@ -7,9 +7,7 @@
 //
 
 #import "ReadDeviceLog.h"
-#include "MobileDevice.h"
-#include <stdio.h>
-#include <unistd.h>
+
 
 
 typedef struct {
@@ -24,6 +22,8 @@ typedef struct {
 
 
 static CFMutableDictionaryRef liveConnections = nil;
+static CFMutableDictionaryRef deviceName = nil;
+
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown);
 
 ReadDeviceLog *gReadDeviceLogObject = nil;
@@ -34,10 +34,6 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
 
 - (id)init
 {
-    if ([self class] == [ReadDeviceLog class]) {
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"Error, attempting to instantiate AbstractClass directly." userInfo:nil];
-    }
     
     self = [super init];
     if(self) {
@@ -51,6 +47,7 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
 {
     
     liveConnections = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+    deviceName = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
     am_device_notification *notification;
     AMDeviceNotificationSubscribe(DeviceNotificationCallback, 0, 0, NULL, &notification);
     
@@ -58,16 +55,6 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
 }
 
 
-#pragma mark -
-
-
-- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength
-{
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass",
-                                           NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
-}
 
 
 @end
@@ -94,8 +81,11 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef a
             extentLength++;
         }
         
-            //Override method
-        [gReadDeviceLogObject analizeWithLogBuffer:buffer length:(int)extentLength];
+        NSString *deviceID = [NSString stringWithUTF8String:CFDictionaryGetValue(deviceName, s)];
+        if(deviceID)
+        {
+            [gReadDeviceLogObject.delegate analizeWithLogBuffer:buffer length:(NSInteger)extentLength deviceID:deviceID];
+        }
 
         length -= extentLength;
         buffer += extentLength;
@@ -128,6 +118,15 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
                                     data->socket = socket;
                                     data->source = source;
                                     CFDictionarySetValue(liveConnections, device, data);
+                                    
+                                    char *buf;
+                                    buf = (char *)malloc(sizeof(int)*3 + 2);
+                                    snprintf(buf,sizeof(buf), "%d", device->product_id);
+                                    
+                                    CFDictionarySetValue(deviceName, data->socket, buf);
+                                    
+                                    [gReadDeviceLogObject.delegate deviceConnected];
+                                    
                                     return;
                                 }
                                 CFRelease(source);
@@ -143,7 +142,19 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
         case ADNCI_MSG_DISCONNECTED: {
             DeviceConsoleConnection *data = (DeviceConsoleConnection *)CFDictionaryGetValue(liveConnections, device);
             if (data) {
+                
+                NSString *deviceID = [NSString stringWithUTF8String:CFDictionaryGetValue(deviceName, data->socket)];
+                if(deviceID)
+                {
+                    
+                    [gReadDeviceLogObject.delegate deviceDisConnectedWithDeviceID:deviceID];
+
+                }
+
+                
+                
                 CFDictionaryRemoveValue(liveConnections, device);
+                CFDictionaryRemoveValue(deviceName, data->socket);
                 AMDeviceRelease(device);
                 CFRunLoopRemoveSource(CFRunLoopGetMain(), data->source, kCFRunLoopCommonModes);
                 CFRelease(data->source);
@@ -151,6 +162,7 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
                 free(data);
                 AMDeviceStopSession(device);
                 AMDeviceDisconnect(device);
+                
             }
             break;
         }
