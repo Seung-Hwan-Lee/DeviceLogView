@@ -10,7 +10,7 @@
 #import "LogFilter.h"
 #import "LogData.h"
 
-@interface ILogFilterGUI : NSObject <NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate>
+@interface ILogFilterGUI : NSObject <NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate, NSTextFieldDelegate>
 
 - (id)initWithWindow:(NSWindow *)aWindow;
 - (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController;

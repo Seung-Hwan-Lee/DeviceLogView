@@ -65,17 +65,21 @@
 
 - (NSPredicate *)logPredicate
 {
-    NSPredicate *logPredicate;
-    if( _deviceID != nil && _process != nil) {
-        logPredicate = [NSPredicate predicateWithFormat:@"deviceID contains %@ and process contains %@", _deviceID, _process];
+    NSMutableArray *compoundPredicateArray = [[NSMutableArray alloc] init];
+    
+    if( _deviceID != nil) {
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"deviceID contains %@", _deviceID]];
     }
-    else if( _deviceID != nil) {
-        logPredicate = [NSPredicate predicateWithFormat:@"deviceID contains %@", _deviceID];
-
+    if( _process != nil) {
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process contains %@", _process]];
     }
-    else if( _process != nil) {
-        logPredicate = [NSPredicate predicateWithFormat:@"process contains %@", _process];
+    if( _sentence != nil) {
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"log contains %@", _sentence]];
     }
+    
+    NSPredicate *logPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:compoundPredicateArray];
+    
+    //NSLog(@"%@", logPredicate);
     
     return logPredicate;
 }

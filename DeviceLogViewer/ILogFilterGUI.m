@@ -16,13 +16,15 @@
     NSTableView *_logTableView;
     NSTableView *_deviceTableView;
     NSTableView *_processTableView;
+    NSTableView *_logLevelTableView;
     NSButton *_fixedButton;
     NSButton *_debugButton, *_errorButton, *_warningButton, *_noticeButton;
+    NSButton *_clearButton;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
     NSArrayController *_logArrayController;
-    
-    BOOL _fixed, _debug, _error, _warning, _notice;
+    NSSearchField *_logSearchField;
+    BOOL _fixed;
 }
 
 
@@ -70,31 +72,56 @@
     
     NSSize windowSize = _window.frame.size;
     
-    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(330, windowSize.height - 90, 80, 50)];
+    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(340, windowSize.height - 90, 80, 25)];
     [_fixedButton setButtonType:NSSwitchButton];
     [_fixedButton setIdentifier:@"fixedButton"];
     [_fixedButton setTitle:@"Fixed"];
-    
-    
     [_fixedButton setTarget:self];
     [_fixedButton setAction:@selector(buttonClicked:)];
-    
-    
+    [_window.contentView addSubview:_fixedButton];
     _fixed = NO;
     
-    [_window.contentView addSubview:_fixedButton];
     
-    _debugButton = [[NSButton alloc] initWithFrame:NSMakeRect(430, windowSize.height - 90, 80, 50)];
-    [_debugButton setButtonType:NSSwitchButton];
-    [_debugButton setIdentifier:@"debugButton"];
-    [_debugButton setTitle:@"Debug"];
+    _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 90, 200, 50)];
+    [_logSearchField setDelegate:self];
+    [_window.contentView addSubview:_logSearchField];
     
     
-    [_debugButton setTarget:self];
-    [_debugButton setAction:@selector(buttonClicked:)];
+    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(330, windowSize.height - 130, 80, 25)];
+    [_clearButton setIdentifier:@"clearButton"];
+    [_clearButton setTitle:@"Clear"];
+    [_clearButton setTarget:self];
+    [_clearButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_clearButton];
     
     
-    _debug = NO;
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(450, windowSize.height - 180, 120, 150)];
+    _logLevelTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(450, windowSize.height - 180, 120, 150)];
+    [_logLevelTableView setIdentifier:@"logLevelTable"];
+    [_logLevelTableView setHeaderView: nil];
+    NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
+    NSArrayController *logLevelArray = [[NSArrayController alloc] init];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Debug", @"logLevel", nil]];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Info", @"logLevel", nil]];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Notice", @"logLevel", nil]];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Warning", @"logLevel", nil]];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Error", @"logLevel", nil]];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Critical", @"logLevel", nil]];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Alert", @"logLevel", nil]];
+    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Emergency", @"logLevel", nil]];
+    [logLevelColumn setWidth:100];
+    [logLevelColumn bind:NSValueBinding toObject:logLevelArray
+           withKeyPath:@"arrangedObjects.logLevel" options:nil];
+    [_logLevelTableView addTableColumn:logLevelColumn];
+    [_logLevelTableView setDelegate:self ];
+    [_logLevelTableView setDataSource:self];
+    [_logLevelTableView reloadData];
+    [tableContainer setDocumentView:_logLevelTableView];
+    [tableContainer setHasVerticalScroller:YES];
+    [_window.contentView addSubview:tableContainer];
+
+    
+   /* _debug = NO;
     
     [_window.contentView addSubview:_debugButton];
     
@@ -106,40 +133,7 @@
     
     [_errorButton setTarget:self];
     [_errorButton setAction:@selector(buttonClicked:)];
-    
-    
-    _error = NO;
-    
-    [_window.contentView addSubview:_errorButton];
-    
-    _warningButton = [[NSButton alloc] initWithFrame:NSMakeRect(430, windowSize.height - 140, 80, 50)];
-    [_warningButton setButtonType:NSSwitchButton];
-    [_warningButton setIdentifier:@"warningButton"];
-    [_warningButton setTitle:@"Warning"];
-    
-    
-    [_warningButton setTarget:self];
-    [_warningButton setAction:@selector(buttonClicked:)];
-    
-    
-    _warning = NO;
-    
-    [_window.contentView addSubview:_warningButton];
-    
-    _noticeButton = [[NSButton alloc] initWithFrame:NSMakeRect(500, windowSize.height - 140, 80, 50)];
-    [_noticeButton setButtonType:NSSwitchButton];
-    [_noticeButton setIdentifier:@"noticeButton"];
-    [_noticeButton setTitle:@"Notice"];
-    
-    
-    [_noticeButton setTarget:self];
-    [_noticeButton setAction:@selector(buttonClicked:)];
-    
-    
-    _notice = NO;
-    
-    [_window.contentView addSubview:_noticeButton];
-    
+    */
     
 }
 
@@ -148,16 +142,28 @@
 
 {
     _logArrayController = aLogArrayController;
+    _logArrayController.selectsInsertedObjects = NO;
+    
+    
+    
+    
     NSSize windowSize = _window.frame.size;
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 200)];
     _logTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
     [_logTableView setIdentifier:@"LogTable"];
-   
+    
     NSTableColumn *dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
     NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
     NSTableColumn *logColumn = [[NSTableColumn alloc] initWithIdentifier:@"log"];
+    
+    
+    //[dateColumn setEditable:NO];
+    //[deviceColumn setEditable:NO];
+    //[processColumn setEditable:NO];
+    //[logLevelColumn setEditable:NO];
+    //[logColumn setEditable:NO];
     
     [dateColumn.headerCell setTitle:@"Date"];
     [deviceColumn.headerCell setTitle:@"Device"];
@@ -173,7 +179,7 @@
     
     
 
-    
+
     [dateColumn bind:NSValueBinding toObject:aLogArrayController
        withKeyPath:@"arrangedObjects.date" options:nil];
     [dateColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
@@ -193,6 +199,7 @@
     [logColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.log" options:nil];
     [logColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+ 
     
         
     // add column
@@ -222,6 +229,7 @@
 - (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController
 {
     _deviceArrayController = aDeviceArrayController;
+    _deviceArrayController.selectsInsertedObjects = NO;
     NSSize windowSize = _window.frame.size;
     // create a table view and a scroll view
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 180, 120, 150)];
@@ -231,6 +239,7 @@
     
     
     NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
+    //[deviceColumn setEditable:NO];
     [deviceColumn setWidth:100];
     [deviceColumn bind:NSValueBinding toObject:aDeviceArrayController
          withKeyPath:@"arrangedObjects.device" options:nil];
@@ -253,11 +262,12 @@
 
 
 
-
 - (void)makeProcessTable:(NSArrayController *)aProcessArrayController
 {
     
     _processArrayController = aProcessArrayController;
+    _processArrayController.selectsInsertedObjects = NO;
+
     NSSize windowSize = _window.frame.size;
     // create a table view and a scroll view
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 180, 150, 150)];
@@ -267,6 +277,7 @@
     
     
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
+    //[processColumn setEditable:NO];
     [processColumn setWidth:150];
     [processColumn bind:NSValueBinding toObject:aProcessArrayController
            withKeyPath:@"arrangedObjects.process" options:nil];
@@ -293,11 +304,13 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
+    NSLog(@"call numberOfRowsInTableView");
     return [tableView numberOfRows];
 }
 
 - (id) tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
+    
     //NSLog(@"%@",[[tableColumn dataCellForRow:0] objectAtIndex:0]);
     
     return nil;
@@ -346,8 +359,25 @@
     [self resizingLogTable:frameSize];
     [self resizingDeviceTable:frameSize];
     [self resizingProcessTable:frameSize];
+    [self resizingLogLevelTable:frameSize];
 
     return frameSize;
+}
+
+
+#pragma mark - TextField Delegate
+
+
+-(void)controlTextDidChange:(NSNotification *)obj
+{
+    NSTextField *textField = [obj object];
+    NSString *text = [textField stringValue];
+    if([text isEqualToString: @""]) {
+        [_logFilter setSentence:nil];
+    } else {
+        [_logFilter setSentence:text];
+    }
+    [self updateTable];
 }
 
 
@@ -386,6 +416,16 @@
     [[_processTableView enclosingScrollView] setNeedsDisplay: YES];
 }
 
+- (void)resizingLogLevelTable:(NSSize)frameSize
+{
+    CGRect frame = _logLevelTableView.frame;
+    frame.origin.y = frameSize.height - 180;
+    
+    [[_logLevelTableView enclosingScrollView] setFrame: frame];
+    [[_logLevelTableView enclosingScrollView] setNeedsDisplay: YES];
+}
+
+
 
 #pragma mrak - Button Event Function
 
@@ -394,6 +434,11 @@
     
     if([buttonIdentifier isEqualToString:@"fixedButton"]){
         _fixed = !_fixed;
+    }
+    else if([buttonIdentifier isEqualToString:@"clearButton"])
+    {
+        [[_logArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
+        [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
     }
 }
 

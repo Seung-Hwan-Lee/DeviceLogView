@@ -16,8 +16,6 @@
     NSArrayController *_logDataArrayController;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
-    NSMutableSet *_processSet;
-    NSMutableSet *_deviceSet;
 }
 
 
@@ -33,9 +31,9 @@
     {
         _logDataArrayController = aLogDataArrayController;
         _processArrayController = aProcessArrayController;
+        [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
         _deviceArrayController = aDeviceArrayController;
-        _processSet = [[NSMutableSet alloc] init];
-        _deviceSet = [[NSMutableSet alloc] init];
+        [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
 
     }
     return self;
@@ -75,37 +73,55 @@
 {
     
     [_logDataArrayController addObject:aLogData];
-    
-
-    
+    //[_logDataArrayController performSelectorOnMainThread:@selector(addObject:) withObject:aLogData waitUntilDone:NO ];
 }
 
 
-- (void)addProcessNameToSetWithProcessName:(NSString *)aProcessName DeviceID:(NSString *)aDeviceID;
+- (void) addProcessNameToArrayWithProcessName:(NSString *)aProcessName DeviceID:(NSString *)aDeviceID;
 {
     if(aProcessName) {
-        [_processSet addObject:[NSDictionary dictionaryWithObjectsAndKeys:aProcessName, @"process",
-                                                                          aDeviceID, @"deviceID",  nil]];
+        BOOL isFound = false;
+        NSDictionary *processDictionary = [NSDictionary dictionaryWithObjectsAndKeys:aProcessName, @"process",
+                                                                          aDeviceID, @"deviceID",  nil];
+        
+        for(NSDictionary *mod in _processArrayController.content)
+        {
+            if([mod isEqualToDictionary:processDictionary])
+            {
+                isFound = true;
+                break;
+            }
+        }
+        
+        if(!isFound){
+            [_processArrayController addObject:processDictionary];
+        }
     }
     
-    NSMutableArray *processList = [[NSMutableArray alloc] init];
-    [processList addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
-    [processList addObjectsFromArray:_processSet.allObjects];
-    [_processArrayController setContent:processList];
 }
 
 
--(void)addDeviceNameToSetWithDeviceName:(NSString *)aDeviceName  DeviceID:(NSString *)aDeviceID
+-(void) addDeviceNameToArrayWithDeviceName:(NSString *)aDeviceName  DeviceID:(NSString *)aDeviceID
 {
     if(aDeviceName) {
-        [_deviceSet addObject:[NSDictionary dictionaryWithObjectsAndKeys:aDeviceName, @"device",
-                                                                         aDeviceID, @"deviceID", nil]];
+        BOOL isFound = false;
+        NSDictionary *deviceDictionary = [NSDictionary dictionaryWithObjectsAndKeys:aDeviceName, @"device",
+                                           aDeviceID, @"deviceID", nil];
+        
+        for(NSDictionary *mod in _deviceArrayController.content)
+        {
+            if([mod isEqualToDictionary:deviceDictionary])
+            {
+                isFound = true;
+                break;
+            }
+        }
+        
+        if(!isFound){
+            [_deviceArrayController addObject:deviceDictionary];
+        }
     }
     
-    NSMutableArray *deviceList = [[NSMutableArray alloc] init];
-    [deviceList addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
-    [deviceList addObjectsFromArray:_deviceSet.allObjects];
-    [_deviceArrayController setContent:deviceList];
 }
 
 
@@ -173,8 +189,9 @@
         [logDataInfo setObject:log forKey:@"log"];
         [logDataInfo setObject:aDeviceID forKey:@"deviceID"];
         
-        [self addDeviceNameToSetWithDeviceName:device DeviceID:aDeviceID];
-        [self addProcessNameToSetWithProcessName:process DeviceID:aDeviceID];
+        [self addDeviceNameToArrayWithDeviceName:device DeviceID:aDeviceID];
+        [self addProcessNameToArrayWithProcessName:process DeviceID:aDeviceID];
+        
         [self addLogDataToArrayController:[[LogData alloc] initWithLogDataInfo:logDataInfo]];
     }
     
@@ -192,12 +209,11 @@
 
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID{
     
-    
     NSArray *device = [_logDataArrayController valueForKeyPath:@"arrangedObjects"];
-    [_processSet removeAllObjects];
-    [_deviceSet removeAllObjects];
-    [_processArrayController setContent:_processSet];
-    [_deviceArrayController setContent:_deviceSet];
+    [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
+    [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
+    [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
+    [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
     
     for(int i = 0 ; i < device.count ; i++)
     {
@@ -207,12 +223,11 @@
             i = i - 1;
         }
         else{
-            [self addProcessNameToSetWithProcessName:logData.process DeviceID:logData.deviceID];
-            [self addDeviceNameToSetWithDeviceName:logData.device DeviceID:logData.deviceID];
+            [self addProcessNameToArrayWithProcessName:logData.process DeviceID:logData.deviceID];
+            [self addDeviceNameToArrayWithDeviceName:logData.device DeviceID:logData.deviceID];
             //NSLog(@"%@ %@ %@", );
         }
     }
-
     
     NSLog(@"device disconncted");
 }

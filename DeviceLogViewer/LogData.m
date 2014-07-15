@@ -30,20 +30,13 @@
         if (_logLevel)
         {
             if ([_logLevel rangeOfString:@"Notice"].location != NSNotFound) {
-                //_logLevel = kLogLevelNotice;
-                _textColor = [NSColor greenColor];
-            } else if([_logLevel rangeOfString:@"Debug"].location != NSNotFound) {
-                //_logLevel = kLogLevelDebug;
-                _textColor = [NSColor blueColor];
-            } else if([_logLevel rangeOfString:@"Error"].location != NSNotFound) {
-                //_logLevel = kLogLevelError;
-                _textColor = [NSColor redColor];
+                _textColor = [NSColor colorWithRed:(float)0/255 green:(float)204/255 blue:(float)0/255 alpha:1.0f];
+            } else if([_logLevel rangeOfString:@"Debug"].location != NSNotFound || [_logLevel rangeOfString:@"Info"].location != NSNotFound) {
+                _textColor = [NSColor colorWithRed:(float)51/255 green:(float)51/255 blue:(float)204/255 alpha:1.0f];
             } else if([_logLevel rangeOfString:@"Warning"].location != NSNotFound) {
-                //_logLevel = kLogLevelWarning;
-                _textColor = [NSColor yellowColor];
+                _textColor = [NSColor colorWithRed:(float)204/255 green:(float)204/255 blue:(float)0/255 alpha:1.0f];
             } else {
-                //_logLevel = kLogLevelNormal;
-                _textColor = [NSColor blackColor];
+                _textColor = [NSColor colorWithRed:(float)204/255 green:(float)0/255 blue:(float)0/255 alpha:1.0f];
             }
         }
     }
