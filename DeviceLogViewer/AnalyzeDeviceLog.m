@@ -209,15 +209,18 @@
 
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID{
     
-    NSArray *device = [_logDataArrayController valueForKeyPath:@"arrangedObjects"];
+    NSArray *allObjects = [_logDataArrayController valueForKeyPath:@"arrangedObjects"];
     [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
     [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
     [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
     [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
     
-    for(int i = 0 ; i < device.count ; i++)
+    //NSArray *deleteObjects = [allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"deviceID MATCHES %@", aDeviceID]];
+    //[_logDataArrayController removeObjects: deleteObjects];
+   
+    for(int i = 0 ; i < allObjects.count ; i++)
     {
-        LogData *logData = [device objectAtIndex:i];
+        LogData *logData = [allObjects objectAtIndex:i];
         if([logData.deviceID isEqualToString:aDeviceID]){
             [_logDataArrayController removeObject:logData];
             i = i - 1;

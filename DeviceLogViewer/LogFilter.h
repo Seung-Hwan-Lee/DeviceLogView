@@ -15,13 +15,11 @@
 @interface LogFilter : NSObject
 
 
-- (void)setNotice:(BOOL)aNotice;
-- (void)setError:(BOOL)aError;
-- (void)setWarning:(BOOL)aWarning;
-- (void)setDebug:(BOOL)aDebug;
+
 - (void)setDeviceID:(NSString *)aDeviceID;
 - (void)setProcess:(NSString *)aProcess;
 - (void)setSentence:(NSString *)aSentence;
+- (BOOL *)logLevel;
 
 - (NSPredicate *)processPredicate;
 - (NSPredicate *)logPredicate;

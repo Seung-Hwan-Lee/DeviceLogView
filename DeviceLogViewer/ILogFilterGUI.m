@@ -23,10 +23,12 @@
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
     NSArrayController *_logArrayController;
+    NSArray *_logLevelArray;
     NSSearchField *_logSearchField;
+    NSSearchField *_loghighlightField;
     BOOL _fixed;
+    NSString *_highlightString;
 }
-
 
 
 
@@ -83,8 +85,17 @@
     
     
     _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 90, 200, 50)];
+    [_logSearchField setIdentifier:@"LogSearch"];
     [_logSearchField setDelegate:self];
     [_window.contentView addSubview:_logSearchField];
+    
+    _loghighlightField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 150, 200, 50)];
+    [_loghighlightField setIdentifier:@"LogHighlight"];
+    [_loghighlightField setDelegate:self];
+    [_window.contentView addSubview:_loghighlightField];
+    
+    
+    
     
     
     _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(330, windowSize.height - 130, 80, 25)];
@@ -100,41 +111,14 @@
     [_logLevelTableView setIdentifier:@"logLevelTable"];
     [_logLevelTableView setHeaderView: nil];
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
-    NSArrayController *logLevelArray = [[NSArrayController alloc] init];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Debug", @"logLevel", nil]];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Info", @"logLevel", nil]];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Notice", @"logLevel", nil]];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Warning", @"logLevel", nil]];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Error", @"logLevel", nil]];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Critical", @"logLevel", nil]];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Alert", @"logLevel", nil]];
-    [logLevelArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"Emergency", @"logLevel", nil]];
-    [logLevelColumn setWidth:100];
-    [logLevelColumn bind:NSValueBinding toObject:logLevelArray
-           withKeyPath:@"arrangedObjects.logLevel" options:nil];
-    [_logLevelTableView addTableColumn:logLevelColumn];
+    _logLevelArray = @[@"Debug", @"Info", @"Notice", @"Warning", @"Error", @"Critical", @"Alert", @"Emergency"];
+        [_logLevelTableView addTableColumn:logLevelColumn];
     [_logLevelTableView setDelegate:self ];
     [_logLevelTableView setDataSource:self];
     [_logLevelTableView reloadData];
     [tableContainer setDocumentView:_logLevelTableView];
     [tableContainer setHasVerticalScroller:YES];
     [_window.contentView addSubview:tableContainer];
-
-    
-   /* _debug = NO;
-    
-    [_window.contentView addSubview:_debugButton];
-    
-    _errorButton = [[NSButton alloc] initWithFrame:NSMakeRect(500, windowSize.height - 90, 80, 50)];
-    [_errorButton setButtonType:NSSwitchButton];
-    [_errorButton setIdentifier:@"errorButton"];
-    [_errorButton setTitle:@"Error"];
-    
-    
-    [_errorButton setTarget:self];
-    [_errorButton setAction:@selector(buttonClicked:)];
-    */
-    
 }
 
 
@@ -304,16 +288,52 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
+    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    {
+        return _logLevelArray.count;
+    }
+    
     NSLog(@"call numberOfRowsInTableView");
     return [tableView numberOfRows];
 }
 
-- (id) tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+
+- (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
     
-    //NSLog(@"%@",[[tableColumn dataCellForRow:0] objectAtIndex:0]);
+    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    {
+        NSButtonCell *cell=[[NSButtonCell alloc] init];
+        NSString *strDisplayPlaylistName;
+        strDisplayPlaylistName=[_logLevelArray objectAtIndex:row];
+        [cell setTitle:strDisplayPlaylistName];
+        [cell setAllowsMixedState:YES];
+        [cell setButtonType:NSSwitchButton];
+        return cell;
+    }
+   
+    return nil;
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+    
+    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    {
+        BOOL value = [_logFilter logLevel][row];
+        return [NSNumber numberWithInteger:(value ? NSOnState : NSOffState)];
+    }
     
     return nil;
+}
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn *)column row:(NSInteger)row {
+  
+    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    {
+        [_logFilter logLevel][row] = [value boolValue];
+        [self updateTable];
+    }
+
 }
 
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification
@@ -333,7 +353,6 @@
         if(row == 0){
             [_logFilter setProcess:nil];
             [_logFilter setDeviceID:nil];
-            return;
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
             [_logFilter setDeviceID: [deviceData objectForKey:@"deviceID"]];
@@ -341,6 +360,8 @@
     }
     [self updateTable];
 }
+
+
 
 /*- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
@@ -350,6 +371,19 @@
     }
 }
 */
+
+- (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
+{
+    if( [tableView.identifier isEqualToString:@"LogTable"])
+    {
+        LogData *data = [[_logArrayController arrangedObjects] objectAtIndex:row];
+        NSInteger line = [[data.log componentsSeparatedByCharactersInSet:
+                           [NSCharacterSet newlineCharacterSet]] count];
+        return tableView.rowHeight * (line - 1);
+        
+    }
+    return tableView.rowHeight;
+}
 
 #pragma mark - Window Delegate
 
@@ -368,16 +402,32 @@
 #pragma mark - TextField Delegate
 
 
--(void)controlTextDidChange:(NSNotification *)obj
+-(void)controlTextDidChange:(NSNotification *)aObject
 {
-    NSTextField *textField = [obj object];
-    NSString *text = [textField stringValue];
-    if([text isEqualToString: @""]) {
-        [_logFilter setSentence:nil];
-    } else {
-        [_logFilter setSentence:text];
+    NSString *objectIdentifier = [[aObject object] identifier];
+    NSTextField *textField = [aObject object];
+    
+    if([objectIdentifier isEqualToString:@"LogSearch"])
+    {
+        
+        NSString *text = [textField stringValue];
+        if([text isEqualToString: @""]) {
+            [_logFilter setSentence:nil];
+        } else {
+            [_logFilter setSentence:text];
+        }
+        [self updateTable];
     }
-    [self updateTable];
+    else if([objectIdentifier isEqualToString:@"LogSearch"])
+    {
+        NSString *text = [textField stringValue];
+        if([text isEqualToString: @""]) {
+            _highlightString = nil;
+        } else {
+            _highlightString = text;
+        }
+        
+    }
 }
 
 
@@ -439,6 +489,7 @@
     {
         [[_logArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
         [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
+        [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
     }
 }
 
