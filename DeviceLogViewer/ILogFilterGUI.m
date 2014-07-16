@@ -40,6 +40,7 @@
     if (self) {
         _window = aWindow;
         _logFilter = [[LogFilter alloc]init];
+        _highlightString = nil;
     }
     
     [_window setDelegate:self];
@@ -64,7 +65,6 @@
     //NSLog(@"%@", [_logFilter logPredicate]);
     _processArrayController.filterPredicate = [_logFilter processPredicate];
     _logArrayController.filterPredicate = [_logFilter logPredicate];
-
 }
 
 
@@ -293,25 +293,40 @@
         return _logLevelArray.count;
     }
     
-    NSLog(@"call numberOfRowsInTableView");
     return [tableView numberOfRows];
 }
+
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    if((_highlightString != nil) && ([tableColumn.identifier isEqualToString:@"log"]))
+    {
+        NSTextFieldCell *cell = aCell;
+        NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
+        NSRange textLocation = [[cellText string] rangeOfString:_highlightString options:NSCaseInsensitiveSearch];
+        if(textLocation.location != NSNotFound)
+        {
+            [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:textLocation];
+            [cell setAttributedStringValue:cellText];
+            return;
+        }
+    }
+
+}
+
 
 
 - (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    
     if( [tableView.identifier isEqualToString:@"logLevelTable"])
     {
         NSButtonCell *cell=[[NSButtonCell alloc] init];
-        NSString *strDisplayPlaylistName;
-        strDisplayPlaylistName=[_logLevelArray objectAtIndex:row];
-        [cell setTitle:strDisplayPlaylistName];
+        NSString *displayText;
+        displayText=[_logLevelArray objectAtIndex:row];
+        [cell setTitle:displayText];
         [cell setAllowsMixedState:YES];
         [cell setButtonType:NSSwitchButton];
         return cell;
     }
-   
     return nil;
 }
 
@@ -361,17 +376,6 @@
     [self updateTable];
 }
 
-
-
-/*- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
-{
-    if([aTableColumn.identifier isEqualToString:@"log"])
-    {
-        NSLog(@"%@", aCell);
-    }
-}
-*/
-
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
     if( [tableView.identifier isEqualToString:@"LogTable"])
@@ -409,7 +413,6 @@
     
     if([objectIdentifier isEqualToString:@"LogSearch"])
     {
-        
         NSString *text = [textField stringValue];
         if([text isEqualToString: @""]) {
             [_logFilter setSentence:nil];
@@ -418,7 +421,7 @@
         }
         [self updateTable];
     }
-    else if([objectIdentifier isEqualToString:@"LogSearch"])
+    else if([objectIdentifier isEqualToString:@"LogHighlight"])
     {
         NSString *text = [textField stringValue];
         if([text isEqualToString: @""]) {
@@ -426,6 +429,7 @@
         } else {
             _highlightString = text;
         }
+        [_logTableView reloadData];
         
     }
 }
