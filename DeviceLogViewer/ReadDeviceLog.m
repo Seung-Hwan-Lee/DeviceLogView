@@ -25,7 +25,6 @@ static CFMutableDictionaryRef liveConnections = nil;
 static CFMutableDictionaryRef deviceName = nil;
 
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown);
-
 ReadDeviceLog *gReadDeviceLogObject = nil;
 
 
@@ -50,7 +49,6 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
     deviceName = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
     am_device_notification *notification;
     AMDeviceNotificationSubscribe(DeviceNotificationCallback, 0, 0, NULL, &notification);
-    
     CFRunLoopRun();
 }
 
@@ -94,8 +92,6 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef a
 
 
 #pragma mark - Device Callback
-
-
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown)
 {
     

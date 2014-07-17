@@ -8,9 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import "ILogFilterGUI.h"
-#import "AnalyzeDeviceLog.h"
+#import "LogDataStorage.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, AnalyzeDeviceLogDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, LogDataStorageDelegate, ILogFilterGUIDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
 

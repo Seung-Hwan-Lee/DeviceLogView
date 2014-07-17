@@ -9,26 +9,25 @@
 
 #import <Foundation/Foundation.h>
 #import "ReadDeviceLog.h"
+#import "ReadFileLog.h"
 #import "LogData.h"
 #import "LogFilter.h"
 
 @protocol AnalyzeDeviceLogDelegate;
 
-@interface AnalyzeDeviceLog:NSObject <ReadDeviceLogDelegate>
+@interface AnalyzeDeviceLog:NSObject <ReadDeviceLogDelegate, ReadFileLogDelegate>
 
 @property id<AnalyzeDeviceLogDelegate> delegate;
 
-- (id)initWithLogDataArrayController:(NSArrayController *)aLogDataArrayController
-             processArrayController:(NSArrayController *)aProcessArrayController
-              deviceArrayController:(NSArrayController *)aDeviceArrayController;
-
-- (void)startLogging;
+- (void)readLogFromDevice;
+- (void)readLogFromFile;
 
 @end
 
 
 @protocol AnalyzeDeviceLogDelegate<NSObject>;
 @required
-
--(void) ModifiedCallBack;
+- (void) AnalyzedLog:(NSDictionary *)aAnalyzedLog;
+- (void)deviceConnected;
+- (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID;
 @end

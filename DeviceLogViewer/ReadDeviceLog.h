@@ -12,23 +12,15 @@
 #include <unistd.h>
 
 @protocol ReadDeviceLogDelegate;
-
-
 @interface ReadDeviceLog : NSObject
 @property id<ReadDeviceLogDelegate> delegate;
-
-
 -(void)startLogging;
-
-
 @end
 
 
 @protocol ReadDeviceLogDelegate <NSObject>
-
 @required
 - (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID;
 - (void)deviceConnected;
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID;
-
 @end

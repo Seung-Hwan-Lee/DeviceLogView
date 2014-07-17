@@ -13,49 +13,32 @@
 
 @implementation AppDelegate
 {
+    LogDataStorage *_logDataStorage;
     ILogFilterGUI *_gui;
-    NSArrayController *_logArrayController;
-    NSArrayController *_processArrayController;
-    NSArrayController *_deviceArrayController;
-
 }
-
-
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     
-    _logArrayController = [[NSArrayController alloc] init];
-    _processArrayController = [[NSArrayController alloc] init];
-    _deviceArrayController = [[NSArrayController alloc] init];
-    
-    
+    _logDataStorage = [[LogDataStorage alloc] init];
+    _logDataStorage.delegate = self;
     _gui = [[ILogFilterGUI alloc] initWithWindow:_window];
-    [_gui makeLogTableWithLogArrayController:_logArrayController];
-    [_gui makeDeviceTableWithDeviceArrayController:_deviceArrayController];
-    [_gui makeProcessTable:_processArrayController];
-    
-   
-    AnalyzeDeviceLog *test =[[AnalyzeDeviceLog alloc] initWithLogDataArrayController:_logArrayController processArrayController:_processArrayController deviceArrayController:_deviceArrayController];
-    
-    test.delegate = self;
-    
-    [test startLogging];
+    [_gui makeLogTableWithLogArrayController:[_logDataStorage LogDataArrayController]];
+    [_gui makeDeviceTableWithDeviceArrayController:[_logDataStorage DeviceArrayController]];
+    [_gui makeProcessTable:[_logDataStorage ProcessArrayController]];
+    _gui.delegate =self;
     
 }
 
-
-
-#pragma mark -
-
--(void) ModifiedCallBack
+- (void)dataUpdate
 {
     [_gui updateTable];
-     
-    //[aProcessArrayController ]
 }
 
-
-
+- (void)FileLoading
+{
+    // Read File Test
+    [_logDataStorage fileOpen];
+}
 
 @end

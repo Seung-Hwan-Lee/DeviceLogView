@@ -10,13 +10,16 @@
 #import "LogFilter.h"
 #import "LogData.h"
 
+@protocol ILogFilterGUIDelegate;
 @interface ILogFilterGUI : NSObject <NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate, NSTextFieldDelegate>
-
 - (id)initWithWindow:(NSWindow *)aWindow;
 - (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController;
 - (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController;
 - (void)makeProcessTable:(NSArrayController *)aProcessArrayController;
 - (void)updateTable;
+@property id<ILogFilterGUIDelegate> delegate;
+@end
 
-
+@protocol ILogFilterGUIDelegate <NSObject>
+- (void)FileLoading;
 @end

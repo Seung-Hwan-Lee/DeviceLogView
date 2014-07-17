@@ -20,6 +20,7 @@
     NSButton *_fixedButton;
     NSButton *_debugButton, *_errorButton, *_warningButton, *_noticeButton;
     NSButton *_clearButton;
+    NSButton *_loadfileButton;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
     NSArrayController *_logArrayController;
@@ -44,11 +45,14 @@
     }
     
     [_window setDelegate:self];
-    [self CreateUI];
+    [self CreateGUI];
    
     
     return self;
 }
+
+
+
 
 
 #pragma mark - Update TableView
@@ -62,19 +66,22 @@
         [_logTableView scrollRowToVisible:numberOfRows - 1];
     }
     
-    //NSLog(@"%@", [_logFilter logPredicate]);
     _processArrayController.filterPredicate = [_logFilter processPredicate];
     _logArrayController.filterPredicate = [_logFilter logPredicate];
 }
 
 
+
+
+
+
 #pragma mark - make GUI
 
-- (void)CreateUI{
+- (void)CreateGUI{
     
     NSSize windowSize = _window.frame.size;
     
-    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(340, windowSize.height - 90, 80, 25)];
+    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(490, windowSize.height - 90, 80, 25)];
     [_fixedButton setButtonType:NSSwitchButton];
     [_fixedButton setIdentifier:@"fixedButton"];
     [_fixedButton setTitle:@"Fixed"];
@@ -94,20 +101,25 @@
     [_loghighlightField setDelegate:self];
     [_window.contentView addSubview:_loghighlightField];
     
-    
-    
-    
-    
-    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(330, windowSize.height - 130, 80, 25)];
+    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(480, windowSize.height - 130, 80, 25)];
     [_clearButton setIdentifier:@"clearButton"];
     [_clearButton setTitle:@"Clear"];
     [_clearButton setTarget:self];
     [_clearButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_clearButton];
     
+    /*
+    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(480, windowSize.height - 180, 80, 25)];
+    [_loadfileButton setIdentifier:@"loadFileButton"];
+    [_loadfileButton setTitle:@"LoadFile"];
+    [_loadfileButton setTarget:self];
+    [_loadfileButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_loadfileButton];
+    */
     
-    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(450, windowSize.height - 180, 120, 150)];
-    _logLevelTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(450, windowSize.height - 180, 120, 150)];
+    
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(330, windowSize.height - 180, 120, 150)];
+    _logLevelTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(330, windowSize.height - 180, 120, 150)];
     [_logLevelTableView setIdentifier:@"logLevelTable"];
     [_logLevelTableView setHeaderView: nil];
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
@@ -128,9 +140,6 @@
     _logArrayController = aLogArrayController;
     _logArrayController.selectsInsertedObjects = NO;
     
-    
-    
-    
     NSSize windowSize = _window.frame.size;
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 200)];
     _logTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
@@ -141,13 +150,6 @@
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
     NSTableColumn *logColumn = [[NSTableColumn alloc] initWithIdentifier:@"log"];
-    
-    
-    //[dateColumn setEditable:NO];
-    //[deviceColumn setEditable:NO];
-    //[processColumn setEditable:NO];
-    //[logLevelColumn setEditable:NO];
-    //[logColumn setEditable:NO];
     
     [dateColumn.headerCell setTitle:@"Date"];
     [deviceColumn.headerCell setTitle:@"Device"];
@@ -161,13 +163,10 @@
     [logLevelColumn setWidth:100];
     [logColumn setWidth:windowSize.width];
     
-    
-
-
     [dateColumn bind:NSValueBinding toObject:aLogArrayController
        withKeyPath:@"arrangedObjects.date" options:nil];
     [dateColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
-    
+
     [deviceColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.device" options:nil];
     [deviceColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
@@ -184,15 +183,12 @@
          withKeyPath:@"arrangedObjects.log" options:nil];
     [logColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
  
-    
-        
     // add column
     [_logTableView addTableColumn:dateColumn];
     [_logTableView addTableColumn:deviceColumn];
     [_logTableView addTableColumn:processColumn];
     [_logTableView addTableColumn:logLevelColumn];
     [_logTableView addTableColumn:logColumn];
-    
     
     [_logTableView setDelegate:self ];
     [_logTableView setDataSource:self];
@@ -221,13 +217,11 @@
     [_deviceTableView setIdentifier:@"deviceSet"];
     [_deviceTableView setHeaderView: nil];
     
-    
     NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
     //[deviceColumn setEditable:NO];
     [deviceColumn setWidth:100];
     [deviceColumn bind:NSValueBinding toObject:aDeviceArrayController
          withKeyPath:@"arrangedObjects.device" options:nil];
-    
     
     // add column
     [_deviceTableView addTableColumn:deviceColumn];
@@ -240,8 +234,6 @@
     [tableContainer setHasVerticalScroller:YES];
     
     [_window.contentView addSubview:tableContainer];
-    
-    
 }
 
 
@@ -253,7 +245,6 @@
     _processArrayController.selectsInsertedObjects = NO;
 
     NSSize windowSize = _window.frame.size;
-    // create a table view and a scroll view
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 180, 150, 150)];
     _processTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 180, 150, 150)];
     [_processTableView setIdentifier:@"processSet"];
@@ -261,7 +252,6 @@
     
     
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
-    //[processColumn setEditable:NO];
     [processColumn setWidth:150];
     [processColumn bind:NSValueBinding toObject:aProcessArrayController
            withKeyPath:@"arrangedObjects.process" options:nil];
@@ -279,8 +269,10 @@
     
     [_window.contentView addSubview:tableContainer];
     
-    
 }
+
+
+
 
 
 
@@ -312,8 +304,6 @@
     }
 
 }
-
-
 
 - (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
@@ -363,6 +353,7 @@
             [_logFilter setDeviceID: [processData objectForKey:@"deviceID"]];
             [_logFilter setProcess: [processData objectForKey:@"process"]];
         }
+        [self updateTable];
     } else if([notification object] == _deviceTableView) {
         NSInteger row = [_deviceTableView selectedRow];
         if(row == 0){
@@ -371,9 +362,10 @@
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
             [_logFilter setDeviceID: [deviceData objectForKey:@"deviceID"]];
-         }
+        }
+        [self updateTable];
     }
-    [self updateTable];
+  
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
@@ -389,18 +381,10 @@
     return tableView.rowHeight;
 }
 
-#pragma mark - Window Delegate
 
-- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
-{
-    //NSLog(@"resizing");
-    [self resizingLogTable:frameSize];
-    [self resizingDeviceTable:frameSize];
-    [self resizingProcessTable:frameSize];
-    [self resizingLogLevelTable:frameSize];
 
-    return frameSize;
-}
+
+
 
 
 #pragma mark - TextField Delegate
@@ -435,6 +419,26 @@
 }
 
 
+#pragma mark - Window Delegate
+
+- (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
+{
+    //NSLog(@"resizing");
+    [self resizingLogTable:frameSize];
+    [self resizingDeviceTable:frameSize];
+    [self resizingProcessTable:frameSize];
+    [self resizingLogLevelTable:frameSize];
+    [self resizingGUI:frameSize];
+    
+    return frameSize;
+}
+
+
+
+
+
+
+
 
 #pragma mark - GUI resize function
 
@@ -446,9 +450,6 @@
     
     [[_logTableView enclosingScrollView] setFrameSize: frame];
     [[_logTableView enclosingScrollView] setNeedsDisplay: YES];
-    
-    //[[_deviceTableView enclosingScrollView] setFrameSize: frameSize];
-    //[[_deviceTableView enclosingScrollView] setNeedsDisplay: YES];
 
 }
 
@@ -479,6 +480,17 @@
     [[_logLevelTableView enclosingScrollView] setNeedsDisplay: YES];
 }
 
+- (void)resizingGUI:(NSSize)frameSize
+{
+ 
+    [_fixedButton setFrame:NSMakeRect(490, frameSize.height - 90, 80, 25)];
+    [_logSearchField setFrame:NSMakeRect(600, frameSize.height - 90, 200, 50)];
+    [_loghighlightField setFrame:NSMakeRect(600, frameSize.height - 150, 200, 50)];
+    [_clearButton setFrame:NSMakeRect(480, frameSize.height - 130, 80, 25)];
+
+}
+
+
 
 
 #pragma mrak - Button Event Function
@@ -489,6 +501,7 @@
     if([buttonIdentifier isEqualToString:@"fixedButton"]){
         _fixed = !_fixed;
     }
+    
     else if([buttonIdentifier isEqualToString:@"clearButton"])
     {
         [[_logArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
