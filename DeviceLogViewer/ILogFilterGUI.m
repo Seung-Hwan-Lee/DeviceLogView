@@ -81,7 +81,7 @@
     
     NSSize windowSize = _window.frame.size;
     
-    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(490, windowSize.height - 90, 80, 25)];
+    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(720, windowSize.height - 180, 80, 25)];
     [_fixedButton setButtonType:NSSwitchButton];
     [_fixedButton setIdentifier:@"fixedButton"];
     [_fixedButton setTitle:@"Fixed"];
@@ -90,6 +90,21 @@
     [_window.contentView addSubview:_fixedButton];
     _fixed = NO;
     
+    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(610, windowSize.height - 180, 80, 25)];
+    [_clearButton setIdentifier:@"clearButton"];
+    [_clearButton setTitle:@"Clear"];
+    [_clearButton setTarget:self];
+    [_clearButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_clearButton];
+    
+    
+    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(480, windowSize.height - 130, 80, 25)];
+    [_loadfileButton setIdentifier:@"loadFileButton"];
+    [_loadfileButton setTitle:@"LoadFile"];
+    [_loadfileButton setTarget:self];
+    [_loadfileButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_loadfileButton];
+
     
     _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 90, 200, 50)];
     [_logSearchField setIdentifier:@"LogSearch"];
@@ -100,22 +115,6 @@
     [_loghighlightField setIdentifier:@"LogHighlight"];
     [_loghighlightField setDelegate:self];
     [_window.contentView addSubview:_loghighlightField];
-    
-    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(480, windowSize.height - 130, 80, 25)];
-    [_clearButton setIdentifier:@"clearButton"];
-    [_clearButton setTitle:@"Clear"];
-    [_clearButton setTarget:self];
-    [_clearButton setAction:@selector(buttonClicked:)];
-    [_window.contentView addSubview:_clearButton];
-    
-    /*
-    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(480, windowSize.height - 180, 80, 25)];
-    [_loadfileButton setIdentifier:@"loadFileButton"];
-    [_loadfileButton setTitle:@"LoadFile"];
-    [_loadfileButton setTarget:self];
-    [_loadfileButton setAction:@selector(buttonClicked:)];
-    [_window.contentView addSubview:_loadfileButton];
-    */
     
     
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(330, windowSize.height - 180, 120, 150)];
@@ -483,11 +482,12 @@
 - (void)resizingGUI:(NSSize)frameSize
 {
  
-    [_fixedButton setFrame:NSMakeRect(490, frameSize.height - 90, 80, 25)];
+    [_fixedButton setFrame:NSMakeRect(720, frameSize.height - 180, 80, 25)];
     [_logSearchField setFrame:NSMakeRect(600, frameSize.height - 90, 200, 50)];
     [_loghighlightField setFrame:NSMakeRect(600, frameSize.height - 150, 200, 50)];
-    [_clearButton setFrame:NSMakeRect(480, frameSize.height - 130, 80, 25)];
-
+    [_clearButton setFrame:NSMakeRect(610, frameSize.height - 180, 80, 25)];
+    [_loadfileButton setFrame:NSMakeRect(480, frameSize.height - 130, 80, 25)];
+    
 }
 
 
@@ -507,6 +507,11 @@
         [[_logArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
         [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
         [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
+    }
+    
+    else if([buttonIdentifier isEqualToString:@"loadFileButton"])
+    {
+        [self.delegate FileLoading];
     }
 }
 
