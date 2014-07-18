@@ -12,8 +12,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#warning comment
-// 각 구문은 들여쓰기를 하셔서 보기 편하게.
+
 @protocol ReadDeviceLogDelegate;
 
 
@@ -23,7 +22,7 @@
 @property id<ReadDeviceLogDelegate> delegate;
 
 
--(void)startLogging;
+- (void)startLogging;
 
 
 @end

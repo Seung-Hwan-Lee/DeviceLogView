@@ -41,4 +41,10 @@
     [_logDataStorage fileOpen];
 }
 
+- (void)fileSaving:(BOOL)isSavingEveryLog
+{
+    // Read File Test
+    [_logDataStorage saveFile:isSavingEveryLog];
+}
+
 @end

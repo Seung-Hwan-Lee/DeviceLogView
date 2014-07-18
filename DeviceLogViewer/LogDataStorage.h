@@ -20,15 +20,13 @@
 @property id<LogDataStorageDelegate> delegate;
 
 
-#warning comment
-// 메소드 이름은 소문자로
-// 그리고 property 로 생성하는게 더 나을듯.
 @property NSArrayController *logDataArrayController;
 @property NSArrayController *processArrayController;
 @property NSArrayController *deviceArrayController;
 
 
 - (void)fileOpen;
+- (void)saveFile:(BOOL)isSavingEveryLog;
 
 
 @end

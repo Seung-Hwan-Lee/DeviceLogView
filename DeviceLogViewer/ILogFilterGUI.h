@@ -33,9 +33,8 @@
 
 @protocol ILogFilterGUIDelegate <NSObject>
 
-#warning comment
-// 메소드 이름은 소문자로 시작.
-- (void)fileLoading;
 
+- (void)fileLoading;
+- (void)fileSaving:(BOOL)isSavingEveryLog;
 
 @end

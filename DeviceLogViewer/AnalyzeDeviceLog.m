@@ -118,8 +118,6 @@
 
 - (void)deviceConnected
 {
-#warning comment
-    // delegate method 호출시에는 항상 selector 가 응답할수 있는 지 체크가 필요.
     if ([_delegate respondsToSelector:@selector(deviceConnected)]) {
         [_delegate deviceConnected];
     }

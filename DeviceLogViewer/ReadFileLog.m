@@ -17,7 +17,7 @@
 
 - (void)readFile
 {
-    NSURL *filePath = [self openDialogAndGetFilePath];
+    NSURL *filePath = [self openDialogForOpenFile];
     NSString *fileContent = [NSString stringWithContentsOfURL:filePath encoding:NSUTF8StringEncoding error:nil];
    
     NSArray* allLinedStrings =
@@ -32,7 +32,7 @@
        
         if(tempString.length != 0 &&[tempString characterAtIndex:0] == NSTabCharacter)
         {
-            sendText = [NSString stringWithFormat:@"%@%@", sendText, tempString];
+            sendText = [NSString stringWithFormat:@"%@%@\n", sendText, tempString];
         }
         else
         {
@@ -58,10 +58,8 @@
 #pragma mark - Get FilePath with Dialog
 
 
-- (NSURL *)openDialogAndGetFilePath
+- (NSURL *)openDialogForOpenFile
 {
-#warning comment
-    // 객체는 생성 시 nil 처리 하는 습관
     NSURL *url = nil;
     NSOpenPanel *openDlg = [NSOpenPanel openPanel];
     [openDlg setCanChooseFiles:YES];

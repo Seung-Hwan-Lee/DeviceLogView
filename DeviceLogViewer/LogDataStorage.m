@@ -67,19 +67,12 @@
 }
 
 
-#warning comment 메소드의 파라매터의 시작은 항상 소문자로
-//DeviceID:(NSString *)aDeviceID; -> deviceID:(NSString *)aDeviceID;
 - (void)addProcessNameToArrayWithProcessName:(NSString *)aProcessName deviceID:(NSString *)aDeviceID;
 {
     if(aProcessName) {
-#warning comment
-        // BOOL 변수는 YES / NO 를 사용.
+
         BOOL isFound = NO;
         
-        
-#warning comment
-        // 아래와 같은 방식보단 modern objective-c 스타일을 따름. (apple 이 권장)
-        // NSDictionary *processDictionary = [NSDictionary dictionaryWithObjectsAndKeys:aProcessName, @"process", aDeviceID, @"deviceID",  nil];
         NSDictionary *processDictionary = @{@"process" : aProcessName, @"deviceID" : aDeviceID};
         
         for (NSDictionary *mod in _processArrayController.content)
@@ -125,7 +118,6 @@
 #pragma mark - AnalyzeDeviceLogDelegate
 
 
-#warning comment 메소드이름 시작은 항상 소문자로
 - (void)analyzedLog:(NSDictionary *)aAnalyzedLog
 {
     LogData *logData = [[LogData alloc] initWithLogDataInfo:aAnalyzedLog];
@@ -133,8 +125,6 @@
     [self addProcessNameToArrayWithProcessName:logData.process deviceID:logData.deviceID];
     [self addLogDataToArrayController:logData];
     
-#warning comment
-    // delegate method 호출시에는 항상 selector 가 응답할수 있는 지 체크가 필요.
     if ([_delegate respondsToSelector:@selector(dataUpdate)]) {
         [_delegate dataUpdate];
     }
@@ -147,11 +137,8 @@
 
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID
 {
-#warning comment
-    // allObjects 라는 변수 이름은 좋지 않아요.
-    // 이름만 가지고 어떤 데이터가 들어있는지 알수 있으면 더 좋겠죠?
-    // NSArray *allObjects  -> logDatas
-    NSArray *allLogs = [_logDataArrayController valueForKeyPath:@"arrangedObjects"];
+
+    NSArray *allLogs = [_logDataArrayController content];
     [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
     [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
     [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
@@ -168,29 +155,67 @@
         [self addDeviceNameToArrayWithDeviceName:logData.device deviceID:logData.deviceID];
     }
     
-    /*for(int i = 0 ; i < allObjects.count ; i++)
-    {
-        LogData *logData = [allObjects objectAtIndex:i];
-        if([logData.deviceID isEqualToString:aDeviceID]){
-            [_logDataArrayController removeObject:logData];
-            i = i - 1;
-        }
-        else{
-            [self addProcessNameToArrayWithProcessName:logData.process deviceID:logData.deviceID];
-            [self addDeviceNameToArrayWithDeviceName:logData.device DeviceID:logData.deviceID];
-            //NSLog(@"%@ %@ %@", );
-        }
-    }*/
-    
     NSLog(@"device disconncted");
 
 }
+
+
+
+
+
+#pragma mark - save file
+
+
+- (void)saveFile:(BOOL)isSavingEveryLog
+{
+    NSURL *filePath = [self openDialogForSaveFile];
+    NSArray *logData = nil;
+    
+    if( isSavingEveryLog)
+    {
+        logData = [_logDataArrayController arrangedObjects];
+    }
+    else
+    {
+        logData = [_logDataArrayController content];
+    }
+    
+    if( logData != nil && filePath != nil)
+    {
+        NSString *saveLogData = @"";
+        for(int i = 0 ; i < [logData count] ; i++)
+        {
+            LogData *log = [logData objectAtIndex:i];
+            saveLogData = [NSString stringWithFormat:@"%@%@%@%@%@%@", saveLogData, log.date, log.device, log.process, log.logLevel, log.log];
+        }
+        
+        [saveLogData writeToURL:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        
+    }
+}
+
+- (NSURL *)openDialogForSaveFile
+{
+    NSURL *url = nil;
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    
+    [panel setMessage:@"Please select a path where to save checkboard as an image."]; // Message inside modal window
+    [panel setAllowsOtherFileTypes:YES];
+    [panel setExtensionHidden:YES];
+    [panel setCanCreateDirectories:YES];
+    [panel setNameFieldStringValue:@"NewFile.txt"];
+    
+    
+    NSInteger result = [panel runModal];
+    
+    if (result == NSOKButton)
+    {
+        url  = [panel URL];
+    }
+    return url;
+}
+
 @end
-
-
-
-
-
 
 
 

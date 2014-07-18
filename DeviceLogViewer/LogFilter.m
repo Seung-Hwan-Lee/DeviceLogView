@@ -45,7 +45,7 @@
     NSPredicate *processPredicate;
     
     if( _deviceID != nil) {
-         processPredicate = [NSPredicate predicateWithFormat:@"deviceID contains %@ or process contains %@", _deviceID, @"All Process"];
+         processPredicate = [NSPredicate predicateWithFormat:@"deviceID == %@ or process == %@", _deviceID, @"All Process"];
     }
    
     
@@ -58,10 +58,10 @@
     NSMutableArray *compoundPredicateArray = [[NSMutableArray alloc] init];
     
     if( _deviceID != nil) {
-        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"deviceID contains %@", _deviceID]];
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"deviceID == %@", _deviceID]];
     }
     if( _process != nil) {
-        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process contains %@", _process]];
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process == %@", _process]];
     }
     if( _sentence != nil) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"log contains[cd] %@", _sentence]];

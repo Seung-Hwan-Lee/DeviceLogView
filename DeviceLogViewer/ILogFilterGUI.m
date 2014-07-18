@@ -9,7 +9,6 @@
 
 #import "ILogFilterGUI.h"
 
-
 @implementation ILogFilterGUI
 {
     LogFilter *_logFilter;
@@ -18,18 +17,19 @@
     NSTableView *_deviceTableView;
     NSTableView *_processTableView;
     NSTableView *_logLevelTableView;
-    NSButton *_fixedButton;
-    NSButton *_debugButton, *_errorButton, *_warningButton, *_noticeButton;
     NSButton *_clearButton;
     NSButton *_loadfileButton;
+    NSButton *_savefileButton;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
     NSArrayController *_logArrayController;
     NSArray *_logLevelArray;
     NSSearchField *_logSearchField;
     NSSearchField *_loghighlightField;
-    BOOL _fixed;
+    NSTextField *_deviceName, *_processName, *_logLevel, *_searchLog, *_highlightLog;
+    
     NSString *_highlightString;
+    BOOL _fixed;
 }
 
 
@@ -43,6 +43,7 @@
         _window = aWindow;
         _logFilter = [[LogFilter alloc]init];
         _highlightString = nil;
+        _fixed = NO;
     }
     
     [_window setDelegate:self];
@@ -77,45 +78,95 @@
     
     NSSize windowSize = _window.frame.size;
     
-    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(720, windowSize.height - 180, 80, 25)];
-    [_fixedButton setButtonType:NSSwitchButton];
-    [_fixedButton setIdentifier:@"fixedButton"];
-    [_fixedButton setTitle:@"Fixed"];
-    [_fixedButton setTarget:self];
-    [_fixedButton setAction:@selector(buttonClicked:)];
-    [_window.contentView addSubview:_fixedButton];
-    _fixed = NO;
-    
-    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(610, windowSize.height - 180, 80, 25)];
+    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(525, windowSize.height - 220, 100, 25)];
     [_clearButton setIdentifier:@"clearButton"];
-    [_clearButton setTitle:@"Clear"];
+    [_clearButton setTag:0];
+    [_clearButton setTitle:@"Clear Log"];
     [_clearButton setTarget:self];
     [_clearButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_clearButton];
     
     
-    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(480, windowSize.height - 130, 80, 25)];
+    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 170, 80, 25)];
     [_loadfileButton setIdentifier:@"loadFileButton"];
-    [_loadfileButton setTitle:@"LoadFile"];
+    [_loadfileButton setTag:1];
+    [_loadfileButton setTitle:@"Load File"];
     [_loadfileButton setTarget:self];
     [_loadfileButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_loadfileButton];
+    
+    _savefileButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 130, 80, 25)];
+    [_savefileButton setIdentifier:@"saveFileButton"];
+    [_savefileButton setTag:2];
+    [_savefileButton setTitle:@"Save File"];
+    [_savefileButton setTarget:self];
+    [_savefileButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_savefileButton];
+
 
     
-    _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 90, 200, 50)];
+    _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(480, windowSize.height - 130, 200, 50)];
     [_logSearchField setIdentifier:@"LogSearch"];
+    [_logSearchField setTag:0];
     [_logSearchField setDelegate:self];
     [_window.contentView addSubview:_logSearchField];
     
-    _loghighlightField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 150, 200, 50)];
+    _loghighlightField = [[NSSearchField alloc] initWithFrame:NSMakeRect(480, windowSize.height - 190, 200, 50)];
     [_loghighlightField setIdentifier:@"LogHighlight"];
+    [_loghighlightField setTag:1];
     [_loghighlightField setDelegate:self];
     [_window.contentView addSubview:_loghighlightField];
     
+    _searchLog = [[NSTextField alloc] initWithFrame:NSMakeRect(480, windowSize.height - 90, 200, 20)];
+    [_searchLog setStringValue:@"Searching Log"];
+    [_searchLog setTextColor:[NSColor redColor]];
+    [_searchLog setBezeled:NO];
+    [_searchLog setDrawsBackground:NO];
+    [_searchLog setEditable:NO];
+    [_searchLog setSelectable:NO];
+    [_window.contentView addSubview:_searchLog];
     
-    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(330, windowSize.height - 180, 120, 150)];
-    _logLevelTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(330, windowSize.height - 180, 120, 150)];
+    _highlightLog = [[NSTextField alloc] initWithFrame:NSMakeRect(480, windowSize.height - 150, 200, 20)];
+    [_highlightLog setStringValue:@"Highlighting Log"];
+    [_highlightLog setTextColor:[NSColor redColor]];
+    [_highlightLog setBezeled:NO];
+    [_highlightLog setDrawsBackground:NO];
+    [_highlightLog setEditable:NO];
+    [_highlightLog setSelectable:NO];
+    [_window.contentView addSubview:_highlightLog];
+    
+    _deviceName = [[NSTextField alloc] initWithFrame:NSMakeRect(10, windowSize.height - 70, 100, 20)];
+    [_deviceName setStringValue:@"Device Name"];
+    [_deviceName setBackgroundColor:[NSColor darkGrayColor]];
+    [_deviceName setBezeled:NO];
+    [_deviceName setEditable:NO];
+    [_deviceName setSelectable:NO];
+    [_window.contentView addSubview:_deviceName];
+
+    
+    _processName = [[NSTextField alloc] initWithFrame:NSMakeRect(150, windowSize.height - 70, 100, 20)];
+    [_processName setStringValue:@"Process Name"];
+    [_processName setBackgroundColor:[NSColor darkGrayColor]];
+    [_processName setBezeled:NO];
+    [_processName setEditable:NO];
+    [_processName setSelectable:NO];
+    [_window.contentView addSubview:_processName];
+
+    
+    _logLevel = [[NSTextField alloc] initWithFrame:NSMakeRect(330, windowSize.height - 70, 70, 20)];
+    [_logLevel setStringValue:@"Log Level"];
+    [_logLevel setBackgroundColor:[NSColor darkGrayColor]];
+    [_logLevel setBezeled:NO];
+    [_logLevel setEditable:NO];
+    [_logLevel setSelectable:NO];
+    [_window.contentView addSubview:_logLevel];
+
+    
+    
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(330, windowSize.height - 220, 120, 150)];
+    _logLevelTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(330, windowSize.height - 220, 120, 150)];
     [_logLevelTableView setIdentifier:@"logLevelTable"];
+    [_logLevelTableView setTag:3];
     [_logLevelTableView setHeaderView: nil];
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
     _logLevelArray = @[@"Debug", @"Info", @"Notice", @"Warning", @"Error", @"Critical", @"Alert", @"Emergency"];
@@ -135,9 +186,10 @@
     _logArrayController.selectsInsertedObjects = NO;
     
     NSSize windowSize = _window.frame.size;
-    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 200)];
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 240)];
     _logTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
     [_logTableView setIdentifier:@"LogTable"];
+    [_logTableView setTag:0];
     
     NSTableColumn *dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
     NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
@@ -191,6 +243,12 @@
     
     [tableContainer setDocumentView:_logTableView];
     [tableContainer setHasVerticalScroller:YES];
+    [[tableContainer contentView] setPostsBoundsChangedNotifications:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(boundsChangeNotificationHandler:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:[tableContainer contentView]];
     
     [_window.contentView addSubview:tableContainer];
 }
@@ -201,10 +259,11 @@
     _deviceArrayController.selectsInsertedObjects = NO;
     NSSize windowSize = _window.frame.size;
     // create a table view and a scroll view
-    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 180, 120, 150)];
-    _deviceTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 180, 120, 150)];
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 220, 120, 150)];
+    _deviceTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 220, 120, 150)];
     [_deviceTableView setIdentifier:@"deviceSet"];
     [_deviceTableView setHeaderView: nil];
+    [_deviceTableView setTag:1];
     
     NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
     //[deviceColumn setEditable:NO];
@@ -231,10 +290,11 @@
     _processArrayController.selectsInsertedObjects = NO;
 
     NSSize windowSize = _window.frame.size;
-    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 180, 150, 150)];
-    _processTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 180, 150, 150)];
+    NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 220, 150, 150)];
+    _processTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 220, 150, 150)];
     [_processTableView setIdentifier:@"processSet"];
     [_processTableView setHeaderView: nil];
+    [_processTableView setTag:2];
     
     
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
@@ -261,7 +321,7 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    if( tableView.tag == 3)
     {
         return _logLevelArray.count;
     }
@@ -287,7 +347,7 @@
 
 - (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    if( tableView.tag == 3)
     {
         NSButtonCell *cell=[[NSButtonCell alloc] init];
         NSString *displayText;
@@ -302,7 +362,7 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
     
-    if ([tableView.identifier isEqualToString:@"logLevelTable"])
+    if (tableView.tag == 3)
     {
         BOOL value = [_logFilter logLevel][row];
         return [NSNumber numberWithInteger:(value ? NSOnState : NSOffState)];
@@ -314,7 +374,7 @@
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn *)column row:(NSInteger)row
 {
   
-    if ([tableView.identifier isEqualToString:@"logLevelTable"])
+    if (tableView.tag == 3)
     {
         [_logFilter logLevel][row] = [value boolValue];
         [self updateTable];
@@ -351,7 +411,7 @@
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
 {
-    if( [tableView.identifier isEqualToString:@"LogTable"])
+    if( tableView.tag == 0)
     {
         LogData *data = [[_logArrayController arrangedObjects] objectAtIndex:row];
         NSInteger line = [[data.log componentsSeparatedByCharactersInSet:
@@ -363,15 +423,43 @@
 }
 
 
+- (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    return NO;
+}
+
+
+- (void)boundsChangeNotificationHandler:(NSNotification *)aNotification
+{
+   
+    if ([aNotification object] == [[_logTableView enclosingScrollView] contentView])
+    {
+        NSClipView *scrollClipView =[[_logTableView enclosingScrollView] contentView];
+        NSPoint currentScrollPosition = [scrollClipView bounds].origin;
+        CGSize tableSize = _logTableView.frame.size;
+        if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height - 240))
+        {
+            _fixed = NO;
+        }
+        else
+        {
+            _fixed = YES;
+        }
+        
+    }
+    
+}
+
+
 #pragma mark - TextField Delegate
 
 
-- (void)controlTextDidChange:(NSNotification *)aObject
+- (void)controlTextDidChange:(NSNotification *)aSearchField
 {
-    NSString *objectIdentifier = [[aObject object] identifier];
-    NSTextField *textField = [aObject object];
+    NSInteger objectTag = [[aSearchField object] tag];
+    NSTextField *textField = [aSearchField object];
     
-    if([objectIdentifier isEqualToString:@"LogSearch"])
+    if(objectTag == 0)
     {
         NSString *text = [textField stringValue];
         if([text isEqualToString: @""]) {
@@ -381,7 +469,7 @@
         }
         [self updateTable];
     }
-    else if([objectIdentifier isEqualToString:@"LogHighlight"])
+    else if(objectTag == 1)
     {
         NSString *text = [textField stringValue];
         if([text isEqualToString: @""]) {
@@ -417,7 +505,7 @@
 -  (void)resizingLogTable:(NSSize)frameSize
 {
     NSSize frame = frameSize;
-    frame.height-= 200;
+    frame.height-= 240;
     frame.width -= 20;
     
     [[_logTableView enclosingScrollView] setFrameSize: frame];
@@ -427,39 +515,36 @@
 
 - (void)resizingDeviceTable:(NSSize)frameSize
 {
-    CGRect frame = _deviceTableView.frame;
-    frame.origin.y = frameSize.height - 180;
-    
-    [[_deviceTableView enclosingScrollView] setFrame: frame];
+    [[_deviceTableView enclosingScrollView] setFrame:NSMakeRect(10, frameSize.height - 220, 120, 150)];
     [[_deviceTableView enclosingScrollView] setNeedsDisplay: YES];
 }
 
 - (void)resizingProcessTable:(NSSize)frameSize
 {
-    CGRect frame = _processTableView.frame;
-    frame.origin.y = frameSize.height - 180;
-    
-    [[_processTableView enclosingScrollView] setFrame: frame];
+    [[_processTableView enclosingScrollView] setFrame:NSMakeRect(150, frameSize.height - 220, 150, 150)];
     [[_processTableView enclosingScrollView] setNeedsDisplay: YES];
 }
 
 - (void)resizingLogLevelTable:(NSSize)frameSize
 {
-    CGRect frame = _logLevelTableView.frame;
-    frame.origin.y = frameSize.height - 180;
-    
-    [[_logLevelTableView enclosingScrollView] setFrame: frame];
+    [[_logLevelTableView enclosingScrollView] setFrame: NSMakeRect(330, frameSize.height - 220, 120, 150)];
     [[_logLevelTableView enclosingScrollView] setNeedsDisplay: YES];
 }
 
 - (void)resizingGUI:(NSSize)frameSize
 {
  
-    [_fixedButton setFrame:NSMakeRect(720, frameSize.height - 180, 80, 25)];
-    [_logSearchField setFrame:NSMakeRect(600, frameSize.height - 90, 200, 50)];
-    [_loghighlightField setFrame:NSMakeRect(600, frameSize.height - 150, 200, 50)];
-    [_clearButton setFrame:NSMakeRect(610, frameSize.height - 180, 80, 25)];
-    [_loadfileButton setFrame:NSMakeRect(480, frameSize.height - 130, 80, 25)];
+    [_logSearchField setFrame:NSMakeRect(480, frameSize.height - 130, 200, 50)];
+    [_loghighlightField setFrame:NSMakeRect(480, frameSize.height - 190, 200, 50)];
+    [_clearButton setFrame:NSMakeRect(525, frameSize.height - 220, 100, 25)];
+    [_loadfileButton setFrame:NSMakeRect(730, frameSize.height - 170, 80, 25)];
+    [_savefileButton setFrame:NSMakeRect(730, frameSize.height - 130, 80, 25)];
+    [_searchLog setFrame:NSMakeRect(480, frameSize.height - 90, 200, 20)];
+    [_highlightLog setFrame:NSMakeRect(480, frameSize.height - 150, 200, 20)];
+    [_deviceName setFrame:NSMakeRect(10, frameSize.height - 70, 100, 20)];
+    [_processName setFrame:NSMakeRect(150, frameSize.height - 70, 100, 20)];
+    [_logLevel setFrame:NSMakeRect(330, frameSize.height - 70, 70, 20)];
+
     
 }
 
@@ -469,32 +554,32 @@
 
 - (void)buttonClicked: (NSButton *)button
 {
-#warning comment
-    // 버튼을 구분하기 위해 identifier의 NSString 객체로 비교하는 거보다
-    // tag 를 이용해서 구분처리하는게 비용이 더 쌉니다.
-    // tag로 변경해주시고 if else 가 3개이상 될경우에는 switch case 문으로
-    NSString *buttonIdentifier = [button identifier];
-
-    if([buttonIdentifier isEqualToString:@"fixedButton"]){
-        _fixed = !_fixed;
-    }
-    else if([buttonIdentifier isEqualToString:@"clearButton"])
-    {
-        [[_logArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
-        [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
-        [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
-    }
+    NSInteger buttonTag = [button tag];
     
-    else if([buttonIdentifier isEqualToString:@"loadFileButton"])
-    {
-#warning comment
-        // delegate method 호출시에는 항상 selector 가 응답할수 있는 지 체크가 필요.
-        if ([_delegate respondsToSelector:@selector(fileLoading)]) {
-            [_delegate fileLoading];
-        }
+    switch (buttonTag) {
+        case 0:
+            [[_logArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
+            [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
+            [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
+            [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
+            [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
+
+            break;
+        case 1:
+            if ([_delegate respondsToSelector:@selector(fileLoading)]) {
+                [_delegate fileLoading];
+            }
+            
+            break;
+        case 2:
+            if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
+                [_delegate fileSaving:NO];
+            }
+            break;
+            
+        default:
+            break;
     }
 }
-
-
 
 @end
