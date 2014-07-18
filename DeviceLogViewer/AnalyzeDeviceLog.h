@@ -13,21 +13,30 @@
 #import "LogData.h"
 #import "LogFilter.h"
 
+
 @protocol AnalyzeDeviceLogDelegate;
+
 
 @interface AnalyzeDeviceLog:NSObject <ReadDeviceLogDelegate, ReadFileLogDelegate>
 
+
 @property id<AnalyzeDeviceLogDelegate> delegate;
+
 
 - (void)readLogFromDevice;
 - (void)readLogFromFile;
+
 
 @end
 
 
 @protocol AnalyzeDeviceLogDelegate<NSObject>;
+
+
 @required
-- (void) AnalyzedLog:(NSDictionary *)aAnalyzedLog;
+- (void)analyzedLog:(NSDictionary *)aAnalyzedLog;
 - (void)deviceConnected;
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID;
+
+
 @end

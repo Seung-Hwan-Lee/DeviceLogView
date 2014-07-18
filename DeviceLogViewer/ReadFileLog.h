@@ -13,13 +13,22 @@
 
 
 @interface ReadFileLog : NSObject
+
+
 -(void)readFile;
+
+
 @property id<ReadFileLogDelegate> delegate;
+
+
 @end
 
 
-
 @protocol ReadFileLogDelegate <NSObject>
+
+
 @required
 - (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID;
+
+
 @end

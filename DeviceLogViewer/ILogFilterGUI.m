@@ -6,6 +6,7 @@
 //  Copyright (c) 2014년 line. All rights reserved.
 //
 
+
 #import "ILogFilterGUI.h"
 
 
@@ -32,8 +33,8 @@
 }
 
 
-
 #pragma mark - initialize
+
 
 -(id)initWithWindow:(NSWindow *)aWindow
 {
@@ -45,14 +46,11 @@
     }
     
     [_window setDelegate:self];
-    [self CreateGUI];
+    [self createGUI];
    
     
     return self;
 }
-
-
-
 
 
 #pragma mark - Update TableView
@@ -61,7 +59,7 @@
 - (void)updateTable{
     
     NSInteger numberOfRows = [_logTableView numberOfRows];
-    if(numberOfRows > 0 && !_fixed)
+    if (numberOfRows > 0 && !_fixed)
     {
         [_logTableView scrollRowToVisible:numberOfRows - 1];
     }
@@ -71,13 +69,11 @@
 }
 
 
-
-
-
-
 #pragma mark - make GUI
 
-- (void)CreateGUI{
+
+- (void)createGUI
+{
     
     NSSize windowSize = _window.frame.size;
     
@@ -123,7 +119,7 @@
     [_logLevelTableView setHeaderView: nil];
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
     _logLevelArray = @[@"Debug", @"Info", @"Notice", @"Warning", @"Error", @"Critical", @"Alert", @"Emergency"];
-        [_logLevelTableView addTableColumn:logLevelColumn];
+    [_logLevelTableView addTableColumn:logLevelColumn];
     [_logLevelTableView setDelegate:self ];
     [_logLevelTableView setDataSource:self];
     [_logLevelTableView reloadData];
@@ -134,7 +130,6 @@
 
 
 - (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController
-
 {
     _logArrayController = aLogArrayController;
     _logArrayController.selectsInsertedObjects = NO;
@@ -198,12 +193,7 @@
     [tableContainer setHasVerticalScroller:YES];
     
     [_window.contentView addSubview:tableContainer];
-    
-    
 }
-
-
-
 
 - (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController
 {
@@ -235,11 +225,8 @@
     [_window.contentView addSubview:tableContainer];
 }
 
-
-
 - (void)makeProcessTable:(NSArrayController *)aProcessArrayController
 {
-    
     _processArrayController = aProcessArrayController;
     _processArrayController.selectsInsertedObjects = NO;
 
@@ -254,8 +241,7 @@
     [processColumn setWidth:150];
     [processColumn bind:NSValueBinding toObject:aProcessArrayController
            withKeyPath:@"arrangedObjects.process" options:nil];
-    
-    
+
     // add column
     [_processTableView addTableColumn:processColumn];
     [_processTableView setDelegate:self ];
@@ -267,15 +253,11 @@
     [tableContainer setHasVerticalScroller:YES];
     
     [_window.contentView addSubview:tableContainer];
-    
 }
 
 
-
-
-
-
 #pragma mark - Table Delegate
+
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
@@ -301,7 +283,6 @@
             return;
         }
     }
-
 }
 
 - (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
@@ -319,9 +300,9 @@
     return nil;
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
     
-    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    if ([tableView.identifier isEqualToString:@"logLevelTable"])
     {
         BOOL value = [_logFilter logLevel][row];
         return [NSNumber numberWithInteger:(value ? NSOnState : NSOffState)];
@@ -330,9 +311,10 @@
     return nil;
 }
 
-- (void)tableView:(NSTableView *)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn *)column row:(NSInteger)row {
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)value forTableColumn:(NSTableColumn *)column row:(NSInteger)row
+{
   
-    if( [tableView.identifier isEqualToString:@"logLevelTable"])
+    if ([tableView.identifier isEqualToString:@"logLevelTable"])
     {
         [_logFilter logLevel][row] = [value boolValue];
         [self updateTable];
@@ -342,9 +324,9 @@
 
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification
 {
-    if([notification object] == _processTableView){
+    if ([notification object] == _processTableView){
         NSInteger row = [_processTableView selectedRow];
-        if(row == 0){
+        if (row == 0){
             [_logFilter setProcess:nil];
             
         } else {
@@ -355,16 +337,16 @@
         [self updateTable];
     } else if([notification object] == _deviceTableView) {
         NSInteger row = [_deviceTableView selectedRow];
-        if(row == 0){
+        if (row == 0){
             [_logFilter setProcess:nil];
             [_logFilter setDeviceID:nil];
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
             [_logFilter setDeviceID: [deviceData objectForKey:@"deviceID"]];
         }
+        
         [self updateTable];
     }
-  
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
@@ -381,15 +363,10 @@
 }
 
 
-
-
-
-
-
 #pragma mark - TextField Delegate
 
 
--(void)controlTextDidChange:(NSNotification *)aObject
+- (void)controlTextDidChange:(NSNotification *)aObject
 {
     NSString *objectIdentifier = [[aObject object] identifier];
     NSTextField *textField = [aObject object];
@@ -420,6 +397,7 @@
 
 #pragma mark - Window Delegate
 
+
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
 {
     //NSLog(@"resizing");
@@ -433,15 +411,10 @@
 }
 
 
-
-
-
-
-
-
 #pragma mark - GUI resize function
 
-- (void)resizingLogTable:(NSSize)frameSize
+
+-  (void)resizingLogTable:(NSSize)frameSize
 {
     NSSize frame = frameSize;
     frame.height-= 200;
@@ -491,17 +464,20 @@
 }
 
 
-
-
 #pragma mrak - Button Event Function
 
-- (void)buttonClicked: (NSButton *)button {
+
+- (void)buttonClicked: (NSButton *)button
+{
+#warning comment
+    // 버튼을 구분하기 위해 identifier의 NSString 객체로 비교하는 거보다
+    // tag 를 이용해서 구분처리하는게 비용이 더 쌉니다.
+    // tag로 변경해주시고 if else 가 3개이상 될경우에는 switch case 문으로
     NSString *buttonIdentifier = [button identifier];
-    
+
     if([buttonIdentifier isEqualToString:@"fixedButton"]){
         _fixed = !_fixed;
     }
-    
     else if([buttonIdentifier isEqualToString:@"clearButton"])
     {
         [[_logArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
@@ -511,7 +487,11 @@
     
     else if([buttonIdentifier isEqualToString:@"loadFileButton"])
     {
-        [self.delegate FileLoading];
+#warning comment
+        // delegate method 호출시에는 항상 selector 가 응답할수 있는 지 체크가 필요.
+        if ([_delegate respondsToSelector:@selector(fileLoading)]) {
+            [_delegate fileLoading];
+        }
     }
 }
 

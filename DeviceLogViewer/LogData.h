@@ -24,4 +24,5 @@
 
 - (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;
 
+
 @end

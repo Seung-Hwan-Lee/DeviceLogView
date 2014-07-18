@@ -23,9 +23,9 @@
     _logDataStorage = [[LogDataStorage alloc] init];
     _logDataStorage.delegate = self;
     _gui = [[ILogFilterGUI alloc] initWithWindow:_window];
-    [_gui makeLogTableWithLogArrayController:[_logDataStorage LogDataArrayController]];
-    [_gui makeDeviceTableWithDeviceArrayController:[_logDataStorage DeviceArrayController]];
-    [_gui makeProcessTable:[_logDataStorage ProcessArrayController]];
+    [_gui makeLogTableWithLogArrayController:[_logDataStorage logDataArrayController]];
+    [_gui makeDeviceTableWithDeviceArrayController:[_logDataStorage deviceArrayController]];
+    [_gui makeProcessTable:[_logDataStorage processArrayController]];
     _gui.delegate =self;
     
 }
@@ -35,7 +35,7 @@
     [_gui updateTable];
 }
 
-- (void)FileLoading
+- (void)fileLoading
 {
     // Read File Test
     [_logDataStorage fileOpen];

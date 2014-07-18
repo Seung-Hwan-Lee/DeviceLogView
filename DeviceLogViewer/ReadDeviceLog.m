@@ -6,8 +6,8 @@
 //  Copyright (c) 2014년 line. All rights reserved.
 //
 
-#import "ReadDeviceLog.h"
 
+#import "ReadDeviceLog.h"
 
 
 typedef struct {
@@ -20,9 +20,9 @@ typedef struct {
 @implementation ReadDeviceLog
 
 
-
 static CFMutableDictionaryRef liveConnections = nil;
 static CFMutableDictionaryRef deviceName = nil;
+
 
 static void DeviceNotificationCallback(am_device_notification_callback_info *info, void *unknown);
 ReadDeviceLog *gReadDeviceLogObject = nil;
@@ -51,8 +51,6 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
     AMDeviceNotificationSubscribe(DeviceNotificationCallback, 0, 0, NULL, &notification);
     CFRunLoopRun();
 }
-
-
 
 
 @end

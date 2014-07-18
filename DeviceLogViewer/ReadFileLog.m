@@ -8,10 +8,12 @@
 
 #import "ReadFileLog.h"
 
+
 @implementation ReadFileLog
 
 
 #pragma mark - Read File Line by Line
+
 
 - (void)readFile
 {
@@ -52,16 +54,20 @@
     
 }
 
+
 #pragma mark - Get FilePath with Dialog
+
 
 - (NSURL *)openDialogAndGetFilePath
 {
-    NSURL *url;
+#warning comment
+    // 객체는 생성 시 nil 처리 하는 습관
+    NSURL *url = nil;
     NSOpenPanel *openDlg = [NSOpenPanel openPanel];
     [openDlg setCanChooseFiles:YES];
     [openDlg setAllowsMultipleSelection:NO];
     [openDlg setCanChooseDirectories:NO];
-    if ( [openDlg runModal] == NSOKButton )
+    if ([openDlg runModal] == NSOKButton)
     {
         NSArray* urls = [openDlg URLs];
         for(int i = 0; i < [urls count]; i++ )
@@ -69,7 +75,9 @@
             url = [urls objectAtIndex:i];
         }
     }
-    return url;
     
+    return url;
 }
+
+
 @end

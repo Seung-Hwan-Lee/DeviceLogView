@@ -15,7 +15,6 @@
 @interface LogFilter : NSObject
 
 
-
 - (void)setDeviceID:(NSString *)aDeviceID;
 - (void)setProcess:(NSString *)aProcess;
 - (void)setSentence:(NSString *)aSentence;
