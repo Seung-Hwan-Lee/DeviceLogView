@@ -171,13 +171,14 @@
     NSURL *filePath = [self openDialogForSaveFile];
     NSArray *logData = nil;
     
-    if( isSavingEveryLog)
+    if(isSavingEveryLog)
     {
-        logData = [_logDataArrayController arrangedObjects];
+        logData = [_logDataArrayController content];
+
     }
     else
     {
-        logData = [_logDataArrayController content];
+        logData = [_logDataArrayController arrangedObjects];
     }
     
     if( logData != nil && filePath != nil)

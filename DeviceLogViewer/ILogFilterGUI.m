@@ -19,7 +19,8 @@
     NSTableView *_logLevelTableView;
     NSButton *_clearButton;
     NSButton *_loadfileButton;
-    NSButton *_savefileButton;
+    NSButton *_saveallButton;
+    NSButton *_savefilteredButton;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
     NSArrayController *_logArrayController;
@@ -87,21 +88,30 @@
     [_window.contentView addSubview:_clearButton];
     
     
-    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 170, 80, 25)];
+    
+    _saveallButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 90, 100, 25)];
+    [_saveallButton setIdentifier:@"saveallButton"];
+    [_saveallButton setTag:2];
+    [_saveallButton setTitle:@"Save All"];
+    [_saveallButton setTarget:self];
+    [_saveallButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_saveallButton];
+    
+    _savefilteredButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 130, 100, 25)];
+    [_savefilteredButton setIdentifier:@"saveFilteredButton"];
+    [_savefilteredButton setTag:3];
+    [_savefilteredButton setTitle:@"Save Filtered"];
+    [_savefilteredButton setTarget:self];
+    [_savefilteredButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_savefilteredButton];
+
+    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 170, 100, 25)];
     [_loadfileButton setIdentifier:@"loadFileButton"];
     [_loadfileButton setTag:1];
     [_loadfileButton setTitle:@"Load File"];
     [_loadfileButton setTarget:self];
     [_loadfileButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_loadfileButton];
-    
-    _savefileButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 130, 80, 25)];
-    [_savefileButton setIdentifier:@"saveFileButton"];
-    [_savefileButton setTag:2];
-    [_savefileButton setTitle:@"Save File"];
-    [_savefileButton setTarget:self];
-    [_savefileButton setAction:@selector(buttonClicked:)];
-    [_window.contentView addSubview:_savefileButton];
 
 
     
@@ -179,6 +189,7 @@
     [_window.contentView addSubview:tableContainer];
     
 }
+
 
 
 - (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController
@@ -507,7 +518,6 @@
     firstResponder = [_window firstResponder];
     if (firstResponder == _logTableView)
     {
-        NSLog(@"%@", [_logTableView selectedRowIndexes]);
         NSIndexSet *selectedIndex = [_logTableView selectedRowIndexes];
         __block NSString *copyString = @"";
         [selectedIndex enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop)
@@ -518,9 +528,6 @@
         NSPasteboard *pastedboard = [NSPasteboard generalPasteboard];
         [pastedboard clearContents];
         [pastedboard setString:copyString forType:NSStringPboardType];
-        
-        NSLog(@"%@", copyString);
-        
     }
 }
 
@@ -563,8 +570,9 @@
     [_logSearchField setFrame:NSMakeRect(480, frameSize.height - 130, 200, 50)];
     [_loghighlightField setFrame:NSMakeRect(480, frameSize.height - 190, 200, 50)];
     [_clearButton setFrame:NSMakeRect(525, frameSize.height - 220, 100, 25)];
-    [_loadfileButton setFrame:NSMakeRect(730, frameSize.height - 170, 80, 25)];
-    [_savefileButton setFrame:NSMakeRect(730, frameSize.height - 130, 80, 25)];
+    [_loadfileButton setFrame:NSMakeRect(730, frameSize.height - 170, 100, 25)];
+    [_savefilteredButton setFrame:NSMakeRect(730, frameSize.height - 130, 100, 25)];
+    [_saveallButton setFrame:NSMakeRect(730, frameSize.height - 90, 100, 25)];
     [_searchLog setFrame:NSMakeRect(480, frameSize.height - 90, 200, 20)];
     [_highlightLog setFrame:NSMakeRect(480, frameSize.height - 150, 200, 20)];
     [_deviceName setFrame:NSMakeRect(10, frameSize.height - 70, 100, 20)];
@@ -598,6 +606,12 @@
             
             break;
         case 2:
+            if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
+                [_delegate fileSaving:YES];
+            }
+            break;
+            
+        case 3:
             if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
                 [_delegate fileSaving:NO];
             }
