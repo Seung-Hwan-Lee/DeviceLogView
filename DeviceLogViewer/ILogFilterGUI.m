@@ -177,6 +177,7 @@
     [tableContainer setDocumentView:_logLevelTableView];
     [tableContainer setHasVerticalScroller:YES];
     [_window.contentView addSubview:tableContainer];
+    
 }
 
 
@@ -238,6 +239,7 @@
     
     [_logTableView setDelegate:self ];
     [_logTableView setDataSource:self];
+    [_logTableView setAllowsMultipleSelection:YES];
     [_logTableView reloadData];
     
     
@@ -496,6 +498,30 @@
     [self resizingGUI:frameSize];
     
     return frameSize;
+}
+
+- (IBAction)copy:(id)sender
+{
+    NSResponder *firstResponder;
+    
+    firstResponder = [_window firstResponder];
+    if (firstResponder == _logTableView)
+    {
+        NSLog(@"%@", [_logTableView selectedRowIndexes]);
+        NSIndexSet *selectedIndex = [_logTableView selectedRowIndexes];
+        __block NSString *copyString = @"";
+        [selectedIndex enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop)
+        {
+            LogData *log = [[_logArrayController arrangedObjects] objectAtIndex:i];
+            copyString = [NSString stringWithFormat:@"%@%@%@%@%@%@", copyString, log.date, log.device, log.process, log.logLevel, log.log];
+        }];
+        NSPasteboard *pastedboard = [NSPasteboard generalPasteboard];
+        [pastedboard clearContents];
+        [pastedboard setString:copyString forType:NSStringPboardType];
+        
+        NSLog(@"%@", copyString);
+        
+    }
 }
 
 
