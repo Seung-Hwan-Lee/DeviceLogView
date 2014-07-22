@@ -32,7 +32,7 @@
 
 
 @required
-- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID;
+- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID isDevice:(BOOL)isDevice;
 - (void)deviceConnected;
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID;
 

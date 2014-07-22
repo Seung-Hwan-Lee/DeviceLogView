@@ -38,8 +38,9 @@
     for(int i = 0 ; i < [_updateData count] ; i ++)
     {
         [super addObject:[_updateData objectAtIndex:i]];
+        [_updateData removeObjectAtIndex:i];
     }
-    [_updateData removeAllObjects];
+
 }
 
 @end

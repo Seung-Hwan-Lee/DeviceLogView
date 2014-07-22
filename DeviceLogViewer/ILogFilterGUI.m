@@ -17,11 +17,6 @@
     NSTableView *_deviceTableView;
     NSTableView *_processTableView;
     NSTableView *_logLevelTableView;
-    NSTableColumn *_deviceColumn;
-    NSTableColumn *_dateColumn;
-    NSTableColumn *_processColumn;
-    NSTableColumn *_logLevelColumn;
-    NSTableColumn *_logColumn;
     NSButton *_clearButton;
     NSButton *_loadfileButton;
     NSButton *_saveallButton;
@@ -32,7 +27,7 @@
     NSArray *_logLevelArray;
     NSSearchField *_logSearchField;
     NSSearchField *_loghighlightField;
-    NSTextField *_deviceName, *_processName, *_logLevel, *_searchLog, *_highlightLog;
+    NSTextField *_dataSource, *_processName, *_logLevel, *_searchLog, *_highlightLog;
     
     NSString *_highlightString;
     BOOL _fixed;
@@ -64,8 +59,6 @@
 
 
 - (void)updateTable{
-    
-    
     
     NSInteger numberOfRows = [_logTableView numberOfRows];
     if (numberOfRows > 0 && !_fixed)
@@ -99,7 +92,7 @@
     
     
     
-    _saveallButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 90, 100, 25)];
+    _saveallButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 170, 100, 25)];
     [_saveallButton setIdentifier:@"saveallButton"];
     [_saveallButton setTag:2];
     [_saveallButton setTitle:@"Save All"];
@@ -115,7 +108,7 @@
     [_savefilteredButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_savefilteredButton];
 
-    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 170, 100, 25)];
+    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 90, 100, 25)];
     [_loadfileButton setIdentifier:@"loadFileButton"];
     [_loadfileButton setTag:1];
     [_loadfileButton setTitle:@"Load File"];
@@ -155,13 +148,13 @@
     [_highlightLog setSelectable:NO];
     [_window.contentView addSubview:_highlightLog];
     
-    _deviceName = [[NSTextField alloc] initWithFrame:NSMakeRect(10, windowSize.height - 70, 100, 20)];
-    [_deviceName setStringValue:@"Device Name"];
-    [_deviceName setBackgroundColor:[NSColor darkGrayColor]];
-    [_deviceName setBezeled:NO];
-    [_deviceName setEditable:NO];
-    [_deviceName setSelectable:NO];
-    [_window.contentView addSubview:_deviceName];
+    _dataSource = [[NSTextField alloc] initWithFrame:NSMakeRect(10, windowSize.height - 70, 100, 20)];
+    [_dataSource setStringValue:@"Data Source"];
+    [_dataSource setBackgroundColor:[NSColor darkGrayColor]];
+    [_dataSource setBezeled:NO];
+    [_dataSource setEditable:NO];
+    [_dataSource setSelectable:NO];
+    [_window.contentView addSubview:_dataSource];
 
     
     _processName = [[NSTextField alloc] initWithFrame:NSMakeRect(150, windowSize.height - 70, 100, 20)];
@@ -213,50 +206,50 @@
     [_logTableView setIdentifier:@"LogTable"];
     [_logTableView setTag:0];
     
-    _dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
-    _deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
-    _processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
-    _logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
-    _logColumn = [[NSTableColumn alloc] initWithIdentifier:@"log"];
+    NSTableColumn *dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
+    NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
+    NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
+    NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
+    NSTableColumn *logColumn = [[NSTableColumn alloc] initWithIdentifier:@"log"];
     
-    [_dateColumn.headerCell setTitle:@"Date"];
-    [_deviceColumn.headerCell setTitle:@"Device"];
-    [_processColumn.headerCell setTitle:@"Process"];
-    [_logLevelColumn.headerCell setTitle:@"LogLevel"];
-    [_logColumn.headerCell setTitle:@"Log"];
+    [dateColumn.headerCell setTitle:@"Date"];
+    [deviceColumn.headerCell setTitle:@"Device"];
+    [processColumn.headerCell setTitle:@"Process"];
+    [logLevelColumn.headerCell setTitle:@"LogLevel"];
+    [logColumn.headerCell setTitle:@"Log"];
     
-    [_dateColumn setWidth:100];
-    [_deviceColumn setWidth:100];
-    [_processColumn setWidth:100];
-    [_logLevelColumn setWidth:100];
-    [_logColumn setWidth:windowSize.width];
+    [dateColumn setWidth:100];
+    [deviceColumn setWidth:100];
+    [processColumn setWidth:100];
+    [logLevelColumn setWidth:100];
+    [logColumn setWidth:windowSize.width];
     
-    [_dateColumn bind:NSValueBinding toObject:aLogArrayController
+    [dateColumn bind:NSValueBinding toObject:aLogArrayController
        withKeyPath:@"arrangedObjects.date" options:nil];
-    [_dateColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [dateColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
 
-    [_deviceColumn bind:NSValueBinding toObject:aLogArrayController
+    [deviceColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.device" options:nil];
-    [_deviceColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [deviceColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
 
-    [_processColumn bind:NSValueBinding toObject:aLogArrayController
+    [processColumn bind:NSValueBinding toObject:aLogArrayController
             withKeyPath:@"arrangedObjects.process" options:nil];
-    [_processColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [processColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
     
-    [_logLevelColumn bind:NSValueBinding toObject:aLogArrayController
+    [logLevelColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.logLevel" options:nil];
-    [_logLevelColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [logLevelColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
     
-    [_logColumn bind:NSValueBinding toObject:aLogArrayController
+    [logColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.log" options:nil];
-    [_logColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [logColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
  
     // add column
-    [_logTableView addTableColumn:_dateColumn];
-    [_logTableView addTableColumn:_deviceColumn];
-    [_logTableView addTableColumn:_processColumn];
-    [_logTableView addTableColumn:_logLevelColumn];
-    [_logTableView addTableColumn:_logColumn];
+    [_logTableView addTableColumn:dateColumn];
+    [_logTableView addTableColumn:deviceColumn];
+    [_logTableView addTableColumn:processColumn];
+    [_logTableView addTableColumn:logLevelColumn];
+    [_logTableView addTableColumn:logColumn];
     
     [_logTableView setDelegate:self ];
     [_logTableView setDataSource:self];
@@ -292,7 +285,7 @@
     
     NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
     //[deviceColumn setEditable:NO];
-    [deviceColumn setWidth:100];
+    [deviceColumn setWidth:120];
     [deviceColumn bind:NSValueBinding toObject:aDeviceArrayController
          withKeyPath:@"arrangedObjects.device" options:nil];
     
@@ -463,7 +456,6 @@
 - (void)boundsChangeNotificationHandler:(NSNotification *)aNotification
 {
    
-    //NSLog(@"bound");
     if ([aNotification object] == [[_logTableView enclosingScrollView] contentView])
     {
         NSClipView *scrollClipView =[[_logTableView enclosingScrollView] contentView];
@@ -472,17 +464,18 @@
         
         if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height + 240))
         {
-            _fixed = NO;
+            
             [_logArrayController setIsUpdateTable:YES];
             [_logArrayController updateArrayController];
+            [self updateTable];
+            _fixed = NO;
         }
         else
         {
+            
+            [_logArrayController setIsUpdateTable:NO];
             _fixed = YES;
-             [_logArrayController setIsUpdateTable:NO];
         }
-        
-        NSLog(@"%f",currentScrollPosition.y - (tableSize.height - _window.frame.size.height + 240) );
         
     }
     
@@ -557,6 +550,7 @@
 }
 
 
+
 #pragma mark - GUI resize function
 
 
@@ -595,12 +589,12 @@
     [_logSearchField setFrame:NSMakeRect(480, frameSize.height - 130, 200, 50)];
     [_loghighlightField setFrame:NSMakeRect(480, frameSize.height - 190, 200, 50)];
     [_clearButton setFrame:NSMakeRect(525, frameSize.height - 220, 100, 25)];
-    [_loadfileButton setFrame:NSMakeRect(730, frameSize.height - 170, 100, 25)];
+    [_saveallButton setFrame:NSMakeRect(730, frameSize.height - 170, 100, 25)];
     [_savefilteredButton setFrame:NSMakeRect(730, frameSize.height - 130, 100, 25)];
-    [_saveallButton setFrame:NSMakeRect(730, frameSize.height - 90, 100, 25)];
+    [_loadfileButton setFrame:NSMakeRect(730, frameSize.height - 90, 100, 25)];
     [_searchLog setFrame:NSMakeRect(480, frameSize.height - 90, 200, 20)];
     [_highlightLog setFrame:NSMakeRect(480, frameSize.height - 150, 200, 20)];
-    [_deviceName setFrame:NSMakeRect(10, frameSize.height - 70, 100, 20)];
+    [_dataSource setFrame:NSMakeRect(10, frameSize.height - 70, 100, 20)];
     [_processName setFrame:NSMakeRect(150, frameSize.height - 70, 100, 20)];
     [_logLevel setFrame:NSMakeRect(330, frameSize.height - 70, 70, 20)];
 
@@ -621,12 +615,13 @@
             [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
             [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
             [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
-            [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
+            [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
 
             break;
         case 1:
             if ([_delegate respondsToSelector:@selector(fileLoading)]) {
                 [_delegate fileLoading];
+                _fixed = YES;
             }
             
             break;

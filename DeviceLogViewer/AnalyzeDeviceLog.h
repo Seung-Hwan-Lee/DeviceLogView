@@ -34,7 +34,7 @@
 
 
 @required
-- (void)analyzedLog:(NSDictionary *)aAnalyzedLog;
+- (void)analyzedLog:(NSDictionary *)aAnalyzedLog isDevice:(BOOL)isDevice;
 - (void)deviceConnected;
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID;
 

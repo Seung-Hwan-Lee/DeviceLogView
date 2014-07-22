@@ -34,7 +34,7 @@
         _processArrayController = [[MyLogDataController alloc] init];
         [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
         _deviceArrayController = [[MyLogDataController alloc] init];
-        [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
+        [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
         
         _analyzeDeviceLog =[[AnalyzeDeviceLog alloc] init];
         _analyzeDeviceLog.delegate = self;
@@ -127,13 +127,27 @@
 #pragma mark - AnalyzeDeviceLogDelegate
 
 
-- (void)analyzedLog:(NSDictionary *)aAnalyzedLog
+- (void)analyzedLog:(NSDictionary *)aAnalyzedLog isDevice:(BOOL)isDevice
 {
     LogData *logData = [[LogData alloc] initWithLogDataInfo:aAnalyzedLog];
-    [self addDeviceNameToArrayWithDeviceName:logData.device deviceID:logData.deviceID];
+    NSString *sourceType;
+    if(isDevice)
+    {
+        sourceType = @"D: ";
+    }
+    else
+    {
+        sourceType = @"F: ";
+    }
+    
+    
+    [self addDeviceNameToArrayWithDeviceName:[sourceType stringByAppendingString:logData.device] deviceID:logData.deviceID];
     [self addProcessNameToArrayWithProcessName:logData.process deviceID:logData.deviceID];
     [self addLogDataToArrayController:logData];
-    [self saveLogToCacheFile:logData];
+    if(isDevice)
+    {
+        [self saveLogToCacheFile:logData];
+    }
     
     if ([_delegate respondsToSelector:@selector(dataUpdate)]) {
         [_delegate dataUpdate];
@@ -152,7 +166,7 @@
     [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
     [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
     [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
-    [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Device", @"device", nil]];
+    [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
     
     NSArray *deleteLogs = [allLogs filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"deviceID MATCHES %@", aDeviceID]];
     [_logDataArrayController removeObjects: deleteLogs];

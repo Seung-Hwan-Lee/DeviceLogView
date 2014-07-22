@@ -44,12 +44,18 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
 
 - (void)startLogging
 {
+
+    dispatch_queue_t backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(backgroundQueue, ^{
+        liveConnections = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+        deviceName = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
+        am_device_notification *notification;
+        AMDeviceNotificationSubscribe(DeviceNotificationCallback, 0, 0, NULL, &notification);
+        CFRunLoopRun();
+
+    });
     
-    liveConnections = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
-    deviceName = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
-    am_device_notification *notification;
-    AMDeviceNotificationSubscribe(DeviceNotificationCallback, 0, 0, NULL, &notification);
-    CFRunLoopRun();
+    
 }
 
 
@@ -80,7 +86,10 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef a
         NSString *deviceID = [NSString stringWithUTF8String:CFDictionaryGetValue(deviceName, s)];
         if(deviceID)
         {
-            [gReadDeviceLogObject.delegate analizeWithLogBuffer:buffer length:(NSInteger)extentLength deviceID:deviceID];
+            if ([gReadDeviceLogObject.delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
+                [gReadDeviceLogObject.delegate analizeWithLogBuffer:buffer length:(NSInteger)extentLength deviceID:deviceID isDevice:YES];
+            }
+            
         }
 
         length -= extentLength;
@@ -105,7 +114,7 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
                             if (socket) {
                                 CFRunLoopSourceRef source = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0);
                                 if (source) {
-                                    CFRunLoopAddSource(CFRunLoopGetMain(), source, kCFRunLoopCommonModes);
+                                    CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopCommonModes);
                                     AMDeviceRetain(device);
                                     DeviceConsoleConnection *data = malloc(sizeof *data);
                                     data->connection = connection;
@@ -119,7 +128,11 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
                                     
                                     CFDictionarySetValue(deviceName, data->socket, buf);
                                     
-                                    [gReadDeviceLogObject.delegate deviceConnected];
+                                    if ([gReadDeviceLogObject.delegate respondsToSelector:@selector(deviceConnected)]) {
+                                        [gReadDeviceLogObject.delegate deviceConnected];
+                                    }
+
+                                    
                                     
                                     return;
                                 }
@@ -140,8 +153,10 @@ static void DeviceNotificationCallback(am_device_notification_callback_info *inf
                 NSString *deviceID = [NSString stringWithUTF8String:CFDictionaryGetValue(deviceName, data->socket)];
                 if(deviceID)
                 {
+                    if ([gReadDeviceLogObject.delegate respondsToSelector:@selector(deviceDisConnectedWithDeviceID:)]) {
+                        [gReadDeviceLogObject.delegate deviceDisConnectedWithDeviceID:deviceID];
+                    }
                     
-                    [gReadDeviceLogObject.delegate deviceDisConnectedWithDeviceID:deviceID];
 
                 }
 

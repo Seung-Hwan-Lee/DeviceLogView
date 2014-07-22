@@ -17,40 +17,43 @@
 
 - (void)readFile
 {
-    NSURL *filePath = [self openDialogForOpenFile];
-    NSString *fileContent = [NSString stringWithContentsOfURL:filePath encoding:NSUTF8StringEncoding error:nil];
-   
-    NSArray* allLinedStrings =
-    [fileContent componentsSeparatedByCharactersInSet:
-     [NSCharacterSet newlineCharacterSet]];
     
-    NSString *sendText;
-    
-    for( int i = 0 ; i < allLinedStrings.count ; i++)
-    {
-        NSString *tempString = [allLinedStrings objectAtIndex:i];
-       
-        if(tempString.length != 0 &&[tempString characterAtIndex:0] == NSTabCharacter)
+        NSURL *filePath = [self openDialogForOpenFile];
+        NSString *fileContent = [NSString stringWithContentsOfURL:filePath encoding:NSUTF8StringEncoding error:nil];
+        
+        NSArray* allLinedStrings =
+        [fileContent componentsSeparatedByCharactersInSet:
+         [NSCharacterSet newlineCharacterSet]];
+        
+        NSString *sendText;
+        
+        for( int i = 0 ; i < allLinedStrings.count ; i++)
         {
-            sendText = [NSString stringWithFormat:@"%@%@\n", sendText, tempString];
-        }
-        else
-        {
-            if( sendText != nil)
+            NSString *tempString = [allLinedStrings objectAtIndex:i];
+            
+            if(tempString.length != 0 &&[tempString characterAtIndex:0] == NSTabCharacter)
             {
-                const char* utf8String = [sendText UTF8String];
-                size_t len = strlen(utf8String) + 1;
-                [self.delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString]];
+                sendText = [NSString stringWithFormat:@"%@%@\n", sendText, tempString];
             }
-            sendText =  [NSString stringWithFormat:@"%@\n", tempString];
+            else
+            {
+                if( sendText != nil)
+                {
+                    const char* utf8String = [sendText UTF8String];
+                    size_t len = strlen(utf8String) + 1;
+                    [self.delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+                }
+                sendText =  [NSString stringWithFormat:@"%@\n", tempString];
+            }
         }
-    }
-    if( sendText != nil)
-    {
-        const char* utf8String = [sendText UTF8String];
-        size_t len = strlen(utf8String) + 1;
-        [self.delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString]];
-    }
+        if( sendText != nil)
+        {
+            const char* utf8String = [sendText UTF8String];
+            size_t len = strlen(utf8String) + 1;
+            [self.delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+        }
+
+
     
 }
 

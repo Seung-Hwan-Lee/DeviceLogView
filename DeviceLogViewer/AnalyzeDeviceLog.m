@@ -65,7 +65,7 @@
 #pragma mark - ReadDeviceLog, ReadFileLog Delegate
 
 
-- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID
+- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID isDevice:(BOOL)isDevice
 {
     NSString *date = nil;
     NSString *device = nil;
@@ -112,7 +112,13 @@
         [logDataInfo setObject:log forKey:@"log"];
         [logDataInfo setObject:aDeviceID forKey:@"deviceID"];
         
-        [self.delegate analyzedLog:logDataInfo];
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           
+                           [self.delegate analyzedLog:logDataInfo isDevice:isDevice];
+                       });
+
+        
     }
 }
 
