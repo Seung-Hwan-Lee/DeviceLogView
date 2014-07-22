@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4FA7FD47197D38FA00759151 /* MyLogDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FA7FD46197D38FA00759151 /* MyLogDataController.m */; };
 		4FAE661E197784B90048DFD8 /* ReadFileLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE661D197784B90048DFD8 /* ReadFileLog.m */; };
 		4FAE66221977BACB0048DFD8 /* LogDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE66211977BACB0048DFD8 /* LogDataStorage.m */; };
 		4FB1B255196FC50100F0EB53 /* ILogFilterGUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B254196FC50100F0EB53 /* ILogFilterGUI.m */; };
@@ -40,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4FA7FD45197D38FA00759151 /* MyLogDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyLogDataController.h; sourceTree = "<group>"; };
+		4FA7FD46197D38FA00759151 /* MyLogDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyLogDataController.m; sourceTree = "<group>"; };
 		4FAE661C197784B90048DFD8 /* ReadFileLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadFileLog.h; sourceTree = "<group>"; };
 		4FAE661D197784B90048DFD8 /* ReadFileLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadFileLog.m; sourceTree = "<group>"; };
 		4FAE66201977BACB0048DFD8 /* LogDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogDataStorage.h; sourceTree = "<group>"; };
@@ -130,6 +133,8 @@
 				4FAE661D197784B90048DFD8 /* ReadFileLog.m */,
 				4FBFEEFF196E65A7002DF74F /* AnalyzeDeviceLog.h */,
 				4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */,
+				4FA7FD45197D38FA00759151 /* MyLogDataController.h */,
+				4FA7FD46197D38FA00759151 /* MyLogDataController.m */,
 			);
 			name = DataController;
 			sourceTree = "<group>";
@@ -333,6 +338,7 @@
 				4FBFEF01196E65A7002DF74F /* AnalyzeDeviceLog.m in Sources */,
 				4FAE66221977BACB0048DFD8 /* LogDataStorage.m in Sources */,
 				4FB1B255196FC50100F0EB53 /* ILogFilterGUI.m in Sources */,
+				4FA7FD47197D38FA00759151 /* MyLogDataController.m in Sources */,
 				4FBFEEF8196E6541002DF74F /* LogData.m in Sources */,
 				4FAE661E197784B90048DFD8 /* ReadFileLog.m in Sources */,
 				4FBFEEFE196E6580002DF74F /* ReadDeviceLog.m in Sources */,

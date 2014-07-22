@@ -17,13 +17,18 @@
     NSTableView *_deviceTableView;
     NSTableView *_processTableView;
     NSTableView *_logLevelTableView;
+    NSTableColumn *_deviceColumn;
+    NSTableColumn *_dateColumn;
+    NSTableColumn *_processColumn;
+    NSTableColumn *_logLevelColumn;
+    NSTableColumn *_logColumn;
     NSButton *_clearButton;
     NSButton *_loadfileButton;
     NSButton *_saveallButton;
     NSButton *_savefilteredButton;
-    NSArrayController *_processArrayController;
-    NSArrayController *_deviceArrayController;
-    NSArrayController *_logArrayController;
+    MyLogDataController *_processArrayController;
+    MyLogDataController *_deviceArrayController;
+    MyLogDataController *_logArrayController;
     NSArray *_logLevelArray;
     NSSearchField *_logSearchField;
     NSSearchField *_loghighlightField;
@@ -59,6 +64,8 @@
 
 
 - (void)updateTable{
+    
+    
     
     NSInteger numberOfRows = [_logTableView numberOfRows];
     if (numberOfRows > 0 && !_fixed)
@@ -192,7 +199,7 @@
 
 
 
-- (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController
+- (void)makeLogTableWithLogArrayController:(MyLogDataController *)aLogArrayController
 {
     _logArrayController = aLogArrayController;
     _logArrayController.selectsInsertedObjects = NO;
@@ -203,50 +210,50 @@
     [_logTableView setIdentifier:@"LogTable"];
     [_logTableView setTag:0];
     
-    NSTableColumn *dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
-    NSTableColumn *deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
-    NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
-    NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
-    NSTableColumn *logColumn = [[NSTableColumn alloc] initWithIdentifier:@"log"];
+    _dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
+    _deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
+    _processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
+    _logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
+    _logColumn = [[NSTableColumn alloc] initWithIdentifier:@"log"];
     
-    [dateColumn.headerCell setTitle:@"Date"];
-    [deviceColumn.headerCell setTitle:@"Device"];
-    [processColumn.headerCell setTitle:@"Process"];
-    [logLevelColumn.headerCell setTitle:@"LogLevel"];
-    [logColumn.headerCell setTitle:@"Log"];
+    [_dateColumn.headerCell setTitle:@"Date"];
+    [_deviceColumn.headerCell setTitle:@"Device"];
+    [_processColumn.headerCell setTitle:@"Process"];
+    [_logLevelColumn.headerCell setTitle:@"LogLevel"];
+    [_logColumn.headerCell setTitle:@"Log"];
     
-    [dateColumn setWidth:100];
-    [deviceColumn setWidth:100];
-    [processColumn setWidth:100];
-    [logLevelColumn setWidth:100];
-    [logColumn setWidth:windowSize.width];
+    [_dateColumn setWidth:100];
+    [_deviceColumn setWidth:100];
+    [_processColumn setWidth:100];
+    [_logLevelColumn setWidth:100];
+    [_logColumn setWidth:windowSize.width];
     
-    [dateColumn bind:NSValueBinding toObject:aLogArrayController
+    [_dateColumn bind:NSValueBinding toObject:aLogArrayController
        withKeyPath:@"arrangedObjects.date" options:nil];
-    [dateColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [_dateColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
 
-    [deviceColumn bind:NSValueBinding toObject:aLogArrayController
+    [_deviceColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.device" options:nil];
-    [deviceColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [_deviceColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
 
-    [processColumn bind:NSValueBinding toObject:aLogArrayController
+    [_processColumn bind:NSValueBinding toObject:aLogArrayController
             withKeyPath:@"arrangedObjects.process" options:nil];
-    [processColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [_processColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
     
-    [logLevelColumn bind:NSValueBinding toObject:aLogArrayController
+    [_logLevelColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.logLevel" options:nil];
-    [logLevelColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [_logLevelColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
     
-    [logColumn bind:NSValueBinding toObject:aLogArrayController
+    [_logColumn bind:NSValueBinding toObject:aLogArrayController
          withKeyPath:@"arrangedObjects.log" options:nil];
-    [logColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
+    [_logColumn bind:@"textColor" toObject:aLogArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
  
     // add column
-    [_logTableView addTableColumn:dateColumn];
-    [_logTableView addTableColumn:deviceColumn];
-    [_logTableView addTableColumn:processColumn];
-    [_logTableView addTableColumn:logLevelColumn];
-    [_logTableView addTableColumn:logColumn];
+    [_logTableView addTableColumn:_dateColumn];
+    [_logTableView addTableColumn:_deviceColumn];
+    [_logTableView addTableColumn:_processColumn];
+    [_logTableView addTableColumn:_logLevelColumn];
+    [_logTableView addTableColumn:_logColumn];
     
     [_logTableView setDelegate:self ];
     [_logTableView setDataSource:self];
@@ -266,7 +273,7 @@
     [_window.contentView addSubview:tableContainer];
 }
 
-- (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController
+- (void)makeDeviceTableWithDeviceArrayController:(MyLogDataController *)aDeviceArrayController
 {
     _deviceArrayController = aDeviceArrayController;
     _deviceArrayController.selectsInsertedObjects = NO;
@@ -297,7 +304,7 @@
     [_window.contentView addSubview:tableContainer];
 }
 
-- (void)makeProcessTable:(NSArrayController *)aProcessArrayController
+- (void)makeProcessTable:(MyLogDataController *)aProcessArrayController
 {
     _processArrayController = aProcessArrayController;
     _processArrayController.selectsInsertedObjects = NO;
@@ -334,6 +341,7 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
+    
     if( tableView.tag == 3)
     {
         return _logLevelArray.count;
@@ -445,6 +453,7 @@
 - (void)boundsChangeNotificationHandler:(NSNotification *)aNotification
 {
    
+    //NSLog(@"bound");
     if ([aNotification object] == [[_logTableView enclosingScrollView] contentView])
     {
         NSClipView *scrollClipView =[[_logTableView enclosingScrollView] contentView];
@@ -453,10 +462,12 @@
         if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height - 240))
         {
             _fixed = NO;
+            [_logArrayController setIsUpdateTable:YES];
         }
         else
         {
             _fixed = YES;
+             [_logArrayController setIsUpdateTable:NO];
         }
         
     }
@@ -469,10 +480,10 @@
 
 - (void)controlTextDidChange:(NSNotification *)aSearchField
 {
-    NSInteger objectTag = [[aSearchField object] tag];
+    NSInteger searchFieldTag = [[aSearchField object] tag];
     NSTextField *textField = [aSearchField object];
     
-    if(objectTag == 0)
+    if(searchFieldTag == 0)
     {
         NSString *text = [textField stringValue];
         if([text isEqualToString: @""]) {
@@ -482,7 +493,7 @@
         }
         [self updateTable];
     }
-    else if(objectTag == 1)
+    else if(searchFieldTag == 1)
     {
         NSString *text = [textField stringValue];
         if([text isEqualToString: @""]) {

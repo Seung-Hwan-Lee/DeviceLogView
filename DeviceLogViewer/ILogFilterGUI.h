@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "LogFilter.h"
 #import "LogData.h"
+#import "MyLogDataController.h"
 
 
 @protocol ILogFilterGUIDelegate;
@@ -19,9 +20,9 @@
 
 
 - (id)initWithWindow:(NSWindow *)aWindow;
-- (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController;
-- (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController;
-- (void)makeProcessTable:(NSArrayController *)aProcessArrayController;
+- (void)makeLogTableWithLogArrayController:(MyLogDataController *)aLogArrayController;
+- (void)makeDeviceTableWithDeviceArrayController:(MyLogDataController *)aDeviceArrayController;
+- (void)makeProcessTable:(MyLogDataController *)aProcessArrayController;
 - (void)updateTable;
 
 
