@@ -469,7 +469,8 @@
         NSClipView *scrollClipView =[[_logTableView enclosingScrollView] contentView];
         NSPoint currentScrollPosition = [scrollClipView bounds].origin;
         CGSize tableSize = _logTableView.frame.size;
-        if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height - 240))
+        
+        if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height + 240))
         {
             _fixed = NO;
             [_logArrayController setIsUpdateTable:YES];
@@ -480,6 +481,8 @@
             _fixed = YES;
              [_logArrayController setIsUpdateTable:NO];
         }
+        
+        NSLog(@"%f",currentScrollPosition.y - (tableSize.height - _window.frame.size.height + 240) );
         
     }
     
