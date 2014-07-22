@@ -29,13 +29,17 @@
     [_updateData addObject:object];
     if(_isUpdateTable)
     {
-        for(int i = 0 ; i < [_updateData count] ; i ++)
-        {
-            [super addObject:[_updateData objectAtIndex:i]];
-        }
-        [_updateData removeAllObjects];
-        
+        [self updateArrayController];
     }
+}
+
+- (void) updateArrayController
+{
+    for(int i = 0 ; i < [_updateData count] ; i ++)
+    {
+        [super addObject:[_updateData objectAtIndex:i]];
+    }
+    [_updateData removeAllObjects];
 }
 
 @end

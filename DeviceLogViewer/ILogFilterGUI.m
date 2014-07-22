@@ -78,6 +78,9 @@
 }
 
 
+
+
+
 #pragma mark - make GUI
 
 
@@ -273,6 +276,8 @@
     [_window.contentView addSubview:tableContainer];
 }
 
+
+
 - (void)makeDeviceTableWithDeviceArrayController:(MyLogDataController *)aDeviceArrayController
 {
     _deviceArrayController = aDeviceArrayController;
@@ -336,6 +341,8 @@
 }
 
 
+
+
 #pragma mark - Table Delegate
 
 
@@ -360,6 +367,7 @@
         if(textLocation.location != NSNotFound)
         {
             [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:textLocation];
+            [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:textLocation];
             [cell setAttributedStringValue:cellText];
             return;
         }
@@ -437,8 +445,10 @@
         LogData *data = [[_logArrayController arrangedObjects] objectAtIndex:row];
         NSInteger line = [[data.log componentsSeparatedByCharactersInSet:
                            [NSCharacterSet newlineCharacterSet]] count];
-        return tableView.rowHeight * (line - 1);
-        
+        if(line > 1)
+        {
+            return tableView.rowHeight * (line - 1);
+        }
     }
     return tableView.rowHeight;
 }
@@ -463,6 +473,7 @@
         {
             _fixed = NO;
             [_logArrayController setIsUpdateTable:YES];
+            [_logArrayController updateArrayController];
         }
         else
         {

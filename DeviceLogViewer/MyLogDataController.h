@@ -12,4 +12,6 @@
 
 @property BOOL isUpdateTable;
 
+- (void) updateArrayController;
+
 @end

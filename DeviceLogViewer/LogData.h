@@ -10,15 +10,18 @@
 #import <Foundation/Foundation.h>
 
 
-@interface LogData : NSManagedObject
+@interface LogData : NSObject
 
 
-@property (nonatomic, retain) NSString *date;
-@property (nonatomic, retain) NSString *device;
-@property (nonatomic, retain) NSString *process;
-@property (nonatomic, retain) NSString *logLevel;
-@property (nonatomic, retain) NSString *log;
-@property (nonatomic, retain) NSColor *textColor;
-@property (nonatomic, retain) NSString *deviceID;
+@property NSString *date;
+@property NSString *device;
+@property NSString *process;
+@property NSString *logLevel;
+@property NSString *log;
+@property NSColor *textColor;
+@property NSString *deviceID;
+
+
+- (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;
 
 @end
