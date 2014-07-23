@@ -28,6 +28,7 @@
     NSSearchField *_logSearchField;
     NSSearchField *_loghighlightField;
     NSTextField *_dataSource, *_processName, *_logLevel, *_searchLog, *_highlightLog;
+    NSPredicate *_processPredicte;
     
     NSString *_highlightString;
     BOOL _fixed;
@@ -45,6 +46,7 @@
         _logFilter = [[LogFilter alloc]init];
         _highlightString = nil;
         _fixed = NO;
+        _processPredicte = nil;
     }
     
     [_window setDelegate:self];
@@ -65,9 +67,7 @@
     {
         [_logTableView scrollRowToVisible:numberOfRows - 1];
     }
-    
-    
-    _processArrayController.filterPredicate = [_logFilter processPredicate];
+    _processArrayController.filterPredicate = _processPredicte;
     @try {
     _logArrayController.filterPredicate = [_logFilter logPredicate];
     }
@@ -430,7 +430,13 @@
     if ([notification object] == _processTableView){
         NSInteger row = [_processTableView selectedRow];
         if (row == 0){
+            
             [_logFilter setProcess:nil];
+            
+            if( [_deviceTableView selectedRow] == 0)
+            {
+                [_logFilter setDeviceID:nil];
+            }
             
         } else {
             NSDictionary *processData = [[_processArrayController arrangedObjects] objectAtIndex:row];
@@ -442,9 +448,13 @@
     } else if([notification object] == _deviceTableView) {
         NSInteger row = [_deviceTableView selectedRow];
         if (row == 0){
+            
             [_window setTitle:@"DeviceLogViewer"];
             [_logFilter setProcess:nil];
             [_logFilter setDeviceID:nil];
+            
+            _processPredicte = [_logFilter processPredicate];
+            
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
             NSString *source = [[deviceData objectForKey:@"device"] substringToIndex:2];
@@ -452,17 +462,18 @@
             
             if( [source isEqualToString:@"F:"])
             {
-                NSLog(@"%@", sourceID);
                 [_window setTitle:sourceID];
             }
             else
             {
-                [_window setTitle:@"DeviceLogViewer"];
+                if ([_delegate respondsToSelector:@selector(changeWindowTitle)]) {
+                    [_delegate changeWindowTitle];
+                }
+
             }
             
-           
-            
             [_logFilter setDeviceID: sourceID];
+            _processPredicte = [_logFilter processPredicate];
 
         }
         
@@ -501,7 +512,6 @@
         NSPoint currentScrollPosition = [scrollClipView bounds].origin;
         CGSize tableSize = _logTableView.frame.size;
         
-       // NSLog(@"%f", currentScrollPosition.y - (tableSize.height - _window.frame.size.height + 240));
         
         if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height + 255))
         {

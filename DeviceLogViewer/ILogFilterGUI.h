@@ -35,5 +35,6 @@
 
 - (void)fileLoading;
 - (void)fileSaving:(BOOL)isSavingEveryLog;
+- (void)changeWindowTitle;
 
 @end

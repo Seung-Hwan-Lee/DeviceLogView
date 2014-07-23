@@ -27,6 +27,7 @@
 
 - (void)fileOpen;
 - (void)saveFile:(BOOL)isSavingEveryLog;
+- (NSString *)currentFilePath;
 
 
 @end

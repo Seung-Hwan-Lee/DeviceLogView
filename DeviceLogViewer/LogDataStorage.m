@@ -13,7 +13,10 @@
 @implementation LogDataStorage
 {
     AnalyzeDeviceLog *_analyzeDeviceLog;
+    
     NSString *_cacheForderPaths;
+    NSString *filePath;
+    
 }
 
 
@@ -195,7 +198,7 @@
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
     [outputFormatter setDateFormat:@"YYYY_MM_dd_HH"];
     NSString *fileName = [[outputFormatter stringFromDate:now] stringByAppendingString:@"_LogData.txt"];
-    NSString *filePath = [NSString stringWithFormat:@"%@%@", _cacheForderPaths, fileName];
+    filePath = [NSString stringWithFormat:@"%@%@", _cacheForderPaths, fileName];
     NSString *logData = [NSString stringWithFormat:@"%@%@%@%@%@", aLog.date, aLog.device, aLog.process, aLog.logLevel, aLog.log];
     NSData *data = [logData dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -214,7 +217,7 @@
 
 - (void)saveFile:(BOOL)isSavingEveryLog
 {
-    NSURL *filePath = [self openDialogForSaveFile];
+    NSURL *filePathURL = [self openDialogForSaveFile];
     NSArray *logData = nil;
     
     if(isSavingEveryLog)
@@ -227,7 +230,7 @@
         logData = [_logDataArrayController arrangedObjects];
     }
     
-    if( logData != nil && filePath != nil)
+    if( logData != nil && filePathURL != nil)
     {
         NSString *saveLogData = @"";
         for(int i = 0 ; i < [logData count] ; i++)
@@ -236,7 +239,7 @@
             saveLogData = [NSString stringWithFormat:@"%@%@%@%@%@%@", saveLogData, log.date, log.device, log.process, log.logLevel, log.log];
         }
         
-        [saveLogData writeToURL:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        [saveLogData writeToURL:filePathURL atomically:YES encoding:NSUTF8StringEncoding error:nil];
         
     }
 }
@@ -260,6 +263,11 @@
         url  = [panel URL];
     }
     return url;
+}
+
+- (NSString *)currentFilePath
+{
+    return filePath;
 }
 
 @end

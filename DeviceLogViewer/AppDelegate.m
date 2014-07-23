@@ -27,9 +27,10 @@
     [_gui makeDeviceTableWithDeviceArrayController:[_logDataStorage deviceArrayController]];
     [_gui makeProcessTable:[_logDataStorage processArrayController]];
     _gui.delegate =self;
-    
-    
+
 }
+
+# pragma mark - ILogFilterGUI delegate
 
 - (void)dataUpdate
 {
@@ -46,6 +47,11 @@
 {
     // Read File Test
     [_logDataStorage saveFile:isSavingEveryLog];
+}
+
+- (void)changeWindowTitle
+{
+    [_window setTitle:[_logDataStorage currentFilePath]];
 }
 
 @end
