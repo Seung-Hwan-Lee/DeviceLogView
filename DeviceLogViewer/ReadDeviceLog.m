@@ -44,7 +44,7 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
 
 - (void)startLogging
 {
-
+    
     dispatch_queue_t backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(backgroundQueue, ^{
         liveConnections = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, NULL, NULL);
@@ -52,9 +52,7 @@ ReadDeviceLog *gReadDeviceLogObject = nil;
         am_device_notification *notification;
         AMDeviceNotificationSubscribe(DeviceNotificationCallback, 0, 0, NULL, &notification);
         CFRunLoopRun();
-
     });
-    
     
 }
 

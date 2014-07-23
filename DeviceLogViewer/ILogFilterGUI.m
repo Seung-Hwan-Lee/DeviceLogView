@@ -68,13 +68,7 @@
         [_logTableView scrollRowToVisible:numberOfRows - 1];
     }
     _processArrayController.filterPredicate = _processPredicte;
-    @try {
     _logArrayController.filterPredicate = [_logFilter logPredicate];
-    }
-    @catch (NSException *e)
-    {
-        NSLog(@"Error: %@%@", [e name], [e reason]);
-    }
 }
 
 
@@ -429,6 +423,10 @@
 {
     if ([notification object] == _processTableView){
         NSInteger row = [_processTableView selectedRow];
+        if(row > [[_processArrayController arrangedObjects] count])
+        {
+            return;
+        }
         if (row == 0){
             
             [_logFilter setProcess:nil];
@@ -447,6 +445,10 @@
         [self updateTable];
     } else if([notification object] == _deviceTableView) {
         NSInteger row = [_deviceTableView selectedRow];
+        if(row > [[_deviceArrayController arrangedObjects] count])
+        {
+            return;
+        }
         if (row == 0){
             
             [_window setTitle:@"DeviceLogViewer"];
@@ -597,7 +599,6 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    //NSLog(@"Program exit");
     return NO;
 }
 

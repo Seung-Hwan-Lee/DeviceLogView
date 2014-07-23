@@ -54,4 +54,5 @@
     [_window setTitle:[_logDataStorage currentFilePath]];
 }
 
+
 @end
