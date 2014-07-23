@@ -41,7 +41,9 @@
                 {
                     const char* utf8String = [sendText UTF8String];
                     size_t len = strlen(utf8String) + 1;
-                    [self.delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+                    if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
+                        [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+                    }
                 }
                 sendText =  [NSString stringWithFormat:@"%@\n", tempString];
             }
@@ -50,7 +52,9 @@
         {
             const char* utf8String = [sendText UTF8String];
             size_t len = strlen(utf8String) + 1;
-            [self.delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+            if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
+                [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+            }
         }
 
 

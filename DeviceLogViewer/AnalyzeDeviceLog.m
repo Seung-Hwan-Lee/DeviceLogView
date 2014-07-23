@@ -114,8 +114,10 @@
         
         dispatch_async(dispatch_get_main_queue(),
                        ^{
-                           
-                           [self.delegate analyzedLog:logDataInfo isDevice:isDevice];
+                         
+                           if ([_delegate respondsToSelector:@selector(analyzedLog:isDevice:)]) {
+                               [self.delegate analyzedLog:logDataInfo isDevice:isDevice];
+                           }
                        });
 
         

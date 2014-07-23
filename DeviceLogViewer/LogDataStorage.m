@@ -30,10 +30,10 @@
             [[NSFileManager defaultManager] createDirectoryAtPath:_cacheForderPaths withIntermediateDirectories:NO attributes:nil error:nil];
         }
         
-        _logDataArrayController = [[MyLogDataController alloc] init];
-        _processArrayController = [[MyLogDataController alloc] init];
+        _logDataArrayController = [[NSArrayController alloc] init];
+        _processArrayController = [[NSArrayController alloc] init];
         [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
-        _deviceArrayController = [[MyLogDataController alloc] init];
+        _deviceArrayController = [[NSArrayController alloc] init];
         [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
         
         _analyzeDeviceLog =[[AnalyzeDeviceLog alloc] init];
@@ -193,8 +193,8 @@
 {
     NSDate * now = [NSDate date];
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"YYYY-MM-dd HH"];
-    NSString *fileName = [[outputFormatter stringFromDate:now] stringByAppendingString:@" LogData"];
+    [outputFormatter setDateFormat:@"YYYY_MM_dd_HH"];
+    NSString *fileName = [[outputFormatter stringFromDate:now] stringByAppendingString:@"_LogData.txt"];
     NSString *filePath = [NSString stringWithFormat:@"%@%@", _cacheForderPaths, fileName];
     NSString *logData = [NSString stringWithFormat:@"%@%@%@%@%@", aLog.date, aLog.device, aLog.process, aLog.logLevel, aLog.log];
     NSData *data = [logData dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];

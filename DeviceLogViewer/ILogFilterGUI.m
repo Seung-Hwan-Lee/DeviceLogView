@@ -21,9 +21,9 @@
     NSButton *_loadfileButton;
     NSButton *_saveallButton;
     NSButton *_savefilteredButton;
-    MyLogDataController *_processArrayController;
-    MyLogDataController *_deviceArrayController;
-    MyLogDataController *_logArrayController;
+    NSArrayController *_processArrayController;
+    NSArrayController *_deviceArrayController;
+    NSArrayController *_logArrayController;
     NSArray *_logLevelArray;
     NSSearchField *_logSearchField;
     NSSearchField *_loghighlightField;
@@ -66,8 +66,15 @@
         [_logTableView scrollRowToVisible:numberOfRows - 1];
     }
     
+    
     _processArrayController.filterPredicate = [_logFilter processPredicate];
+    @try {
     _logArrayController.filterPredicate = [_logFilter logPredicate];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"Error: %@%@", [e name], [e reason]);
+    }
 }
 
 
@@ -82,7 +89,7 @@
     
     NSSize windowSize = _window.frame.size;
     
-    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(525, windowSize.height - 220, 100, 25)];
+    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(730, windowSize.height - 210, 100, 25)];
     [_clearButton setIdentifier:@"clearButton"];
     [_clearButton setTag:0];
     [_clearButton setTitle:@"Clear Log"];
@@ -195,7 +202,7 @@
 
 
 
-- (void)makeLogTableWithLogArrayController:(MyLogDataController *)aLogArrayController
+- (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController
 {
     _logArrayController = aLogArrayController;
     _logArrayController.selectsInsertedObjects = NO;
@@ -271,7 +278,7 @@
 
 
 
-- (void)makeDeviceTableWithDeviceArrayController:(MyLogDataController *)aDeviceArrayController
+- (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController
 {
     _deviceArrayController = aDeviceArrayController;
     _deviceArrayController.selectsInsertedObjects = NO;
@@ -302,7 +309,7 @@
     [_window.contentView addSubview:tableContainer];
 }
 
-- (void)makeProcessTable:(MyLogDataController *)aProcessArrayController
+- (void)makeProcessTable:(NSArrayController *)aProcessArrayController
 {
     _processArrayController = aProcessArrayController;
     _processArrayController.selectsInsertedObjects = NO;
@@ -356,6 +363,19 @@
     {
         NSTextFieldCell *cell = aCell;
         NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
+        NSRange searchedRange = NSMakeRange(0, [cellText length]);
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:_highlightString options:0 error:nil];
+        NSArray *matches = [regex matchesInString:[cellText string] options:0 range:searchedRange];
+        
+        for (NSTextCheckingResult* match in matches) {
+            [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:[match range]];
+            [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:[match range]];
+            [cell setAttributedStringValue:cellText];
+            return;
+
+        }
+        
+        /*
         NSRange textLocation = [[cellText string] rangeOfString:_highlightString options:NSCaseInsensitiveSearch];
         if(textLocation.location != NSNotFound)
         {
@@ -364,6 +384,7 @@
             [cell setAttributedStringValue:cellText];
             return;
         }
+         */
     }
 }
 
@@ -413,6 +434,7 @@
             
         } else {
             NSDictionary *processData = [[_processArrayController arrangedObjects] objectAtIndex:row];
+            
             [_logFilter setDeviceID: [processData objectForKey:@"deviceID"]];
             [_logFilter setProcess: [processData objectForKey:@"process"]];
         }
@@ -420,11 +442,28 @@
     } else if([notification object] == _deviceTableView) {
         NSInteger row = [_deviceTableView selectedRow];
         if (row == 0){
+            [_window setTitle:@"DeviceLogViewer"];
             [_logFilter setProcess:nil];
             [_logFilter setDeviceID:nil];
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
-            [_logFilter setDeviceID: [deviceData objectForKey:@"deviceID"]];
+            NSString *source = [[deviceData objectForKey:@"device"] substringToIndex:2];
+            NSString *sourceID = [deviceData objectForKey:@"deviceID"];
+            
+            if( [source isEqualToString:@"F:"])
+            {
+                NSLog(@"%@", sourceID);
+                [_window setTitle:sourceID];
+            }
+            else
+            {
+                [_window setTitle:@"DeviceLogViewer"];
+            }
+            
+           
+            
+            [_logFilter setDeviceID: sourceID];
+
         }
         
         [self updateTable];
@@ -462,18 +501,14 @@
         NSPoint currentScrollPosition = [scrollClipView bounds].origin;
         CGSize tableSize = _logTableView.frame.size;
         
-        if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height + 240))
+       // NSLog(@"%f", currentScrollPosition.y - (tableSize.height - _window.frame.size.height + 240));
+        
+        if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height + 255))
         {
-            
-            [_logArrayController setIsUpdateTable:YES];
-            [_logArrayController updateArrayController];
-            [self updateTable];
             _fixed = NO;
         }
         else
         {
-            
-            [_logArrayController setIsUpdateTable:NO];
             _fixed = YES;
         }
         
@@ -588,7 +623,7 @@
  
     [_logSearchField setFrame:NSMakeRect(480, frameSize.height - 130, 200, 50)];
     [_loghighlightField setFrame:NSMakeRect(480, frameSize.height - 190, 200, 50)];
-    [_clearButton setFrame:NSMakeRect(525, frameSize.height - 220, 100, 25)];
+    [_clearButton setFrame:NSMakeRect(730, frameSize.height - 210, 100, 25)];
     [_saveallButton setFrame:NSMakeRect(730, frameSize.height - 170, 100, 25)];
     [_savefilteredButton setFrame:NSMakeRect(730, frameSize.height - 130, 100, 25)];
     [_loadfileButton setFrame:NSMakeRect(730, frameSize.height - 90, 100, 25)];

@@ -28,6 +28,7 @@
     [_gui makeProcessTable:[_logDataStorage processArrayController]];
     _gui.delegate =self;
     
+    
 }
 
 - (void)dataUpdate
