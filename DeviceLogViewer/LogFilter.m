@@ -64,8 +64,7 @@
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process == %@", _process]];
     }
     if( _sentence != nil) {
-        _sentence = [NSString stringWithFormat:@".*%@.*", _sentence];
-        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"log matches %@", _sentence]];
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"log matches %@ or log contains %@", _sentence, _sentence]];
     }
     if( !_logLevel[0]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Debug"]];

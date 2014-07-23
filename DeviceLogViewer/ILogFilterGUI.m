@@ -450,7 +450,6 @@
         if (row == 0){
             
             [_window setTitle:@"DeviceLogViewer"];
-            [_logFilter setProcess:nil];
             [_logFilter setDeviceID:nil];
             
             _processPredicte = [_logFilter processPredicate];
@@ -476,7 +475,9 @@
             _processPredicte = [_logFilter processPredicate];
 
         }
-        
+        [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:0] byExtendingSelection:NO];
+        [_logFilter setProcess:nil];
+
         [self updateTable];
     }
 }
@@ -594,6 +595,11 @@
     }
 }
 
+- (BOOL)windowShouldClose:(id)sender
+{
+    //NSLog(@"Program exit");
+    return NO;
+}
 
 
 #pragma mark - GUI resize function

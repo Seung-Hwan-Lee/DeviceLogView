@@ -18,18 +18,21 @@
 - (void)readFile
 {
     
-        NSURL *filePath = [self openDialogForOpenFile];
+    NSURL *filePath = [self openDialogForOpenFile];
+    
+    
+    dispatch_queue_t backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(backgroundQueue, ^{
         NSString *fileContent = [NSString stringWithContentsOfURL:filePath encoding:NSUTF8StringEncoding error:nil];
-        
-        NSArray* allLinedStrings =
-        [fileContent componentsSeparatedByCharactersInSet:
-         [NSCharacterSet newlineCharacterSet]];
+        NSArray *allLinedStrings =[fileContent componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
         
         NSString *sendText;
         
         for( int i = 0 ; i < allLinedStrings.count ; i++)
         {
+            
             NSString *tempString = [allLinedStrings objectAtIndex:i];
+          
             
             if(tempString.length != 0 &&[tempString characterAtIndex:0] == NSTabCharacter)
             {
@@ -41,6 +44,7 @@
                 {
                     const char* utf8String = [sendText UTF8String];
                     size_t len = strlen(utf8String) + 1;
+                    
                     if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
                         [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
                     }
@@ -56,7 +60,11 @@
                 [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
             }
         }
+        
+        
+    });
 
+    
 
     
 }
