@@ -30,7 +30,9 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="Z6B-Z8-fkO"/>
-                            <menuItem title="Preferences…" keyEquivalent="," id="97S-wL-Lia"/>
+                            <menuItem title="Preferences…" id="97S-wL-Lia">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="qxo-Z8-GkX"/>
                             <menuItem title="Services" id="Cv7-bF-4wq">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -119,6 +121,11 @@
                             <menuItem title="Move Next" keyEquivalent="." id="E8x-Ph-0JC">
                                 <connections>
                                     <action selector="moveNext:" target="Voe-Tx-rLC" id="PjC-Pk-9TN"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Move Prev" keyEquivalent="," id="eff-jD-QfS">
+                                <connections>
+                                    <action selector="movePrev:" target="Voe-Tx-rLC" id="CdM-bY-JU1"/>
                                 </connections>
                             </menuItem>
                         </items>

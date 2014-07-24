@@ -63,6 +63,9 @@
 - (IBAction)moveNext:(id)sender {
     [_gui moveNextCheckedLog];
 }
+- (IBAction)movePrev:(id)sender {
+    [_gui movePrevCheckedLog];
+}
 
 
 @end

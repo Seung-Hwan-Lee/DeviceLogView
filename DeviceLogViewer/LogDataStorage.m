@@ -25,7 +25,6 @@
     self = [super init];
     if(self)
     {
-        
         NSArray *documentsDirectory  = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         _cacheForderPaths = [[documentsDirectory objectAtIndex:0] stringByAppendingString:@"/MyDeviceLog/"];
         if (![[NSFileManager defaultManager] fileExistsAtPath:_cacheForderPaths])

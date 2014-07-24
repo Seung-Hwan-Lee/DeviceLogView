@@ -701,7 +701,7 @@
 }
 
 
-#pragma mark - 
+#pragma mark - Log Check function
 
 - (void)checkingCurrentLog
 {
@@ -727,11 +727,9 @@
         return;
     }
     
-    if( _checkedPoint >= [_checkedLog count] )
+    if( _checkedPoint >= [_checkedLog count] || _checkedPoint < 0)
     {
         _checkedPoint = 0;
-        [self moveNextCheckedLog];
-        return;
     }
     
     LogData *log = [_checkedLog objectAtIndex:_checkedPoint];
@@ -746,6 +744,32 @@
     }
     
 }
+
+- (void)movePrevCheckedLog
+{
+    if([_checkedLog count] < 1)
+    {
+        return;
+    }
+    
+    if( _checkedPoint >= [_checkedLog count] || _checkedPoint < 0)
+    {
+        _checkedPoint = [_checkedLog count] - 1;
+    }
+    
+    LogData *log = [_checkedLog objectAtIndex:_checkedPoint];
+    NSArray *arrangLogs = [_logArrayController arrangedObjects];
+    
+    if([arrangLogs containsObject:log])
+    {
+        NSInteger checkedLogRow =[arrangLogs indexOfObject:log];
+        [_logTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex: checkedLogRow] byExtendingSelection:NO];
+        [_logTableView scrollRowToVisible:checkedLogRow];
+        _checkedPoint--;
+    }
+    
+}
+
 
 
 @end

@@ -24,6 +24,7 @@
 - (void)updateTable;
 - (void)checkingCurrentLog;
 - (void)moveNextCheckedLog;
+- (void)movePrevCheckedLog;
 
 
 
