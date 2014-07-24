@@ -64,7 +64,8 @@
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process == %@", _process]];
     }
     if( _sentence != nil) {
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@".*(%@).*",_sentence] options:0 error:nil];
+        NSString *regexString = [NSString stringWithFormat:@".*(%@).*",_sentence];
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[regexString stringByReplacingOccurrencesOfString:@"&" withString:@".*"] options:0 error:nil];
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"log matches[cd] %@", [regex pattern]]];
     }
     if( !_logLevel[0]) {

@@ -32,6 +32,7 @@
 
 # pragma mark - ILogFilterGUI delegate
 
+
 - (void)dataUpdate
 {
     [_gui updateTable];
@@ -52,6 +53,15 @@
 - (void)changeWindowTitle
 {
     [_window setTitle:[_logDataStorage currentFilePath]];
+}
+
+# pragma mark - Key Event
+
+- (IBAction)checkingLog:(id)sender {
+    [_gui checkingCurrentLog];
+}
+- (IBAction)moveNext:(id)sender {
+    [_gui moveNextCheckedLog];
 }
 
 

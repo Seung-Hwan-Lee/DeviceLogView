@@ -22,6 +22,9 @@
 - (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController;
 - (void)makeProcessTable:(NSArrayController *)aProcessArrayController;
 - (void)updateTable;
+- (void)checkingCurrentLog;
+- (void)moveNextCheckedLog;
+
 
 
 @property id<ILogFilterGUIDelegate> delegate;
