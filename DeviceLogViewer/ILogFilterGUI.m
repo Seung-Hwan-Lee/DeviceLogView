@@ -673,6 +673,7 @@
             [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
             [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
             [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
+            [_checkedLog removeAllObjects];
 
             break;
         case 1:

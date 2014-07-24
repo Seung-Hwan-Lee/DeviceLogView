@@ -166,22 +166,14 @@
 {
     
     NSArray *allLogs = [_logDataArrayController content];
-    [[_processArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
-    [[_deviceArrayController mutableArrayValueForKey:@"content"] removeAllObjects];
-    [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
-    [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
-    
+    NSArray *allDevice = [_deviceArrayController content];
+    NSArray *allProcess = [_deviceArrayController content];
     NSArray *deleteLogs = [allLogs filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"deviceID MATCHES %@", aDeviceID]];
     [_logDataArrayController removeObjects: deleteLogs];
-    
-    NSArray *arrangedLogs = [_logDataArrayController valueForKeyPath:@"arrangedObjects"];
-    for(int i = 0 ; i < arrangedLogs.count ; i++)
-    {
-        LogData *logData = [arrangedLogs objectAtIndex:i];
-        [self addProcessNameToArrayWithProcessName:logData.process deviceID:logData.deviceID];
-        [self addDeviceNameToArrayWithDeviceName:logData.device deviceID:logData.deviceID];
-    }
-    
+    NSArray *deleteDevices = [allDevice filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"deviceID MATCHES %@", aDeviceID]];
+    [_deviceArrayController removeObjects: deleteDevices];
+    NSArray *deleteProcess = [allProcess filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"deviceID MATCHES %@", aDeviceID]];
+    [_processArrayController removeObjects: deleteProcess];
     NSLog(@"device disconncted");
     
 }
@@ -207,6 +199,7 @@
         [fileManager createFileAtPath:filePath contents:nil attributes:nil];
     }
     
+    
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
     [fileHandle seekToEndOfFile];
     [fileHandle writeData:data];
@@ -217,7 +210,9 @@
 
 - (void)saveFile:(BOOL)isSavingEveryLog
 {
-    NSURL *filePathURL = [self openDialogForSaveFile];
+    
+    NSString *stringfilePath = [[[self openDialogForSaveFile] absoluteString] substringFromIndex:7];
+    
     NSArray *logData = nil;
     
     if(isSavingEveryLog)
@@ -230,16 +225,22 @@
         logData = [_logDataArrayController arrangedObjects];
     }
     
-    if( logData != nil && filePathURL != nil)
+    if( logData != nil && stringfilePath != nil)
     {
-        NSString *saveLogData = @"";
+       
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        [fileManager createFileAtPath:stringfilePath contents:nil attributes:nil];
+        NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:stringfilePath];
+        
         for(int i = 0 ; i < [logData count] ; i++)
         {
-            LogData *log = [logData objectAtIndex:i];
-            saveLogData = [NSString stringWithFormat:@"%@%@%@%@%@%@", saveLogData, log.date, log.device, log.process, log.logLevel, log.log];
+            LogData *aLog = [logData objectAtIndex:i];
+            NSString *log = [NSString stringWithFormat:@"%@%@%@%@%@", aLog.date, aLog.device, aLog.process, aLog.logLevel, aLog.log];
+            NSData *data = [log dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+            [fileHandle writeData:data];
         }
         
-        [saveLogData writeToURL:filePathURL atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        [fileHandle closeFile];
         
     }
 }

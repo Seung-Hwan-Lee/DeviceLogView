@@ -33,7 +33,6 @@
             
             NSString *tempString = [allLinedStrings objectAtIndex:i];
           
-            
             if(tempString.length != 0 &&[tempString characterAtIndex:0] == NSTabCharacter)
             {
                 sendText = [NSString stringWithFormat:@"%@%@\n", sendText, tempString];
