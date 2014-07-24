@@ -358,32 +358,46 @@
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    if((_highlightString != nil) && ([tableColumn.identifier isEqualToString:@"log"]))
+    if( tableView.tag == 0)
     {
-        NSTextFieldCell *cell = aCell;
-        NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
-        NSRange searchedRange = NSMakeRange(0, [cellText length]);
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[_highlightString stringByReplacingOccurrencesOfString:@"&" withString:@".*"] options:NSRegularExpressionCaseInsensitive error:nil];
-        NSArray *matches = [regex matchesInString:[cellText string] options:0 range:searchedRange];
-        
-        for (NSTextCheckingResult* match in matches) {
-            [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:[match range]];
-            [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:[match range]];
-            [cell setAttributedStringValue:cellText];
-            return;
-
-        }
-        
-        /*
-        NSRange textLocation = [[cellText string] rangeOfString:_highlightString options:NSCaseInsensitiveSearch];
-        if(textLocation.location != NSNotFound)
+        if(([tableColumn.identifier isEqualToString:@"date"]) && [_checkedLog containsObject:[[_logArrayController arrangedObjects] objectAtIndex:row]])
         {
-            [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:textLocation];
-            [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:textLocation];
+            NSTextFieldCell *cell = aCell;
+            NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
+            NSRange searchedRange = NSMakeRange(0, [cellText length]);
+        
+            [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:searchedRange];
+            [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:searchedRange];
             [cell setAttributedStringValue:cellText];
             return;
         }
-         */
+        if((_highlightString != nil) && ([tableColumn.identifier isEqualToString:@"log"]))
+        {
+            NSTextFieldCell *cell = aCell;
+            NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
+            NSRange searchedRange = NSMakeRange(0, [cellText length]);
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[_highlightString stringByReplacingOccurrencesOfString:@"&" withString:@".*"] options:NSRegularExpressionCaseInsensitive error:nil];
+            NSArray *matches = [regex matchesInString:[cellText string] options:0 range:searchedRange];
+            
+            for (NSTextCheckingResult* match in matches) {
+                [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:[match range]];
+                [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:[match range]];
+                [cell setAttributedStringValue:cellText];
+                //return;
+            }
+            
+            /*
+             NSRange textLocation = [[cellText string] rangeOfString:_highlightString options:NSCaseInsensitiveSearch];
+             if(textLocation.location != NSNotFound)
+             {
+             [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:textLocation];
+             [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:textLocation];
+             [cell setAttributedStringValue:cellText];
+             return;
+             }
+             */
+        }
+
     }
 }
 
@@ -717,6 +731,7 @@
         {
             [_checkedLog removeObject:log];
         }
+        [_logTableView reloadData];
     }
 }
 
@@ -742,11 +757,26 @@
         [_logTableView scrollRowToVisible:checkedLogRow];
         _checkedPoint++;
     }
+    else{
+        for( ; _checkedPoint < [_checkedLog count] ; _checkedPoint ++)
+        {
+            log = [_checkedLog objectAtIndex:_checkedPoint];
+            
+            if([arrangLogs containsObject:log])
+            {
+                [self moveNextCheckedLog];
+                return;
+            }
+            
+        }
+    }
+
     
 }
 
 - (void)movePrevCheckedLog
 {
+    
     if([_checkedLog count] < 1)
     {
         return;
@@ -766,6 +796,19 @@
         [_logTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex: checkedLogRow] byExtendingSelection:NO];
         [_logTableView scrollRowToVisible:checkedLogRow];
         _checkedPoint--;
+    }
+    else{
+        for( ; _checkedPoint < [_checkedLog count] ; _checkedPoint ++)
+        {
+            log = [_checkedLog objectAtIndex:_checkedPoint];
+            
+            if([arrangLogs containsObject:log])
+            {
+                [self movePrevCheckedLog];
+                return;
+            }
+
+        }
     }
     
 }
