@@ -358,7 +358,7 @@
         NSTextFieldCell *cell = aCell;
         NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
         NSRange searchedRange = NSMakeRange(0, [cellText length]);
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:_highlightString options:0 error:nil];
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:_highlightString options:NSRegularExpressionCaseInsensitive error:nil];
         NSArray *matches = [regex matchesInString:[cellText string] options:0 range:searchedRange];
         
         for (NSTextCheckingResult* match in matches) {
