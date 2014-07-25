@@ -385,17 +385,6 @@
                 [cell setAttributedStringValue:cellText];
                 //return;
             }
-            
-            /*
-             NSRange textLocation = [[cellText string] rangeOfString:_highlightString options:NSCaseInsensitiveSearch];
-             if(textLocation.location != NSNotFound)
-             {
-             [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:textLocation];
-             [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:textLocation];
-             [cell setAttributedStringValue:cellText];
-             return;
-             }
-             */
         }
 
     }

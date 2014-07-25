@@ -166,7 +166,8 @@
     
     NSArray *allLogs = [_logDataArrayController content];
     NSArray *allDevice = [_deviceArrayController content];
-    NSArray *allProcess = [_deviceArrayController content];
+    NSArray *allProcess = [_processArrayController content];
+    
     NSArray *deleteLogs = [allLogs filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"deviceID MATCHES %@", aDeviceID]];
     [_logDataArrayController removeObjects: deleteLogs];
     NSArray *deleteDevices = [allDevice filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"deviceID MATCHES %@", aDeviceID]];
