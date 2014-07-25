@@ -607,6 +607,7 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
+    exit(0);
     return NO;
 }
 
