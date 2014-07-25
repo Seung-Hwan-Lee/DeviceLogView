@@ -34,9 +34,22 @@
         
         _logDataArrayController = [[NSArrayController alloc] init];
         _processArrayController = [[NSArrayController alloc] init];
-        [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
         _deviceArrayController = [[NSArrayController alloc] init];
+        
+        _logDataArrayController.selectsInsertedObjects = NO;
+        _processArrayController.selectsInsertedObjects = NO;
+        _deviceArrayController.selectsInsertedObjects = NO;
+
+
+        [_logDataArrayController setAutomaticallyPreparesContent:YES];
+        [_logDataArrayController setAutomaticallyRearrangesObjects:YES];
+        //[_logDataArrayController setClearsFilterPredicateOnInsertion:NO];
+        //[_processArrayController setClearsFilterPredicateOnInsertion:NO];
+        //[_deviceArrayController setClearsFilterPredicateOnInsertion:NO];
+        
         [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
+        [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
+
         
         _analyzeDeviceLog =[[AnalyzeDeviceLog alloc] init];
         _analyzeDeviceLog.delegate = self;

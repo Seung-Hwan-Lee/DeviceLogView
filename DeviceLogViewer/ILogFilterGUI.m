@@ -28,7 +28,6 @@
     NSSearchField *_logSearchField;
     NSSearchField *_loghighlightField;
     NSTextField *_dataSource, *_processName, *_logLevel, *_searchLog, *_highlightLog;
-    NSPredicate *_processPredicte;
     NSMutableArray *_checkedLog;
     NSInteger _checkedPoint;
     
@@ -41,7 +40,6 @@
     
     NSString *_highlightString;
     BOOL _fixed;
-    BOOL _fileRead;
 }
 
 
@@ -57,9 +55,7 @@
         _checkedLog = [[NSMutableArray alloc] init];
         _highlightString = nil;
         _fixed = NO;
-        _processPredicte = nil;
         _checkedPoint= 0;
-        _fileRead = NO;
     }
     
     [_window setDelegate:self];
@@ -74,15 +70,14 @@
 
 
 - (void)updateTable{
-    if(!_fileRead)
+
+    if(!_fixed)
     {
         NSInteger numberOfRows = [_logTableView numberOfRows];
-        if (numberOfRows > 0 && !_fixed)
+        if (numberOfRows > 0)
         {
             [_logTableView scrollRowToVisible:numberOfRows - 1];
         }
-        _processArrayController.filterPredicate = _processPredicte;
-        _logArrayController.filterPredicate = [_logFilter logPredicate];
     }
     
 }
@@ -220,8 +215,7 @@
 - (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController
 {
     _logArrayController = aLogArrayController;
-    _logArrayController.selectsInsertedObjects = NO;
-   
+      
     NSSize windowSize = _window.frame.size;
     _logScrollContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 240)];
     _logTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
@@ -278,7 +272,6 @@
 - (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController
 {
     _deviceArrayController = aDeviceArrayController;
-    _deviceArrayController.selectsInsertedObjects = NO;
     NSSize windowSize = _window.frame.size;
     // create a table view and a scroll view
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, windowSize.height - 220, 120, 150)];
@@ -309,7 +302,6 @@
 - (void)makeProcessTable:(NSArrayController *)aProcessArrayController
 {
     _processArrayController = aProcessArrayController;
-    _processArrayController.selectsInsertedObjects = NO;
 
     NSSize windowSize = _window.frame.size;
     NSScrollView * tableContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(150, windowSize.height - 220, 150, 150)];
@@ -420,6 +412,7 @@
     if (tableView.tag == 3)
     {
         [_logFilter logLevel][row] = [value boolValue];
+         _logArrayController.filterPredicate = [_logFilter logPredicate];
         [self updateTable];
     }
 
@@ -427,6 +420,7 @@
 
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification
 {
+    [self bindingLogTable];
     if ([notification object] == _processTableView){
         NSInteger row = [_processTableView selectedRow];
         if(row > [[_processArrayController arrangedObjects] count])
@@ -441,12 +435,16 @@
             {
                 [_logFilter setDeviceID:nil];
             }
+            _logArrayController.filterPredicate = [_logFilter logPredicate];
+
             
         } else {
             NSDictionary *processData = [[_processArrayController arrangedObjects] objectAtIndex:row];
             
             [_logFilter setDeviceID: [processData objectForKey:@"deviceID"]];
             [_logFilter setProcess: [processData objectForKey:@"process"]];
+            _logArrayController.filterPredicate = [_logFilter logPredicate];
+
         }
         [self updateTable];
     } else if([notification object] == _deviceTableView) {
@@ -460,7 +458,8 @@
             [_window setTitle:@"DeviceLogViewer"];
             [_logFilter setDeviceID:nil];
             
-            _processPredicte = [_logFilter processPredicate];
+            _processArrayController.filterPredicate = [_logFilter processPredicate];
+            _logArrayController.filterPredicate = [_logFilter logPredicate];
             
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
@@ -480,12 +479,14 @@
             }
             
             [_logFilter setDeviceID: sourceID];
-            _processPredicte = [_logFilter processPredicate];
+            _processArrayController.filterPredicate = [_logFilter processPredicate];
+            _logArrayController.filterPredicate = [_logFilter logPredicate];
 
         }
         [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:0] byExtendingSelection:NO];
         [_logFilter setProcess:nil];
-
+         _logArrayController.filterPredicate = [_logFilter logPredicate];
+        
         [self updateTable];
     }
 }
@@ -553,7 +554,7 @@
             [_logFilter setSentence:text];
         }
        
-        
+         _logArrayController.filterPredicate = [_logFilter logPredicate];
         [self updateTable];
     }
     else if(searchFieldTag == 1)
@@ -678,7 +679,7 @@
         case 0:
             
             [self unbindingLogTable];
-            
+            [_logTableView reloadData];
             
             [[_logArrayController content] removeAllObjects];
             [[_processArrayController content] removeAllObjects];
@@ -686,23 +687,15 @@
             [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
             [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
             
-            [self bindingLogTable];
+            NSLog(@"%ld", [[_logArrayController content] count]);
             
-            [_logTableView reloadData];
-            
-
             break;
         case 1:
             if ([_delegate respondsToSelector:@selector(fileLoading)]) {
-                 _fileRead = YES;
                 [self unbindingLogTable];
                 [_logTableView reloadData];
                 [_delegate fileLoading];
                 _fixed = YES;
-                //[self bindingLogTable];
-                _fileRead = NO;
-                
-                
             }
             
             break;
