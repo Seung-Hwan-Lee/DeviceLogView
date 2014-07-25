@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "ILogFilterGUI.h"
 #import "LogDataStorage.h"
+#import "ReadSimulatorLog.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, LogDataStorageDelegate, ILogFilterGUIDelegate>
 

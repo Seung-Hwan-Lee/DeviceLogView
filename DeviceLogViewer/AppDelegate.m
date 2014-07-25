@@ -27,8 +27,12 @@
     [_gui makeDeviceTableWithDeviceArrayController:[_logDataStorage deviceArrayController]];
     [_gui makeProcessTable:[_logDataStorage processArrayController]];
     _gui.delegate =self;
+    
+    //[[[ReadSimulatorLog alloc] init] startLogging];
 
 }
+
+
 
 # pragma mark - ILogFilterGUI delegate
 
