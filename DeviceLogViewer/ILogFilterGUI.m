@@ -40,6 +40,7 @@
     
     NSString *_highlightString;
     BOOL _fixed;
+    BOOL _filtering;
 }
 
 
@@ -56,6 +57,7 @@
         _highlightString = nil;
         _fixed = NO;
         _checkedPoint= 0;
+        _filtering = NO;
     }
     
     [_window setDelegate:self];
@@ -78,6 +80,12 @@
         {
             [_logTableView scrollRowToVisible:numberOfRows - 1];
         }
+    }
+    
+    if( _filtering )
+    {
+        _processArrayController.filterPredicate = [_logFilter processPredicate];
+        _logArrayController.filterPredicate = [_logFilter logPredicate];
     }
     
 }
@@ -412,7 +420,7 @@
     if (tableView.tag == 3)
     {
         [_logFilter logLevel][row] = [value boolValue];
-         _logArrayController.filterPredicate = [_logFilter logPredicate];
+        _filtering = YES;
         [self updateTable];
     }
 
@@ -435,7 +443,7 @@
             {
                 [_logFilter setDeviceID:nil];
             }
-            _logArrayController.filterPredicate = [_logFilter logPredicate];
+            _filtering = YES;
 
             
         } else {
@@ -443,7 +451,7 @@
             
             [_logFilter setDeviceID: [processData objectForKey:@"deviceID"]];
             [_logFilter setProcess: [processData objectForKey:@"process"]];
-            _logArrayController.filterPredicate = [_logFilter logPredicate];
+            _filtering = YES;
 
         }
         [self updateTable];
@@ -457,9 +465,6 @@
             
             [_window setTitle:@"DeviceLogViewer"];
             [_logFilter setDeviceID:nil];
-            
-            _processArrayController.filterPredicate = [_logFilter processPredicate];
-            _logArrayController.filterPredicate = [_logFilter logPredicate];
             
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
@@ -479,13 +484,11 @@
             }
             
             [_logFilter setDeviceID: sourceID];
-            _processArrayController.filterPredicate = [_logFilter processPredicate];
-            _logArrayController.filterPredicate = [_logFilter logPredicate];
 
         }
         [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:0] byExtendingSelection:NO];
         [_logFilter setProcess:nil];
-         _logArrayController.filterPredicate = [_logFilter logPredicate];
+        _filtering = YES;
         
         [self updateTable];
     }
@@ -554,7 +557,7 @@
             [_logFilter setSentence:text];
         }
        
-         _logArrayController.filterPredicate = [_logFilter logPredicate];
+        _filtering = YES;
         [self updateTable];
     }
     else if(searchFieldTag == 1)
@@ -687,11 +690,10 @@
             [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
             [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
             
-            NSLog(@"%ld", [[_logArrayController content] count]);
-            
             break;
         case 1:
             if ([_delegate respondsToSelector:@selector(fileLoading)]) {
+                _filtering = NO;
                 [self unbindingLogTable];
                 [_logTableView reloadData];
                 [_delegate fileLoading];
