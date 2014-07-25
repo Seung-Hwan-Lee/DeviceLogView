@@ -42,7 +42,7 @@
                 if( sendText != nil)
                 {
                     const char* utf8String = [sendText UTF8String];
-                    size_t len = strlen(utf8String) + 1;
+                    size_t len = strlen(utf8String);
                     
                     if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
                         [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
@@ -54,7 +54,7 @@
         if( sendText != nil)
         {
             const char* utf8String = [sendText UTF8String];
-            size_t len = strlen(utf8String) + 1;
+            size_t len = strlen(utf8String);
             if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
                 [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
             }
