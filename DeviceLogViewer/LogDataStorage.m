@@ -40,13 +40,6 @@
         _processArrayController.selectsInsertedObjects = NO;
         _deviceArrayController.selectsInsertedObjects = NO;
 
-
-        //[_logDataArrayController setAutomaticallyPreparesContent:NO];
-        //[_logDataArrayController setAutomaticallyRearrangesObjects:NO];
-        //[_logDataArrayController setClearsFilterPredicateOnInsertion:NO];
-        //[_processArrayController setClearsFilterPredicateOnInsertion:NO];
-        //[_deviceArrayController setClearsFilterPredicateOnInsertion:NO];
-        
         [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
         [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
 
@@ -87,7 +80,7 @@
 
 - (void)addLogDataToArrayController:(LogData *)aLogData
 {
-    [_logDataArrayController addObject:aLogData];
+    [_logDataArrayController addLogData:aLogData];
 }
 
 

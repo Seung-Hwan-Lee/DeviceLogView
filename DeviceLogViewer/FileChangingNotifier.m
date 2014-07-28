@@ -8,6 +8,7 @@
 
 #import "FileChangingNotifier.h"
 
+
 @implementation FileChangingNotifier
 
 + (id) notifierWithCallback:(FSEventStreamCallback)newCallback path:(NSString *)newPath {
@@ -24,9 +25,7 @@
         context.retain = (CFAllocatorRetainCallBack)CFRetain;
         context.release = (CFAllocatorReleaseCallBack)CFRelease;
         context.copyDescription = (CFAllocatorCopyDescriptionCallBack)CFCopyDescription;
-        
-        NSLog(@"here");
-        
+                
         stream = FSEventStreamCreate(kCFAllocatorDefault, newCallback, &context, (__bridge CFArrayRef)paths, kFSEventStreamEventIdSinceNow, /*latency*/ 1.0, kFSEventStreamCreateFlagUseCFTypes);
         if (!stream) {
             NSLog(@"Could not create event stream for path %@", newPath);
@@ -51,6 +50,8 @@
 - (void) stop {
     FSEventStreamStop(stream);
 }
+
+
 
 
 @end

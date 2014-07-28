@@ -21,10 +21,8 @@
     NSURL *filePath = [self openDialogForOpenFile];
     
     
-    //dispatch_queue_t backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    //dispatch_async(backgroundQueue, ^{
-        NSString *fileContent = [NSString stringWithContentsOfURL:filePath encoding:NSUTF8StringEncoding error:nil];
-        NSArray *allLinedStrings =[fileContent componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
+    NSString *fileContent = [NSString stringWithContentsOfURL:filePath encoding:NSUTF8StringEncoding error:nil];
+    NSArray *allLinedStrings =[fileContent componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
     NSLog(@"%ld", [allLinedStrings count]);
         NSString *sendText;
         
@@ -60,11 +58,6 @@
             }
         }
         
-        
-    //});
-
-    
-
     
 }
 

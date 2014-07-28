@@ -360,6 +360,9 @@
 {
     if( tableView.tag == 0 )
     {
+        if( [[_logArrayController arrangedObjects] count] < 1)
+            return;
+        
         if(([tableColumn.identifier isEqualToString:@"date"]) && [_checkedLog containsObject:[[_logArrayController arrangedObjects] objectAtIndex:row]])
         {
             NSTextFieldCell *cell = aCell;
@@ -690,9 +693,6 @@
     switch (buttonTag) {
         case 0:
             
-            //[self unbindingLogTable];
-            //[_logTableView reloadData];
-            //[[_logArrayController content] removeAllObjects];
             [_logArrayController removeAllLog];
             [_logTableView reloadData];
             [[_processArrayController content] removeAllObjects];
@@ -830,7 +830,7 @@
 }
 
 
-# pragma mark -
+# pragma mark - table binding
 
 - (void) bindingLogTable
 {

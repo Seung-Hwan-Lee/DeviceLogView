@@ -133,16 +133,8 @@
 			isa = PBXGroup;
 			children = (
 				4FBFEF02196E74C5002DF74F /* MobileDevice.h */,
-				4FBFEEFC196E6580002DF74F /* ReadDeviceLog.h */,
-				4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */,
-				4FAE661C197784B90048DFD8 /* ReadFileLog.h */,
-				4FAE661D197784B90048DFD8 /* ReadFileLog.m */,
 				4FBFEEFF196E65A7002DF74F /* AnalyzeDeviceLog.h */,
 				4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */,
-				4F03E44019823D3900BE0939 /* FileChangingNotifier.h */,
-				4F03E44119823D3900BE0939 /* FileChangingNotifier.m */,
-				4F03E4431982427100BE0939 /* ReadSimulatorLog.h */,
-				4F03E4441982427100BE0939 /* ReadSimulatorLog.m */,
 				4FB69A851986195B0004A51E /* MYArrayController.h */,
 				4FB69A861986195B0004A51E /* MYArrayController.m */,
 			);
@@ -156,6 +148,21 @@
 				4FB1B254196FC50100F0EB53 /* ILogFilterGUI.m */,
 			);
 			name = UiClass;
+			sourceTree = "<group>";
+		};
+		4FB69A8819863A650004A51E /* ReadLogFromSource */ = {
+			isa = PBXGroup;
+			children = (
+				4FBFEEFC196E6580002DF74F /* ReadDeviceLog.h */,
+				4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */,
+				4FAE661C197784B90048DFD8 /* ReadFileLog.h */,
+				4FAE661D197784B90048DFD8 /* ReadFileLog.m */,
+				4F03E4431982427100BE0939 /* ReadSimulatorLog.h */,
+				4F03E4441982427100BE0939 /* ReadSimulatorLog.m */,
+				4F03E44019823D3900BE0939 /* FileChangingNotifier.h */,
+				4F03E44119823D3900BE0939 /* FileChangingNotifier.m */,
+			);
+			name = ReadLogFromSource;
 			sourceTree = "<group>";
 		};
 		4FBFEEB6196E651D002DF74F = {
@@ -201,6 +208,7 @@
 		4FBFEEC8196E651D002DF74F /* DeviceLogViewer */ = {
 			isa = PBXGroup;
 			children = (
+				4FB69A8819863A650004A51E /* ReadLogFromSource */,
 				4FAE661F1977BA280048DFD8 /* DataManagement */,
 				4FB1B252196FC3B300F0EB53 /* UiClass */,
 				4FB1B251196FB98900F0EB53 /* DataController */,

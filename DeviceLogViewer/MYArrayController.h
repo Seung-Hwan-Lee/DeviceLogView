@@ -21,6 +21,7 @@
 - (void)setLogFilter:(LogFilter *)aLogFilter;
 - (void)updatePredicate;
 - (void)removeAllLog;
+- (void)addLogData:(id)aLogData;
 
 
 

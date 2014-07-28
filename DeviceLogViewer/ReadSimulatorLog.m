@@ -27,11 +27,9 @@ static void fsEventsCallback(ConstFSEventStreamRef streamRef,
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
     [outputFormatter setDateFormat:@"YYYY_MM_dd_HH"];
     NSString *fileName = [[outputFormatter stringFromDate:now] stringByAppendingString:@"_LogData.txt"];
-    NSString *filePath = [NSString stringWithFormat:@"%@%@", _cacheForderPaths, fileName];
     
-    NSLog(@"%@",filePath);
 
-    FileChangingNotifier *test = [FileChangingNotifier notifierWithCallback:fsEventsCallback path:filePath];
+    FileChangingNotifier *test = [FileChangingNotifier notifierWithCallback:fsEventsCallback path:_cacheForderPaths];
     [test start];
 }
 
@@ -45,5 +43,11 @@ static void fsEventsCallback(ConstFSEventStreamRef streamRef,
                              const FSEventStreamEventFlags eventFlags[],
                              const FSEventStreamEventId eventIds[])
 {
-    NSLog(@"Simulator");
+    int i;
+    
+    // printf("Callback called\n");
+    for (i=0; i<numEvents; i++) {
+        /* flags are unsigned long, IDs are uint64_t */
+        NSLog(@"Change %llu in %@, flags %u\n", eventIds[0], eventPaths, (unsigned int)eventFlags[0]);
+    }
 }

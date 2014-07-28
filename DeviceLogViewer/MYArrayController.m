@@ -15,6 +15,7 @@
     NSMutableArray *_allLogData;
 }
 
+
 - (id)init{
     if((self = [super init])) {
         _logFilter = nil;
@@ -24,15 +25,30 @@
 
 }
 
-- (void)setLogFilter:(LogFilter *)aLogFilter
+
+
+#pragma mark - set table object
+
+
+
+- (void)addLogData:(id)aLogData
 {
-    _logFilter = aLogFilter;
-    [self updatePredicate];
+    if([_logPredicate evaluateWithObject:aLogData])
+    {
+        [super addObject:aLogData];
+        [_allLogData addObject:aLogData];
+    }
+    else
+    {
+        [_allLogData addObject:aLogData];
+    }
+    
+    
 }
 
 - (void)updatePredicate
 {
- 
+    
     if ([_delegate respondsToSelector:@selector(beforChangingData)]) {
         [[self delegate] beforChangingData];
     }
@@ -44,24 +60,21 @@
     if ([_delegate respondsToSelector:@selector(afterChangingData)]) {
         [[self delegate] afterChangingData];
     }
-
+    
 }
 
-
-- (void)addObject:(id)object
+- (void)setLogFilter:(LogFilter *)aLogFilter
 {
-    if([_logPredicate evaluateWithObject:object])
-    {
-        [super addObject:object];
-        [_allLogData addObject:object];
-    }
-    else
-    {
-        [_allLogData addObject:object];
-    }
-    
-    
+    _logFilter = aLogFilter;
+    [self updatePredicate];
 }
+
+
+
+
+#pragma mark - remove object
+
+
 
 - (void)removeAllLog
 {
