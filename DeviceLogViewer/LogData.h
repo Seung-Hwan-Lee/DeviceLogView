@@ -20,6 +20,7 @@
 @property NSString *log;
 @property NSColor *textColor;
 @property NSString *deviceID;
+@property NSInteger logHeight;
 
 
 - (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;

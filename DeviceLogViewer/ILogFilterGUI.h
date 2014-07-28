@@ -10,15 +10,16 @@
 #import <Foundation/Foundation.h>
 #import "LogFilter.h"
 #import "LogData.h"
+#import "MYArrayController.h"
 
 @protocol ILogFilterGUIDelegate;
 
 
-@interface ILogFilterGUI : NSObject <NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate, NSTextFieldDelegate>
+@interface ILogFilterGUI : NSObject <NSTableViewDelegate, NSTableViewDataSource, NSWindowDelegate, NSTextFieldDelegate, MYArrayControllerDelegate>
 
 
 - (id)initWithWindow:(NSWindow *)aWindow;
-- (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController;
+- (void)makeLogTableWithLogArrayController:(MYArrayController *)aLogArrayController;
 - (void)makeDeviceTableWithDeviceArrayController:(NSArrayController *)aDeviceArrayController;
 - (void)makeProcessTable:(NSArrayController *)aProcessArrayController;
 - (void)updateTable;

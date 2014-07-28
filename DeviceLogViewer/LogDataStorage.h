@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AnalyzeDeviceLog.h"
+#import "MYArrayController.h"
 
 
 @protocol LogDataStorageDelegate;
@@ -20,7 +21,7 @@
 @property id<LogDataStorageDelegate> delegate;
 
 
-@property NSArrayController *logDataArrayController;
+@property MYArrayController *logDataArrayController;
 @property NSArrayController *processArrayController;
 @property NSArrayController *deviceArrayController;
 

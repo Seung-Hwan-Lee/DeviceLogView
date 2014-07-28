@@ -23,7 +23,7 @@
     NSButton *_savefilteredButton;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
-    NSArrayController *_logArrayController;
+    MYArrayController *_logArrayController;
     NSArray *_logLevelArray;
     NSSearchField *_logSearchField;
     NSSearchField *_loghighlightField;
@@ -85,7 +85,6 @@
     if( _filtering )
     {
         _processArrayController.filterPredicate = [_logFilter processPredicate];
-        _logArrayController.filterPredicate = [_logFilter logPredicate];
     }
     
 }
@@ -220,10 +219,13 @@
 
 
 
-- (void)makeLogTableWithLogArrayController:(NSArrayController *)aLogArrayController
+- (void)makeLogTableWithLogArrayController:(MYArrayController *)aLogArrayController
 {
     _logArrayController = aLogArrayController;
-      
+    
+    [_logArrayController setLogFilter:_logFilter];
+    [_logArrayController setDelegate:self];
+    
     NSSize windowSize = _window.frame.size;
     _logScrollContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 240)];
     _logTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
@@ -356,7 +358,7 @@
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-    if( tableView.tag == 0)
+    if( tableView.tag == 0 )
     {
         if(([tableColumn.identifier isEqualToString:@"date"]) && [_checkedLog containsObject:[[_logArrayController arrangedObjects] objectAtIndex:row]])
         {
@@ -403,6 +405,8 @@
     return nil;
 }
 
+
+
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
     
     if (tableView.tag == 3)
@@ -421,6 +425,8 @@
     {
         [_logFilter logLevel][row] = [value boolValue];
         _filtering = YES;
+        [_logArrayController updatePredicate];
+
         [self updateTable];
     }
 
@@ -454,6 +460,9 @@
             _filtering = YES;
 
         }
+        
+        [_logArrayController updatePredicate];
+
         [self updateTable];
     } else if([notification object] == _deviceTableView) {
         NSInteger row = [_deviceTableView selectedRow];
@@ -489,7 +498,8 @@
         [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:0] byExtendingSelection:NO];
         [_logFilter setProcess:nil];
         _filtering = YES;
-        
+        [_logArrayController updatePredicate];
+
         [self updateTable];
     }
 }
@@ -499,12 +509,9 @@
     if( tableView.tag == 0)
     {
         LogData *data = [[_logArrayController arrangedObjects] objectAtIndex:row];
-        NSInteger line = [[data.log componentsSeparatedByCharactersInSet:
-                           [NSCharacterSet newlineCharacterSet]] count];
-        if(line > 1)
-        {
-            return tableView.rowHeight * (line - 1);
-        }
+        
+        return tableView.rowHeight * data.logHeight;
+        
     }
     return tableView.rowHeight;
 }
@@ -558,6 +565,8 @@
         }
        
         _filtering = YES;
+        [_logArrayController updatePredicate];
+
         [self updateTable];
     }
     else if(searchFieldTag == 1)
@@ -681,10 +690,11 @@
     switch (buttonTag) {
         case 0:
             
-            [self unbindingLogTable];
+            //[self unbindingLogTable];
+            //[_logTableView reloadData];
+            //[[_logArrayController content] removeAllObjects];
+            [_logArrayController removeAllLog];
             [_logTableView reloadData];
-            
-            [[_logArrayController content] removeAllObjects];
             [[_processArrayController content] removeAllObjects];
             [[_deviceArrayController content] removeAllObjects];
             [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
@@ -847,7 +857,7 @@
     [_logColumn bind:@"textColor" toObject:_logArrayController withKeyPath:@"arrangedObjects.textColor" options:nil];
 }
 
-- (void) unbindingLogTable
+- (void)unbindingLogTable
 {
     [_dateColumn unbind:NSValueBinding];
     [_dateColumn unbind:@"textColor"];
@@ -861,5 +871,15 @@
     [_logColumn unbind:@"textColor"];
 }
 
+
+#pragma mark - MYArrayController delegate
+
+- (void)beforChangingData{
+    [self unbindingLogTable];
+}
+
+- (void)afterChangingData{
+    [self bindingLogTable];
+}
 
 @end

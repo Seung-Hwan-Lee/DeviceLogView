@@ -24,7 +24,18 @@
         _log = [aDataInfo objectForKey:@"log"];
         _logLevel = [aDataInfo objectForKey:@"logLevel"];
         _deviceID = [aDataInfo objectForKey:@"deviceID"];
+
+        NSInteger line = [[_log componentsSeparatedByCharactersInSet:
+                           [NSCharacterSet newlineCharacterSet]] count];
         
+        if(line > 1)
+        {
+            _logHeight = line - 1;
+        }
+        else
+        {
+            _logHeight = line;
+        }
 
         if (_logLevel)
         {

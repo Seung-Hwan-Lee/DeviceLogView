@@ -12,6 +12,7 @@
 		4FAE661E197784B90048DFD8 /* ReadFileLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE661D197784B90048DFD8 /* ReadFileLog.m */; };
 		4FAE66221977BACB0048DFD8 /* LogDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE66211977BACB0048DFD8 /* LogDataStorage.m */; };
 		4FB1B255196FC50100F0EB53 /* ILogFilterGUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B254196FC50100F0EB53 /* ILogFilterGUI.m */; };
+		4FB69A871986195B0004A51E /* MYArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB69A861986195B0004A51E /* MYArrayController.m */; };
 		4FBFEEC3196E651D002DF74F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBFEEC2196E651D002DF74F /* Cocoa.framework */; };
 		4FBFEECD196E651D002DF74F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FBFEECB196E651D002DF74F /* InfoPlist.strings */; };
 		4FBFEECF196E651D002DF74F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEECE196E651D002DF74F /* main.m */; };
@@ -52,6 +53,8 @@
 		4FAE66211977BACB0048DFD8 /* LogDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogDataStorage.m; sourceTree = "<group>"; };
 		4FB1B253196FC50100F0EB53 /* ILogFilterGUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILogFilterGUI.h; sourceTree = "<group>"; };
 		4FB1B254196FC50100F0EB53 /* ILogFilterGUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILogFilterGUI.m; sourceTree = "<group>"; };
+		4FB69A851986195B0004A51E /* MYArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYArrayController.h; sourceTree = "<group>"; };
+		4FB69A861986195B0004A51E /* MYArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYArrayController.m; sourceTree = "<group>"; };
 		4FBFEEBF196E651D002DF74F /* DeviceLogViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeviceLogViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FBFEEC2196E651D002DF74F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4FBFEEC5196E651D002DF74F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -140,6 +143,8 @@
 				4F03E44119823D3900BE0939 /* FileChangingNotifier.m */,
 				4F03E4431982427100BE0939 /* ReadSimulatorLog.h */,
 				4F03E4441982427100BE0939 /* ReadSimulatorLog.m */,
+				4FB69A851986195B0004A51E /* MYArrayController.h */,
+				4FB69A861986195B0004A51E /* MYArrayController.m */,
 			);
 			name = DataController;
 			sourceTree = "<group>";
@@ -348,6 +353,7 @@
 				4FBFEEF8196E6541002DF74F /* LogData.m in Sources */,
 				4FAE661E197784B90048DFD8 /* ReadFileLog.m in Sources */,
 				4FBFEEFE196E6580002DF74F /* ReadDeviceLog.m in Sources */,
+				4FB69A871986195B0004A51E /* MYArrayController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,7 +32,7 @@
             [[NSFileManager defaultManager] createDirectoryAtPath:_cacheForderPaths withIntermediateDirectories:NO attributes:nil error:nil];
         }
         
-        _logDataArrayController = [[NSArrayController alloc] init];
+        _logDataArrayController = [[MYArrayController alloc] init];
         _processArrayController = [[NSArrayController alloc] init];
         _deviceArrayController = [[NSArrayController alloc] init];
         
@@ -41,8 +41,8 @@
         _deviceArrayController.selectsInsertedObjects = NO;
 
 
-        [_logDataArrayController setAutomaticallyPreparesContent:YES];
-        [_logDataArrayController setAutomaticallyRearrangesObjects:YES];
+        //[_logDataArrayController setAutomaticallyPreparesContent:NO];
+        //[_logDataArrayController setAutomaticallyRearrangesObjects:NO];
         //[_logDataArrayController setClearsFilterPredicateOnInsertion:NO];
         //[_processArrayController setClearsFilterPredicateOnInsertion:NO];
         //[_deviceArrayController setClearsFilterPredicateOnInsertion:NO];
@@ -142,9 +142,9 @@
 #pragma mark - AnalyzeDeviceLogDelegate
 
 
-- (void)analyzedLog:(NSDictionary *)aAnalyzedLog isDevice:(BOOL)isDevice
+- (void)analyzedLog:(LogData *)aLogData isDevice:(BOOL)isDevice
 {
-    LogData *logData = [[LogData alloc] initWithLogDataInfo:aAnalyzedLog];
+    
     NSString *sourceType;
     if(isDevice)
     {
@@ -156,12 +156,12 @@
     }
     
     
-    [self addDeviceNameToArrayWithDeviceName:[sourceType stringByAppendingString:logData.device] deviceID:logData.deviceID];
-    [self addProcessNameToArrayWithProcessName:logData.process deviceID:logData.deviceID];
-    [self addLogDataToArrayController:logData];
+    [self addDeviceNameToArrayWithDeviceName:[sourceType stringByAppendingString:aLogData.device] deviceID:aLogData.deviceID];
+    [self addProcessNameToArrayWithProcessName:aLogData.process deviceID:aLogData.deviceID];
+    [self addLogDataToArrayController:aLogData];
     if(isDevice)
     {
-        [self saveLogToCacheFile:logData];
+        [self saveLogToCacheFile:aLogData];
     }
     
     if ([_delegate respondsToSelector:@selector(dataUpdate)]) {

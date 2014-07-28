@@ -103,6 +103,8 @@
                                        length:aLength encoding:NSUTF8StringEncoding];
     }
     
+    
+    
     if (date != nil && device != nil && process != nil && logLevel != nil && log != nil){
         NSMutableDictionary *logDataInfo = [NSMutableDictionary dictionary];
         [logDataInfo setObject:date forKey:@"date"];
@@ -112,11 +114,13 @@
         [logDataInfo setObject:log forKey:@"log"];
         [logDataInfo setObject:aDeviceID forKey:@"deviceID"];
         
+        LogData *logData = [[LogData alloc] initWithLogDataInfo:logDataInfo];
+        
         dispatch_async(dispatch_get_main_queue(),
                        ^{
                          
                            if ([_delegate respondsToSelector:@selector(analyzedLog:isDevice:)]) {
-                               [self.delegate analyzedLog:logDataInfo isDevice:isDevice];
+                               [self.delegate analyzedLog:logData isDevice:isDevice];
                            }
                        });
 
