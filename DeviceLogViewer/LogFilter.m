@@ -130,7 +130,6 @@
 - (void)setDeviceName:(NSString *)aDeviceName
 {
     _deviceName = aDeviceName;
-    NSLog(@"%@", _deviceName);
 }
 
 

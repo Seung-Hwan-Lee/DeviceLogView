@@ -41,6 +41,7 @@
     NSString *_highlightString;
     BOOL _fixed;
     BOOL _filtering;
+
 }
 
 
@@ -153,6 +154,67 @@
     [_loghighlightField setAutoresizingMask:4];
     [[_loghighlightField cell] setScrollable:YES];
     [_window.contentView addSubview:_loghighlightField];
+    
+    
+    if ([_logSearchField respondsToSelector: @selector(setRecentSearches:)])
+	{
+		NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:@"Search Menu"];
+		[searchMenu setAutoenablesItems:YES];
+        
+		NSMenuItem *recentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"Recent Searches" action:nil keyEquivalent:@""];
+		[recentsTitleItem setTag:NSSearchFieldRecentsTitleMenuItemTag];
+		[searchMenu insertItem:recentsTitleItem atIndex:0];
+        
+		NSMenuItem *norecentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"No recent searches" action:nil keyEquivalent:@""];
+		[norecentsTitleItem setTag:NSSearchFieldNoRecentsMenuItemTag];
+		[searchMenu insertItem:norecentsTitleItem atIndex:1];
+        
+		NSMenuItem *recentsItem = [[NSMenuItem alloc] initWithTitle:@"Recents" action:nil keyEquivalent:@""];
+		[recentsItem setTag:NSSearchFieldRecentsMenuItemTag];
+		[searchMenu insertItem:recentsItem atIndex:2];
+        
+		NSMenuItem *separatorItem = (NSMenuItem*)[NSMenuItem separatorItem];
+		[separatorItem setTag:NSSearchFieldRecentsTitleMenuItemTag];
+		[searchMenu insertItem:separatorItem atIndex:3];
+        
+		NSMenuItem *clearItem = [[NSMenuItem alloc] initWithTitle:@"Clear" action:nil keyEquivalent:@""];
+		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];	// tag this menu item so NSSearchField can use it
+		[searchMenu insertItem:clearItem atIndex:4];
+        
+		id searchCell = [_logSearchField cell];
+		[searchCell setMaximumRecents:20];
+		[searchCell setSearchMenuTemplate:searchMenu];
+	}
+    if ([_loghighlightField respondsToSelector: @selector(setRecentSearches:)])
+	{
+		NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:@"Search Menu"];
+		[searchMenu setAutoenablesItems:YES];
+        
+		NSMenuItem *recentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"Recent Searches" action:nil keyEquivalent:@""];
+		[recentsTitleItem setTag:NSSearchFieldRecentsTitleMenuItemTag];
+		[searchMenu insertItem:recentsTitleItem atIndex:0];
+        
+		NSMenuItem *norecentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"No recent searches" action:nil keyEquivalent:@""];
+		[norecentsTitleItem setTag:NSSearchFieldNoRecentsMenuItemTag];
+		[searchMenu insertItem:norecentsTitleItem atIndex:1];
+        
+		NSMenuItem *recentsItem = [[NSMenuItem alloc] initWithTitle:@"Recents" action:nil keyEquivalent:@""];
+		[recentsItem setTag:NSSearchFieldRecentsMenuItemTag];
+		[searchMenu insertItem:recentsItem atIndex:2];
+        
+		NSMenuItem *separatorItem = (NSMenuItem*)[NSMenuItem separatorItem];
+		[separatorItem setTag:NSSearchFieldRecentsTitleMenuItemTag];
+		[searchMenu insertItem:separatorItem atIndex:3];
+        
+		NSMenuItem *clearItem = [[NSMenuItem alloc] initWithTitle:@"Clear" action:nil keyEquivalent:@""];
+		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];	// tag this menu item so NSSearchField can use it
+		[searchMenu insertItem:clearItem atIndex:4];
+        
+		id searchCell = [_loghighlightField cell];
+		[searchCell setMaximumRecents:20];
+		[searchCell setSearchMenuTemplate:searchMenu];
+	}
+
     
     _searchLog = [[NSTextField alloc] initWithFrame:NSMakeRect(480, windowSize.height - 90, 200, 20)];
     [_searchLog setStringValue:@"Searching Log"];
@@ -453,6 +515,9 @@
                 [_logFilter setDeviceID:nil];
                 [_logFilter setDeviceName:nil];
             }
+            
+            //[_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:0] byExtendingSelection:YES];
+
             _filtering = YES;
 
             
@@ -461,8 +526,10 @@
             
             [_logFilter setDeviceID: [processData objectForKey:@"deviceID"]];
             [_logFilter setDeviceName:[processData objectForKey:@"device"]];
-
             [_logFilter setProcess: [processData objectForKey:@"process"]];
+            
+            //[_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row] byExtendingSelection:YES];
+
             _filtering = YES;
 
         }
@@ -559,14 +626,15 @@
 #pragma mark - TextField Delegate
 
 
-- (void)controlTextDidChange:(NSNotification *)aSearchField
+- (void)controlTextDidEndEditing:(NSNotification *)aSearchField
 {
     NSInteger searchFieldTag = [[aSearchField object] tag];
     NSTextField *textField = [aSearchField object];
+    NSString *text;
     
     if(searchFieldTag == 0)
     {
-        NSString *text = [textField stringValue];
+        text = [textField stringValue];
         if([text isEqualToString: @""]) {
             [_logFilter setSentence:nil];
         } else {
@@ -580,7 +648,7 @@
     }
     else if(searchFieldTag == 1)
     {
-        NSString *text = [textField stringValue];
+        text = [textField stringValue];
         if([text isEqualToString: @""]) {
             _highlightString = nil;
         } else {
@@ -589,13 +657,7 @@
         [_logTableView reloadData];
         
     }
-    NSRect test = textField.frame;
-    test.origin.x = 400;
-
-    [textField locationOfPrintRect:test];
 }
-
-
 #pragma mark - Window Delegate
 
 
@@ -636,6 +698,7 @@
     exit(0);
     return NO;
 }
+
 
 
 #pragma mark - GUI resize function
