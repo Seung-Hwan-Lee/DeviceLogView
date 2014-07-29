@@ -84,8 +84,8 @@ static void SocketCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef a
         NSString *deviceID = [NSString stringWithUTF8String:CFDictionaryGetValue(deviceName, s)];
         if(deviceID)
         {
-            if ([gReadDeviceLogObject.delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
-                [gReadDeviceLogObject.delegate analizeWithLogBuffer:buffer length:(NSInteger)extentLength deviceID:deviceID isDevice:YES];
+            if ([gReadDeviceLogObject.delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:source:)]) {
+                [gReadDeviceLogObject.delegate analizeWithLogBuffer:buffer length:(NSInteger)extentLength deviceID:deviceID source:0];
             }
             
         }

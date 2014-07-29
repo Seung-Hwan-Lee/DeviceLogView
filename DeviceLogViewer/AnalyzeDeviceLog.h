@@ -12,12 +12,13 @@
 #import "ReadFileLog.h"
 #import "LogData.h"
 #import "LogFilter.h"
+#import "ReadSimulatorLog.h"
 
 
 @protocol AnalyzeDeviceLogDelegate;
 
 
-@interface AnalyzeDeviceLog:NSObject <ReadDeviceLogDelegate, ReadFileLogDelegate>
+@interface AnalyzeDeviceLog:NSObject <ReadDeviceLogDelegate, ReadFileLogDelegate, ReadSimulatorLogDelegate>
 
 
 @property id<AnalyzeDeviceLogDelegate> delegate;
@@ -25,6 +26,8 @@
 
 - (void)readLogFromDevice;
 - (void)readLogFromFile;
+- (void)readLogFromSimulator;
+
 
 
 @end
@@ -34,7 +37,7 @@
 
 
 @required
-- (void)analyzedLog:(LogData *)aLogData isDevice:(BOOL)isDevice;
+- (void)analyzedLog:(LogData *)aLogData source:(NSInteger)aSource;
 - (void)deviceConnected;
 - (void)deviceDisConnectedWithDeviceID:(NSString *)aDeviceID;
 

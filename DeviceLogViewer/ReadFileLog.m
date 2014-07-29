@@ -42,8 +42,8 @@
                     const char* utf8String = [sendText UTF8String];
                     size_t len = strlen(utf8String);
                     
-                    if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
-                        [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+                    if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:source:)]) {
+                        [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] source:1];
                     }
                 }
                 sendText =  [NSString stringWithFormat:@"%@\n", tempString];
@@ -53,8 +53,8 @@
         {
             const char* utf8String = [sendText UTF8String];
             size_t len = strlen(utf8String);
-            if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:isDevice:)]) {
-                [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] isDevice:NO];
+            if ([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:source:)]) {
+                [_delegate analizeWithLogBuffer:utf8String length:len deviceID:[filePath absoluteString] source:1];
             }
         }
         

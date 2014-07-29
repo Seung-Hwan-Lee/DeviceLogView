@@ -9,45 +9,39 @@
 #import "ReadSimulatorLog.h"
 
 @implementation ReadSimulatorLog
-
-static void fsEventsCallback(ConstFSEventStreamRef streamRef,
-                      void *info,
-                      size_t numEvents,
-                      void *eventPaths,
-                      const FSEventStreamEventFlags eventFlags[],
-                             const FSEventStreamEventId eventIds[]);
-
+{
+    void (^eventHandler)(void);
+}
 
 -(void)startLogging
 {
-    NSArray *documentsDirectory  = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *_cacheForderPaths = [[documentsDirectory objectAtIndex:0] stringByAppendingString:@"/MyDeviceLog/"];
+    NSArray *labraryDirectory  = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *simulatorForderPaths = [[labraryDirectory objectAtIndex:0] stringByAppendingString:@"/Logs/iOS Simulator/"];
+    NSArray *simulatorFolder = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:simulatorForderPaths error:nil];
+  
     
-    NSDate * now = [NSDate date];
-    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"YYYY_MM_dd_HH"];
-    NSString *fileName = [[outputFormatter stringFromDate:now] stringByAppendingString:@"_LogData.txt"];
+    //_fileHandler = [NSFileHandle fileHandleForReadingAtPath:_path];
+
+    dispatch_queue_t backgroundQueue = dispatch_get_global_queue(0, 0);
     
-
-    FileChangingNotifier *test = [FileChangingNotifier notifierWithCallback:fsEventsCallback path:_cacheForderPaths];
-    [test start];
-}
-
-@end
-
-
-static void fsEventsCallback(ConstFSEventStreamRef streamRef,
-                             void *info,
-                             size_t numEvents,
-                             void *eventPaths,
-                             const FSEventStreamEventFlags eventFlags[],
-                             const FSEventStreamEventId eventIds[])
-{
-    int i;
     
-    // printf("Callback called\n");
-    for (i=0; i<numEvents; i++) {
-        /* flags are unsigned long, IDs are uint64_t */
-        NSLog(@"Change %llu in %@, flags %u\n", eventIds[0], eventPaths, (unsigned int)eventFlags[0]);
+    for( int i = 0 ; i < simulatorFolder.count ; i++)
+    {
+        FileWatch *fileWatch = [[FileWatch alloc] init];
+        [fileWatch setDelegate:self];
+        [fileWatch startFileWatch:[NSString stringWithFormat:@"%@%@%@", simulatorForderPaths, [simulatorFolder objectAtIndex:i], @"/system.log"] targetQueue:backgroundQueue];
     }
 }
+
+
+- (void)modifiedString:(const char *)aBuffer length:(NSInteger)aLength filePath:(NSString *)aFilePath
+{
+    if([_delegate respondsToSelector:@selector(analizeWithLogBuffer:length:deviceID:source:)])
+    {
+        [_delegate analizeWithLogBuffer:aBuffer length:aLength deviceID:aFilePath source:2];
+    }
+}
+
+
+
+@end

@@ -47,6 +47,7 @@
         _analyzeDeviceLog =[[AnalyzeDeviceLog alloc] init];
         _analyzeDeviceLog.delegate = self;
         [_analyzeDeviceLog readLogFromDevice];
+        [_analyzeDeviceLog readLogFromSimulator];
     }
     return self;
 }
@@ -135,24 +136,28 @@
 #pragma mark - AnalyzeDeviceLogDelegate
 
 
-- (void)analyzedLog:(LogData *)aLogData isDevice:(BOOL)isDevice
+- (void)analyzedLog:(LogData *)aLogData source:(NSInteger)aSource
 {
     
     NSString *sourceType;
-    if(isDevice)
+    if(aSource == 0)
     {
         sourceType = @"D: ";
     }
-    else
+    else if(aSource == 1)
     {
         sourceType = @"F: ";
+    }
+    else
+    {
+        sourceType = @"S: ";
     }
     
     
     [self addDeviceNameToArrayWithDeviceName:[sourceType stringByAppendingString:aLogData.device] deviceID:aLogData.deviceID];
     [self addProcessNameToArrayWithProcessName:aLogData.process deviceID:aLogData.deviceID];
     [self addLogDataToArrayController:aLogData];
-    if(isDevice)
+    if(aSource == 0)
     {
         [self saveLogToCacheFile:aLogData];
     }

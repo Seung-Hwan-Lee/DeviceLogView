@@ -14,6 +14,7 @@
 {
     ReadDeviceLog *_readDeviceLog;
     ReadFileLog *_readFileLog;
+    ReadSimulatorLog *_readSimulatorLog;
 }
 
 
@@ -28,6 +29,8 @@
         _readDeviceLog.delegate = self;
         _readFileLog = [[ReadFileLog alloc] init];
         _readFileLog.delegate = self;
+        _readSimulatorLog = [[ReadSimulatorLog alloc] init];
+        _readSimulatorLog.delegate = self;
     }
     return self;
 
@@ -41,6 +44,11 @@
 - (void)readLogFromFile
 {
     [_readFileLog readFile];
+}
+
+- (void)readLogFromSimulator
+{
+    [_readSimulatorLog startLogging];
 }
 
 
@@ -65,13 +73,14 @@
 #pragma mark - ReadDeviceLog, ReadFileLog Delegate
 
 
-- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID isDevice:(BOOL)isDevice
+- (void)analizeWithLogBuffer:(const char *)aBuffer length:(NSInteger)aLength deviceID:(NSString *)aDeviceID source:(NSInteger)aSource
 {
     NSString *date = nil;
     NSString *device = nil;
     NSString *process = nil;
     NSString *logLevel = nil;
     NSString *log = nil;
+
     
     if (aLength < 16 || aBuffer[15] == '=') {
         return;
@@ -119,8 +128,8 @@
         dispatch_async(dispatch_get_main_queue(),
                        ^{
                          
-                           if ([_delegate respondsToSelector:@selector(analyzedLog:isDevice:)]) {
-                               [self.delegate analyzedLog:logData isDevice:isDevice];
+                           if ([_delegate respondsToSelector:@selector(analyzedLog:source:)]) {
+                               [self.delegate analyzedLog:logData source:aSource];
                            }
                        });
 
