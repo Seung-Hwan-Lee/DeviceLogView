@@ -18,6 +18,7 @@
 - (void)setDeviceID:(NSString *)aDeviceID;
 - (void)setProcess:(NSString *)aProcess;
 - (void)setSentence:(NSString *)aSentence;
+- (void)setDeviceName:(NSString *)aDeviceName;
 - (BOOL *)logLevel;
 
 - (NSPredicate *)processPredicate;

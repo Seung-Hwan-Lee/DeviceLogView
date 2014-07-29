@@ -15,6 +15,7 @@
     NSString *_process;
     NSString *_deviceID;
     NSString *_sentence;
+    NSString *_deviceName;
     BOOL _logLevel[8];
 }
 
@@ -33,6 +34,7 @@
         _deviceID = nil;
         _process = nil;
         _sentence = nil;
+        _deviceName = nil;
         
     }
     
@@ -44,10 +46,9 @@
 {
     NSPredicate *processPredicate;
     
-    if( _deviceID != nil) {
-         processPredicate = [NSPredicate predicateWithFormat:@"deviceID == %@ or process == %@", _deviceID, @"All Process"];
+    if( _deviceID != nil && _deviceName != nil) {
+         processPredicate = [NSPredicate predicateWithFormat:@"(device == %@ and deviceID == %@) or process == %@",_deviceName, _deviceID, @"All Process"];
     }
-   
     
     return processPredicate;
 }
@@ -59,6 +60,9 @@
     
     if( _deviceID != nil) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"deviceID == %@", _deviceID]];
+    }
+    if( _deviceName != nil) {
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"device == %@", _deviceName]];
     }
     if( _process != nil) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process == %@", _process]];
@@ -95,7 +99,6 @@
     
     NSPredicate *logPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:compoundPredicateArray];
     
-    //NSLog(@"%@", logPredicate);
     
     return logPredicate;
 }
@@ -122,6 +125,12 @@
 - (BOOL *)logLevel
 {
     return _logLevel;
+}
+
+- (void)setDeviceName:(NSString *)aDeviceName
+{
+    _deviceName = aDeviceName;
+    NSLog(@"%@", _deviceName);
 }
 
 

@@ -451,6 +451,7 @@
             if( [_deviceTableView selectedRow] == 0)
             {
                 [_logFilter setDeviceID:nil];
+                [_logFilter setDeviceName:nil];
             }
             _filtering = YES;
 
@@ -459,6 +460,8 @@
             NSDictionary *processData = [[_processArrayController arrangedObjects] objectAtIndex:row];
             
             [_logFilter setDeviceID: [processData objectForKey:@"deviceID"]];
+            [_logFilter setDeviceName:[processData objectForKey:@"device"]];
+
             [_logFilter setProcess: [processData objectForKey:@"process"]];
             _filtering = YES;
 
@@ -477,25 +480,28 @@
             
             [_window setTitle:@"DeviceLogViewer"];
             [_logFilter setDeviceID:nil];
+            [_logFilter setDeviceName:nil];
+
             
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
             NSString *source = [[deviceData objectForKey:@"device"] substringToIndex:2];
             NSString *sourceID = [deviceData objectForKey:@"deviceID"];
             
-            if( [source isEqualToString:@"F:"])
-            {
-                [_window setTitle:sourceID];
-            }
-            else
+            if( [source isEqualToString:@"D:"])
             {
                 if ([_delegate respondsToSelector:@selector(changeWindowTitle)]) {
                     [_delegate changeWindowTitle];
                 }
+            }
+            else
+            {
+                [_window setTitle:sourceID];
 
             }
             
             [_logFilter setDeviceID: sourceID];
+            [_logFilter setDeviceName:[[deviceData objectForKey:@"device"] substringFromIndex:3]];
 
         }
         [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:0] byExtendingSelection:NO];

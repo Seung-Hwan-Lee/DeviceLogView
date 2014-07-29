@@ -85,13 +85,13 @@
 }
 
 
-- (void)addProcessNameToArrayWithProcessName:(NSString *)aProcessName deviceID:(NSString *)aDeviceID;
+- (void)addProcessNameToArrayWithProcessName:(NSString *)aProcessName deviceID:(NSString *)aDeviceID deviceName:(NSString *)aDeviceName;
 {
     if(aProcessName) {
         
         BOOL isFound = NO;
         
-        NSDictionary *processDictionary = @{@"process" : aProcessName, @"deviceID" : aDeviceID};
+        NSDictionary *processDictionary = @{@"process" : aProcessName, @"deviceID" : aDeviceID, @"device" : aDeviceName};
         
         for (NSDictionary *mod in _processArrayController.content)
         {
@@ -155,7 +155,7 @@
     
     
     [self addDeviceNameToArrayWithDeviceName:[sourceType stringByAppendingString:aLogData.device] deviceID:aLogData.deviceID];
-    [self addProcessNameToArrayWithProcessName:aLogData.process deviceID:aLogData.deviceID];
+    [self addProcessNameToArrayWithProcessName:aLogData.process deviceID:aLogData.deviceID deviceName:aLogData.device];
     [self addLogDataToArrayController:aLogData];
     if(aSource == 0)
     {
