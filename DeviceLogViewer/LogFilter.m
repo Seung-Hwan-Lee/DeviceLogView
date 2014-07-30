@@ -11,12 +11,7 @@
 
 @implementation LogFilter
 {
-
-    NSString *_process;
-    NSString *_deviceID;
-    NSString *_sentence;
-    NSString *_deviceName;
-    BOOL _logLevel[8];
+    BOOL _logLevel[9];
 }
 
 
@@ -27,7 +22,7 @@
 {
     self = [super init];
     if(self) {
-        for(int i = 0 ; i < 8 ; i++)
+        for(int i = 0 ; i < 9 ; i++)
         {
             _logLevel[i] = TRUE;
         }
@@ -72,28 +67,28 @@
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[regexString stringByReplacingOccurrencesOfString:@"&" withString:@".*"] options:0 error:nil];
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"log matches[cd] %@", [regex pattern]]];
     }
-    if( !_logLevel[0]) {
+    if( !_logLevel[1]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Debug"]];
     }
-    if( !_logLevel[1]) {
+    if( !_logLevel[2]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Info"]];
     }
-    if( !_logLevel[2]) {
+    if( !_logLevel[3]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Notice"]];
     }
-    if( !_logLevel[3]) {
+    if( !_logLevel[4]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Warning"]];
     }
-    if( !_logLevel[4]) {
+    if( !_logLevel[5]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Error"]];
     }
-    if( !_logLevel[5]) {
+    if( !_logLevel[6]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Critical"]];
     }
-    if( !_logLevel[6]) {
+    if( !_logLevel[7]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Alert"]];
     }
-    if( !_logLevel[7]) {
+    if( !_logLevel[8]) {
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"NOT (logLevel contains %@)", @"Emergency"]];
     }
     
@@ -107,30 +102,12 @@
 #pragma mark -
 
 
-- (void)setDeviceID:(NSString *)aDeviceID
-{
-    _deviceID = aDeviceID;
-}
-
-- (void)setProcess:(NSString *)aProcess
-{
-    _process = aProcess;
-}
-
-- (void)setSentence:(NSString *)aSentence
-{
-    _sentence = aSentence;
-}
 
 - (BOOL *)logLevel
 {
     return _logLevel;
 }
 
-- (void)setDeviceName:(NSString *)aDeviceName
-{
-    _deviceName = aDeviceName;
-}
 
 
 @end

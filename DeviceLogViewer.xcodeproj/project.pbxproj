@@ -112,6 +112,8 @@
 		4FAE661F1977BA280048DFD8 /* DataManagement */ = {
 			isa = PBXGroup;
 			children = (
+				4FBFEEFF196E65A7002DF74F /* AnalyzeDeviceLog.h */,
+				4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */,
 				4FAE66201977BACB0048DFD8 /* LogDataStorage.h */,
 				4FAE66211977BACB0048DFD8 /* LogDataStorage.m */,
 			);
@@ -132,9 +134,6 @@
 		4FB1B251196FB98900F0EB53 /* DataController */ = {
 			isa = PBXGroup;
 			children = (
-				4FBFEF02196E74C5002DF74F /* MobileDevice.h */,
-				4FBFEEFF196E65A7002DF74F /* AnalyzeDeviceLog.h */,
-				4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */,
 				4FB69A851986195B0004A51E /* MYArrayController.h */,
 				4FB69A861986195B0004A51E /* MYArrayController.m */,
 			);
@@ -153,6 +152,7 @@
 		4FB69A8819863A650004A51E /* ReadLogFromSource */ = {
 			isa = PBXGroup;
 			children = (
+				4FBFEF02196E74C5002DF74F /* MobileDevice.h */,
 				4FBFEEFC196E6580002DF74F /* ReadDeviceLog.h */,
 				4FBFEEFD196E6580002DF74F /* ReadDeviceLog.m */,
 				4FAE661C197784B90048DFD8 /* ReadFileLog.h */,

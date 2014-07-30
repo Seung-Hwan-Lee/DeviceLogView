@@ -21,6 +21,7 @@
     NSButton *_loadfileButton;
     NSButton *_saveallButton;
     NSButton *_savefilteredButton;
+    NSButton *_addProcess;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
     MYArrayController *_logArrayController;
@@ -37,6 +38,7 @@
     NSTableColumn *_processColumn;
     NSTableColumn *_logLevelColumn;
     NSTableColumn *_logColumn;
+    
     
     NSString *_highlightString;
     BOOL _fixed;
@@ -135,6 +137,15 @@
     [_loadfileButton setTarget:self];
     [_loadfileButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_loadfileButton];
+    
+    _addProcess = [[NSButton alloc] initWithFrame:NSMakeRect(405, windowSize.height - 70, 25, 20)];
+    [_addProcess setIdentifier:@"loadFileButton"];
+    [_addProcess setTag:4];
+    [_addProcess setTitle:@" + "];
+    [_addProcess setTarget:self];
+    [_addProcess setAction:@selector(buttonClicked:)];
+    [[_addProcess cell] setBackgroundColor:[NSColor yellowColor]];
+    //[_window.contentView addSubview:_addProcess];
 
 
     
@@ -268,7 +279,7 @@
     [_logLevelTableView setTag:3];
     [_logLevelTableView setHeaderView: nil];
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
-    _logLevelArray = @[@"Debug", @"Info", @"Notice", @"Warning", @"Error", @"Critical", @"Alert", @"Emergency"];
+    _logLevelArray = @[@"ALL",@"Debug", @"Info", @"Notice", @"Warning", @"Error", @"Critical", @"Alert", @"Emergency"];
     [_logLevelTableView addTableColumn:logLevelColumn];
     [_logLevelTableView setDelegate:self ];
     [_logLevelTableView setDataSource:self];
@@ -385,8 +396,9 @@
     
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
     [processColumn setWidth:230];
+    NSDictionary *options = @{ NSPredicateFormatBindingOption:@YES };
     [processColumn bind:NSValueBinding toObject:aProcessArrayController
-           withKeyPath:@"arrangedObjects.process" options:nil];
+           withKeyPath:@"arrangedObjects.process" options:options];
 
     // add column
     [_processTableView addTableColumn:processColumn];
@@ -488,11 +500,27 @@
   
     if (tableView.tag == 3)
     {
-        [_logFilter logLevel][row] = [value boolValue];
+        if(row == 0)
+        {
+            for(int i = 0 ; i < 9 ; i++)
+            {
+                [_logFilter logLevel][i] = [value boolValue];
+            }
+        }
+        else
+        {
+            [_logFilter logLevel][row] = [value boolValue];
+        }
         _filtering = YES;
         [_logArrayController updatePredicate];
 
         [self updateTable];
+    }
+    else if (tableView.tag == 2)
+    {
+        NSLog(@"value: %@", value);
+         //NSDictionary *processDictionary = [[_logArrayController arrangedObjects] objectAtIndex:row];
+        //[processDictionary setValue:value forKey:@"process"];
     }
 
 }
@@ -516,8 +544,6 @@
                 [_logFilter setDeviceName:nil];
             }
             
-            //[_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:0] byExtendingSelection:YES];
-
             _filtering = YES;
 
             
@@ -528,15 +554,26 @@
             [_logFilter setDeviceName:[processData objectForKey:@"device"]];
             [_logFilter setProcess: [processData objectForKey:@"process"]];
             
-            //[_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row] byExtendingSelection:YES];
+            NSArray *deviceArray = [_deviceArrayController content];
+            
+            for(int i = 0 ; i < deviceArray.count ; i++)
+            {
+                NSDictionary *deviceDictionary = [deviceArray objectAtIndex:i];
+                if( ([[deviceDictionary objectForKey:@"deviceID"] isEqualToString: _logFilter.deviceID ]))
+                {
+                    
+                    [_deviceTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:i] byExtendingSelection:NO];
+                    break;
+                }
+            }
 
             _filtering = YES;
 
         }
         
         [_logArrayController updatePredicate];
-
         [self updateTable];
+        
     } else if([notification object] == _deviceTableView) {
         NSInteger row = [_deviceTableView selectedRow];
         if(row > [[_deviceArrayController arrangedObjects] count])
@@ -595,6 +632,15 @@
 
 - (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
+    if(tableView.tag == 2)
+    {
+        NSDictionary *processDictionary = [[_processArrayController arrangedObjects] objectAtIndex:row];
+        if([processDictionary objectForKey:@"isCustom"] != nil)
+        {
+            return YES;
+        }
+    }
+    
     return NO;
 }
 
@@ -621,6 +667,7 @@
     }
     
 }
+
 
 
 #pragma mark - TextField Delegate
@@ -658,6 +705,7 @@
         
     }
 }
+
 #pragma mark - Window Delegate
 
 
@@ -698,6 +746,8 @@
     exit(0);
     return NO;
 }
+
+
 
 
 
@@ -758,6 +808,7 @@
 - (void)buttonClicked: (NSButton *)button
 {
     NSInteger buttonTag = [button tag];
+    NSDictionary *processDictionary;
     
     switch (buttonTag) {
         case 0:
@@ -792,6 +843,27 @@
             if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
                 [_delegate fileSaving:NO];
             }
+            break;
+            
+        case 4:
+            
+            if( _logFilter.deviceID != nil && _logFilter.deviceName != nil)
+            {
+                processDictionary = @{@"process" : @"",  @"isCustom" : @"", @"device" : _logFilter.deviceName, @"deviceID": _logFilter.deviceID};
+
+            }
+            else
+            {
+                processDictionary = @{@"process" : @"",  @"isCustom" : @""};
+
+            }
+            
+            [_processArrayController addObject: processDictionary];
+            NSInteger row = [[_processArrayController arrangedObjects] indexOfObject:processDictionary];
+            [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row] byExtendingSelection:NO];
+            [_processTableView scrollRowToVisible:row];
+            [_processTableView editColumn:0 row:row withEvent:nil select:YES];
+            
             break;
             
         default:
@@ -897,6 +969,7 @@
     }
     
 }
+
 
 
 # pragma mark - table binding
