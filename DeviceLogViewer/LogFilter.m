@@ -60,7 +60,7 @@
         [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"device == %@", _deviceName]];
     }
     if( _process != nil) {
-        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process == %@", _process]];
+        [compoundPredicateArray addObject:[NSPredicate predicateWithFormat:@"process contains %@", _process]];
     }
     if( _sentence != nil) {
         NSString *regexString = [NSString stringWithFormat:@".*(%@).*",_sentence];

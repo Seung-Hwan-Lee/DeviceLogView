@@ -66,7 +66,6 @@
     [_window setDelegate:self];
     [self createGUI];
    
-    
     return self;
 }
 
@@ -85,9 +84,13 @@
         }
     }
     
-    if( _filtering )
+    if( _filtering && [_deviceTableView selectedRow] != 0)
     {
-        _processArrayController.filterPredicate = [_logFilter processPredicate];
+        NSPredicate *processPredicate = [_logFilter processPredicate];
+        if(processPredicate != nil)
+        {
+            _processArrayController.filterPredicate = [_logFilter processPredicate];
+        }
     }
     
 }
@@ -144,39 +147,41 @@
     [_addProcess setTitle:@" + "];
     [_addProcess setTarget:self];
     [_addProcess setAction:@selector(buttonClicked:)];
-    [[_addProcess cell] setBackgroundColor:[NSColor yellowColor]];
-    //[_window.contentView addSubview:_addProcess];
+    [[_addProcess cell] setBackgroundColor:[NSColor whiteColor]];
+    [_window.contentView addSubview:_addProcess];
 
 
     
-    _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 130, 200, 50)];
+    _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 115, 200, 25)];
     [_logSearchField setIdentifier:@"LogSearch"];
     [_logSearchField setTag:0];
     [_logSearchField setDelegate:self];
     [_logSearchField setAutoresizingMask:4];
     [[_logSearchField cell] setScrollable:YES];
+    [_logSearchField setDrawsBackground:NO];
     [_window.contentView addSubview:_logSearchField];
     
     
-    _loghighlightField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 190, 200, 50)];
+    _loghighlightField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 175, 200, 25)];
     [_loghighlightField setIdentifier:@"LogHighlight"];
     [_loghighlightField setTag:1];
     [_loghighlightField setDelegate:self];
     [_loghighlightField setAutoresizingMask:4];
     [[_loghighlightField cell] setScrollable:YES];
+    [_loghighlightField setDrawsBackground:NO];
     [_window.contentView addSubview:_loghighlightField];
     
     
     if ([_logSearchField respondsToSelector: @selector(setRecentSearches:)])
 	{
 		NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:@"Search Menu"];
-		[searchMenu setAutoenablesItems:YES];
+        [searchMenu setAutoenablesItems:YES];
         
-		NSMenuItem *recentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"Recent Searches" action:nil keyEquivalent:@""];
-		[recentsTitleItem setTag:NSSearchFieldRecentsTitleMenuItemTag];
-		[searchMenu insertItem:recentsTitleItem atIndex:0];
+        NSMenuItem *recentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"Recent Searches" action:nil keyEquivalent:@""];
+        [recentsTitleItem setTag:NSSearchFieldRecentsTitleMenuItemTag];
+        [searchMenu insertItem:recentsTitleItem atIndex:0];
         
-		NSMenuItem *norecentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"No recent searches" action:nil keyEquivalent:@""];
+        NSMenuItem *norecentsTitleItem = [[NSMenuItem alloc] initWithTitle:@"No recent searches" action:nil keyEquivalent:@""];
 		[norecentsTitleItem setTag:NSSearchFieldNoRecentsMenuItemTag];
 		[searchMenu insertItem:norecentsTitleItem atIndex:1];
         
@@ -189,13 +194,15 @@
 		[searchMenu insertItem:separatorItem atIndex:3];
         
 		NSMenuItem *clearItem = [[NSMenuItem alloc] initWithTitle:@"Clear" action:nil keyEquivalent:@""];
-		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];	// tag this menu item so NSSearchField can use it
+		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];
 		[searchMenu insertItem:clearItem atIndex:4];
         
 		id searchCell = [_logSearchField cell];
 		[searchCell setMaximumRecents:20];
 		[searchCell setSearchMenuTemplate:searchMenu];
 	}
+    
+    
     if ([_loghighlightField respondsToSelector: @selector(setRecentSearches:)])
 	{
 		NSMenu *searchMenu = [[NSMenu alloc] initWithTitle:@"Search Menu"];
@@ -218,7 +225,7 @@
 		[searchMenu insertItem:separatorItem atIndex:3];
         
 		NSMenuItem *clearItem = [[NSMenuItem alloc] initWithTitle:@"Clear" action:nil keyEquivalent:@""];
-		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];	// tag this menu item so NSSearchField can use it
+		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];
 		[searchMenu insertItem:clearItem atIndex:4];
         
 		id searchCell = [_loghighlightField cell];
@@ -394,17 +401,24 @@
     [_processTableView setTag:2];
     
     
+    
     NSTableColumn *processColumn = [[NSTableColumn alloc] initWithIdentifier:@"process"];
     [processColumn setWidth:230];
-    NSDictionary *options = @{ NSPredicateFormatBindingOption:@YES };
+    
+
     [processColumn bind:NSValueBinding toObject:aProcessArrayController
-           withKeyPath:@"arrangedObjects.process" options:options];
+           withKeyPath:@"arrangedObjects.process" options:nil];
+    
+
+    //NSDictionary *test;
 
     // add column
     [_processTableView addTableColumn:processColumn];
     [_processTableView setDelegate:self ];
     [_processTableView setDataSource:self];
     [_processTableView reloadData];
+    
+    
     
     
     [tableContainer setDocumentView:_processTableView];
@@ -516,14 +530,11 @@
 
         [self updateTable];
     }
-    else if (tableView.tag == 2)
-    {
-        NSLog(@"value: %@", value);
-         //NSDictionary *processDictionary = [[_logArrayController arrangedObjects] objectAtIndex:row];
-        //[processDictionary setValue:value forKey:@"process"];
-    }
+    
 
 }
+
+
 
 - (void)tableViewSelectionIsChanging:(NSNotification *)notification
 {
@@ -548,25 +559,12 @@
 
             
         } else {
-            NSDictionary *processData = [[_processArrayController arrangedObjects] objectAtIndex:row];
+            LogData *processData = [[_processArrayController arrangedObjects] objectAtIndex:row];
             
-            [_logFilter setDeviceID: [processData objectForKey:@"deviceID"]];
-            [_logFilter setDeviceName:[processData objectForKey:@"device"]];
-            [_logFilter setProcess: [processData objectForKey:@"process"]];
+            [_logFilter setDeviceID: processData.deviceID];
+            [_logFilter setDeviceName:processData.device];
+            [_logFilter setProcess: processData.process];
             
-            NSArray *deviceArray = [_deviceArrayController content];
-            
-            for(int i = 0 ; i < deviceArray.count ; i++)
-            {
-                NSDictionary *deviceDictionary = [deviceArray objectAtIndex:i];
-                if( ([[deviceDictionary objectForKey:@"deviceID"] isEqualToString: _logFilter.deviceID ]))
-                {
-                    
-                    [_deviceTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:i] byExtendingSelection:NO];
-                    break;
-                }
-            }
-
             _filtering = YES;
 
         }
@@ -585,7 +583,7 @@
             [_window setTitle:@"DeviceLogViewer"];
             [_logFilter setDeviceID:nil];
             [_logFilter setDeviceName:nil];
-
+            _processArrayController.filterPredicate = [_logFilter processPredicate];
             
         } else {
             NSDictionary *deviceData = [[_deviceArrayController arrangedObjects] objectAtIndex:row];
@@ -601,7 +599,6 @@
             else
             {
                 [_window setTitle:sourceID];
-
             }
             
             [_logFilter setDeviceID: sourceID];
@@ -634,8 +631,8 @@
 {
     if(tableView.tag == 2)
     {
-        NSDictionary *processDictionary = [[_processArrayController arrangedObjects] objectAtIndex:row];
-        if([processDictionary objectForKey:@"isCustom"] != nil)
+        LogData *processLogData = [[_processArrayController arrangedObjects] objectAtIndex:row];
+        if(processLogData.date != nil)
         {
             return YES;
         }
@@ -786,8 +783,8 @@
 - (void)resizingGUI:(NSSize)frameSize
 {
  
-    [_logSearchField setFrame:NSMakeRect(600, frameSize.height - 130, 200, 50)];
-    [_loghighlightField setFrame:NSMakeRect(600, frameSize.height - 190, 200, 50)];
+    [_logSearchField setFrame:NSMakeRect(600, frameSize.height - 115, 200, 25)];
+    [_loghighlightField setFrame:NSMakeRect(600, frameSize.height - 175, 200, 25)];
     [_clearButton setFrame:NSMakeRect(850, frameSize.height - 210, 100, 25)];
     [_saveallButton setFrame:NSMakeRect(850, frameSize.height - 170, 100, 25)];
     [_savefilteredButton setFrame:NSMakeRect(850, frameSize.height - 130, 100, 25)];
@@ -797,6 +794,7 @@
     [_dataSource setFrame:NSMakeRect(10, frameSize.height - 70, 100, 20)];
     [_processName setFrame:NSMakeRect(230, frameSize.height - 70, 100, 20)];
     [_logLevel setFrame:NSMakeRect(450, frameSize.height - 70, 70, 20)];
+    [_addProcess setFrame:NSMakeRect(405, frameSize.height - 70, 25, 20)];
 
     
 }
@@ -808,7 +806,7 @@
 - (void)buttonClicked: (NSButton *)button
 {
     NSInteger buttonTag = [button tag];
-    NSDictionary *processDictionary;
+    LogData *processLogData;
     
     switch (buttonTag) {
         case 0:
@@ -817,7 +815,7 @@
             [_logTableView reloadData];
             [[_processArrayController content] removeAllObjects];
             [[_deviceArrayController content] removeAllObjects];
-            [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
+            [_processArrayController addObject:[[LogData alloc] initWithLogDataInfo:@{ @"process": @"All Process"}]];
             [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
             
             break;
@@ -847,19 +845,21 @@
             
         case 4:
             
+            
+            
             if( _logFilter.deviceID != nil && _logFilter.deviceName != nil)
             {
-                processDictionary = @{@"process" : @"",  @"isCustom" : @"", @"device" : _logFilter.deviceName, @"deviceID": _logFilter.deviceID};
+                processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : @"",  @"date" : @"", @"device" : _logFilter.deviceName, @"deviceID": _logFilter.deviceID}];
 
             }
             else
             {
-                processDictionary = @{@"process" : @"",  @"isCustom" : @""};
+                processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : @"",  @"date" : @""}];
 
             }
             
-            [_processArrayController addObject: processDictionary];
-            NSInteger row = [[_processArrayController arrangedObjects] indexOfObject:processDictionary];
+            [_processArrayController addObject: processLogData];
+            NSInteger row = [[_processArrayController arrangedObjects] indexOfObject:processLogData];
             [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row] byExtendingSelection:NO];
             [_processTableView scrollRowToVisible:row];
             [_processTableView editColumn:0 row:row withEvent:nil select:YES];

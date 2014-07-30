@@ -41,7 +41,7 @@
         _deviceArrayController.selectsInsertedObjects = NO;
 
         [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
-        [_processArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Process", @"process", nil]];
+        [_processArrayController addObject:[[LogData alloc] initWithLogDataInfo:@{ @"process": @"All Process"}]];
 
         
         _analyzeDeviceLog =[[AnalyzeDeviceLog alloc] init];
@@ -91,11 +91,11 @@
         
         BOOL isFound = NO;
         
-        NSDictionary *processDictionary = @{@"process" : aProcessName, @"deviceID" : aDeviceID, @"device" : aDeviceName};
+        LogData *processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : aProcessName, @"deviceID" : aDeviceID, @"device" : aDeviceName}];
         
-        for (NSDictionary *mod in _processArrayController.content)
+        for (LogData *mod in _processArrayController.content)
         {
-            if ([mod isEqualToDictionary:processDictionary])
+            if ([mod isEqualToLogData:processLogData])
             {
                 isFound = true;
                 break;
@@ -103,7 +103,7 @@
         }
         
         if (!isFound){
-            [_processArrayController addObject:processDictionary];
+            [_processArrayController addObject:processLogData];
         }
     }
     

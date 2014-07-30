@@ -24,5 +24,6 @@
 
 
 - (id)initWithLogDataInfo:(NSDictionary *)aDataInfo;
+- (BOOL)isEqualToLogData:(LogData *)aLogData;
 
 @end

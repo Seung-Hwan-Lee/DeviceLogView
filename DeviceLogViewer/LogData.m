@@ -25,17 +25,20 @@
         _logLevel = [aDataInfo objectForKey:@"logLevel"];
         _deviceID = [aDataInfo objectForKey:@"deviceID"];
 
-        NSInteger line = [[_log componentsSeparatedByCharactersInSet:
+        if(_log)
+        {
+            NSInteger line = [[_log componentsSeparatedByCharactersInSet:
                            [NSCharacterSet newlineCharacterSet]] count];
-        
-        if(line > 1)
-        {
-            _logHeight = line - 1;
+            if(line > 1)
+            {
+                _logHeight = line - 1;
+            }
+            else
+            {
+                _logHeight = line;
+            }
         }
-        else
-        {
-            _logHeight = line;
-        }
+       
 
         if (_logLevel)
         {
@@ -54,5 +57,10 @@
     return self;
 }
 
+
+- (BOOL)isEqualToLogData:(LogData *)aLogData
+{
+    return ([_process isEqualToString:aLogData.process] && [_device isEqualToString:aLogData.device] && [_deviceID isEqualToString:aLogData.deviceID] );
+}
 
 @end
