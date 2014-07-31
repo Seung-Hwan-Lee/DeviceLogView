@@ -13,6 +13,7 @@
     LogFilter *_logFilter;
     NSPredicate *_logPredicate;
     NSMutableArray *_allLogData;
+    BOOL _isAddObject;
 }
 
 
@@ -20,6 +21,7 @@
     if((self = [super init])) {
         _logFilter = nil;
         _allLogData = [[NSMutableArray alloc] init];
+        _isAddObject = YES;
     }
     return self;
 
@@ -33,7 +35,7 @@
 
 - (void)addLogData:(id)aLogData
 {
-    if([_logPredicate evaluateWithObject:aLogData])
+    if( _isAddObject && [_logPredicate evaluateWithObject:aLogData] )
     {
         [super addObject:aLogData];
         [_allLogData addObject:aLogData];
@@ -95,6 +97,17 @@
 {
     [[super content] removeAllObjects];
     
+}
+
+- (void)stopAddObject
+{
+    _isAddObject = NO;
+}
+
+- (void)startAddObject
+{
+    _isAddObject = YES;
+    [self updatePredicate];
 }
 
 

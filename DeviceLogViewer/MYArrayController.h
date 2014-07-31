@@ -18,11 +18,13 @@
 
 @property id<MYArrayControllerDelegate> delegate;
 
+
 - (void)setLogFilter:(LogFilter *)aLogFilter;
 - (void)updatePredicate;
 - (void)removeAllLog;
 - (void)addLogData:(id)aLogData;
-
+- (void)startAddObject;
+- (void)stopAddObject;
 
 
 @end
@@ -34,5 +36,6 @@
 @required
 - (void)beforChangingData;
 - (void)afterChangingData;
+
 
 @end

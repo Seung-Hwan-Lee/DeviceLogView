@@ -671,6 +671,7 @@
     {
         if([tableColumn.identifier isEqualToString:@"log"])
         {
+            [_logArrayController stopAddObject];
             return YES;
         }
     }
@@ -738,6 +739,11 @@
             _highlightString = text;
         }
         [_logTableView reloadData];
+    }
+    else if(tag == 0)
+    {
+        [_logArrayController startAddObject];
+
     }
     
 }
