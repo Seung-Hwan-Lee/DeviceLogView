@@ -46,16 +46,17 @@
     [_logDataStorage fileOpen];
 }
 
-- (void)fileSaving:(BOOL)isSavingEveryLog
+- (void)fileSaving:(NSArray *)aLogData
 {
     // Read File Test
-    [_logDataStorage saveFile:isSavingEveryLog];
+    [_logDataStorage saveFile:aLogData];
 }
 
 - (void)changeWindowTitle
 {
     [_window setTitle:[_logDataStorage currentFilePath]];
 }
+
 
 # pragma mark - Key Event
 
@@ -68,6 +69,8 @@
 - (IBAction)movePrev:(id)sender {
     [_gui movePrevCheckedLog];
 }
+
+
 
 
 @end

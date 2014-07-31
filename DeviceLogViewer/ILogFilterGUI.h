@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "LogFilter.h"
 #import "LogData.h"
+#import "MYTableView.h"
 #import "MYArrayController.h"
 
 @protocol ILogFilterGUIDelegate;
@@ -39,7 +40,7 @@
 
 
 - (void)fileLoading;
-- (void)fileSaving:(BOOL)isSavingEveryLog;
+- (void)fileSaving:(NSArray *)aLogData;
 - (void)changeWindowTitle;
 
 @end

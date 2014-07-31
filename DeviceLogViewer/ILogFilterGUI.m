@@ -13,7 +13,7 @@
 {
     LogFilter *_logFilter;
     NSWindow *_window;
-    NSTableView *_logTableView;
+    MYTableView *_logTableView;
     NSTableView *_deviceTableView;
     NSTableView *_processTableView;
     NSTableView *_logLevelTableView;
@@ -39,7 +39,6 @@
     NSTableColumn *_logLevelColumn;
     NSTableColumn *_logColumn;
     
-    
     NSString *_highlightString;
     BOOL _fixed;
     BOOL _filtering;
@@ -61,6 +60,7 @@
         _fixed = NO;
         _checkedPoint= 0;
         _filtering = NO;
+        
     }
     
     [_window setDelegate:self];
@@ -97,6 +97,25 @@
 
 
 
+#pragma mark - action
+
+- (void)saveSelectedRow
+{
+    NSIndexSet *selectedIndex = [_logTableView selectedRowIndexes];
+
+    NSMutableArray *logArray = [[NSMutableArray alloc] init];
+    [selectedIndex enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop)
+     {
+         LogData *log = [[_logArrayController arrangedObjects] objectAtIndex:i];
+         [logArray addObject:log];
+     }];
+
+    if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
+        
+        [_delegate fileSaving:logArray];
+        
+    }
+}
 
 
 #pragma mark - make GUI
@@ -154,7 +173,7 @@
     
     _logSearchField = [[NSSearchField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 115, 200, 25)];
     [_logSearchField setIdentifier:@"LogSearch"];
-    [_logSearchField setTag:0];
+    [_logSearchField setTag:5];
     [_logSearchField setDelegate:self];
     [_logSearchField setAutoresizingMask:4];
     [[_logSearchField cell] setScrollable:YES];
@@ -308,9 +327,20 @@
     
     NSSize windowSize = _window.frame.size;
     _logScrollContainer = [[NSScrollView alloc] initWithFrame:NSMakeRect(10, 10, windowSize.width - 20, windowSize.height - 240)];
-    _logTableView = [[NSTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
+    _logTableView = [[MYTableView alloc] initWithFrame:NSMakeRect(0, 0, windowSize.width - 20, windowSize.height - 200)];
     [_logTableView setIdentifier:@"LogTable"];
     [_logTableView setTag:0];
+   
+    NSMenu *tableMenu = [[NSMenu alloc] initWithTitle:@"Table Menu"];
+    [tableMenu setAutoenablesItems:YES];
+    NSMenuItem *copy = [[NSMenuItem alloc] initWithTitle:@"Copy" action:nil keyEquivalent:@""];
+    [copy setAction:@selector(copy:)];
+    [tableMenu insertItem:copy atIndex:0];
+    NSMenuItem *savefile = [[NSMenuItem alloc] initWithTitle:@"Save file" action:nil keyEquivalent:@""];
+    [savefile setAction:@selector(saveSelectedRow)];
+    [tableMenu insertItem:savefile atIndex:1];
+   
+    [_logTableView setMenu:tableMenu];
     
     _dateColumn = [[NSTableColumn alloc] initWithIdentifier:@"date"];
     _deviceColumn = [[NSTableColumn alloc] initWithIdentifier:@"device"];
@@ -632,11 +662,19 @@
     if(tableView.tag == 2)
     {
         LogData *processLogData = [[_processArrayController arrangedObjects] objectAtIndex:row];
-        if(processLogData.date != nil)
+        if(processLogData.date != nil )
         {
             return YES;
         }
     }
+    else if(tableView.tag == 0)
+    {
+        if([tableColumn.identifier isEqualToString:@"log"])
+        {
+            return YES;
+        }
+    }
+
     
     return NO;
 }
@@ -670,13 +708,13 @@
 #pragma mark - TextField Delegate
 
 
-- (void)controlTextDidEndEditing:(NSNotification *)aSearchField
+- (void)controlTextDidEndEditing:(NSNotification *)aTextField
 {
-    NSInteger searchFieldTag = [[aSearchField object] tag];
-    NSTextField *textField = [aSearchField object];
+    NSInteger tag = [[aTextField object] tag];
+    NSTextField *textField = [aTextField object];
     NSString *text;
     
-    if(searchFieldTag == 0)
+    if(tag == 5)
     {
         text = [textField stringValue];
         if([text isEqualToString: @""]) {
@@ -686,11 +724,12 @@
         }
        
         _filtering = YES;
+        
         [_logArrayController updatePredicate];
 
         [self updateTable];
     }
-    else if(searchFieldTag == 1)
+    else if(tag == 1)
     {
         text = [textField stringValue];
         if([text isEqualToString: @""]) {
@@ -699,8 +738,8 @@
             _highlightString = text;
         }
         [_logTableView reloadData];
-        
     }
+    
 }
 
 #pragma mark - Window Delegate
@@ -708,13 +747,11 @@
 
 - (NSSize)windowWillResize:(NSWindow *)sender toSize:(NSSize)frameSize
 {
-    //NSLog(@"resizing");
     [self resizingLogTable:frameSize];
     [self resizingDeviceTable:frameSize];
     [self resizingProcessTable:frameSize];
     [self resizingLogLevelTable:frameSize];
     [self resizingGUI:frameSize];
-    
     return frameSize;
 }
 
@@ -737,6 +774,9 @@
         [pastedboard setString:copyString forType:NSStringPboardType];
     }
 }
+
+
+
 
 - (BOOL)windowShouldClose:(id)sender
 {
@@ -832,14 +872,14 @@
         case 2:
             if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
                
-                [_delegate fileSaving:YES];
+                [_delegate fileSaving:[_logArrayController content]];
                 
             }
             break;
             
         case 3:
             if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
-                [_delegate fileSaving:NO];
+                [_delegate fileSaving:[_logArrayController arrangedObjects]];
             }
             break;
             

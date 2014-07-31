@@ -57,6 +57,15 @@
     return self;
 }
 
+- (void)setLog:(NSString *)log
+{
+    if(_log == nil)
+    {
+        _log = log;
+    }
+}
+
+
 
 - (BOOL)isEqualToLogData:(LogData *)aLogData
 {

@@ -42,6 +42,7 @@
 
         [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
         [_processArrayController addObject:[[LogData alloc] initWithLogDataInfo:@{ @"process": @"All Process"}]];
+        
 
         
         _analyzeDeviceLog =[[AnalyzeDeviceLog alloc] init];
@@ -219,22 +220,11 @@
 }
 
 
-- (void)saveFile:(BOOL)isSavingEveryLog
+- (void)saveFile:(NSArray *)logData
 {
     
     NSString *stringfilePath = [[[self openDialogForSaveFile] absoluteString] substringFromIndex:7];
     
-    NSArray *logData = nil;
-    
-    if(isSavingEveryLog)
-    {
-        logData = [_logDataArrayController content];
-        
-    }
-    else
-    {
-        logData = [_logDataArrayController arrangedObjects];
-    }
     
     if( logData != nil && stringfilePath != nil)
     {

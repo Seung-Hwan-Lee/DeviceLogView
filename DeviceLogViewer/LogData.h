@@ -17,7 +17,7 @@
 @property NSString *device;
 @property NSString *process;
 @property NSString *logLevel;
-@property NSString *log;
+@property (nonatomic) NSString *log;
 @property NSColor *textColor;
 @property NSString *deviceID;
 @property NSInteger logHeight;

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4F03E44219823D3900BE0939 /* FileWatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F03E44119823D3900BE0939 /* FileWatch.m */; };
 		4F03E4451982427100BE0939 /* ReadSimulatorLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F03E4441982427100BE0939 /* ReadSimulatorLog.m */; };
+		4F661FA7198A078D003941C0 /* MYTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F661FA6198A078D003941C0 /* MYTableView.m */; };
 		4FAE661E197784B90048DFD8 /* ReadFileLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE661D197784B90048DFD8 /* ReadFileLog.m */; };
 		4FAE66221977BACB0048DFD8 /* LogDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAE66211977BACB0048DFD8 /* LogDataStorage.m */; };
 		4FB1B255196FC50100F0EB53 /* ILogFilterGUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB1B254196FC50100F0EB53 /* ILogFilterGUI.m */; };
@@ -47,6 +48,8 @@
 		4F03E44119823D3900BE0939 /* FileWatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileWatch.m; sourceTree = "<group>"; };
 		4F03E4431982427100BE0939 /* ReadSimulatorLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadSimulatorLog.h; sourceTree = "<group>"; };
 		4F03E4441982427100BE0939 /* ReadSimulatorLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadSimulatorLog.m; sourceTree = "<group>"; };
+		4F661FA5198A078D003941C0 /* MYTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYTableView.h; sourceTree = "<group>"; };
+		4F661FA6198A078D003941C0 /* MYTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYTableView.m; sourceTree = "<group>"; };
 		4FAE661C197784B90048DFD8 /* ReadFileLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadFileLog.h; sourceTree = "<group>"; };
 		4FAE661D197784B90048DFD8 /* ReadFileLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadFileLog.m; sourceTree = "<group>"; };
 		4FAE66201977BACB0048DFD8 /* LogDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogDataStorage.h; sourceTree = "<group>"; };
@@ -145,6 +148,8 @@
 			children = (
 				4FB1B253196FC50100F0EB53 /* ILogFilterGUI.h */,
 				4FB1B254196FC50100F0EB53 /* ILogFilterGUI.m */,
+				4F661FA5198A078D003941C0 /* MYTableView.h */,
+				4F661FA6198A078D003941C0 /* MYTableView.m */,
 			);
 			name = UiClass;
 			sourceTree = "<group>";
@@ -357,6 +362,7 @@
 				4FBFEF01196E65A7002DF74F /* AnalyzeDeviceLog.m in Sources */,
 				4FAE66221977BACB0048DFD8 /* LogDataStorage.m in Sources */,
 				4F03E4451982427100BE0939 /* ReadSimulatorLog.m in Sources */,
+				4F661FA7198A078D003941C0 /* MYTableView.m in Sources */,
 				4FB1B255196FC50100F0EB53 /* ILogFilterGUI.m in Sources */,
 				4FBFEEF8196E6541002DF74F /* LogData.m in Sources */,
 				4FAE661E197784B90048DFD8 /* ReadFileLog.m in Sources */,
