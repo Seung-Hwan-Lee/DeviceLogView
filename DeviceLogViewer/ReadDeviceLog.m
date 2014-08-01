@@ -19,7 +19,6 @@ typedef struct {
 
 @implementation ReadDeviceLog
 
-
 static CFMutableDictionaryRef liveConnections = nil;
 static CFMutableDictionaryRef deviceName = nil;
 

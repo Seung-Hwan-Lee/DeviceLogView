@@ -9,9 +9,7 @@
 #import "ReadSimulatorLog.h"
 
 @implementation ReadSimulatorLog
-{
-    void (^eventHandler)(void);
-}
+
 
 -(void)startLogging
 {

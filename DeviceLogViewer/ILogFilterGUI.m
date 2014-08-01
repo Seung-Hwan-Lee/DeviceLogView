@@ -21,6 +21,7 @@
     NSButton *_loadfileButton;
     NSButton *_saveallButton;
     NSButton *_savefilteredButton;
+    NSButton *_fixedButton;
     NSButton *_addProcess;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
@@ -135,6 +136,14 @@
     [_window.contentView addSubview:_clearButton];
     
     
+    _fixedButton = [[NSButton alloc] initWithFrame:NSMakeRect(600, windowSize.height - 220, 130, 25)];
+    [_fixedButton setButtonType:NSSwitchButton];
+    [_fixedButton setTag:5];
+    [_fixedButton setTitle:@"Fixed Log Scroll"];
+    [_fixedButton setTarget:self];
+    [_fixedButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_fixedButton];
+    [_fixedButton setState:_fixed];
     
     _saveallButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 170, 100, 25)];
     [_saveallButton setIdentifier:@"saveallButton"];
@@ -252,6 +261,7 @@
 		[searchCell setSearchMenuTemplate:searchMenu];
 	}
 
+    
     
     _searchLog = [[NSTextField alloc] initWithFrame:NSMakeRect(600, windowSize.height - 90, 200, 20)];
     [_searchLog setStringValue:@"Searching Log"];
@@ -439,17 +449,11 @@
     [processColumn bind:NSValueBinding toObject:aProcessArrayController
            withKeyPath:@"arrangedObjects.process" options:nil];
     
-
-    //NSDictionary *test;
-
     // add column
     [_processTableView addTableColumn:processColumn];
     [_processTableView setDelegate:self ];
     [_processTableView setDataSource:self];
     [_processTableView reloadData];
-    
-    
-    
     
     [tableContainer setDocumentView:_processTableView];
     [tableContainer setHasVerticalScroller:YES];
@@ -465,7 +469,6 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    
     if( tableView.tag == 3)
     {
         return _logLevelArray.count;
@@ -694,17 +697,19 @@
         if(currentScrollPosition.y > (tableSize.height - _window.frame.size.height + 255))
         {
             _fixed = NO;
+            [_fixedButton setState:_fixed];
+
         }
         else
         {
             _fixed = YES;
+            [_fixedButton setState:_fixed];
+
         }
         
     }
     
 }
-
-
 
 #pragma mark - TextField Delegate
 
@@ -829,6 +834,8 @@
 - (void)resizingGUI:(NSSize)frameSize
 {
  
+
+    [_fixedButton setFrame:NSMakeRect(600, frameSize.height - 220, 130, 25)];
     [_logSearchField setFrame:NSMakeRect(600, frameSize.height - 115, 200, 25)];
     [_loghighlightField setFrame:NSMakeRect(600, frameSize.height - 175, 200, 25)];
     [_clearButton setFrame:NSMakeRect(850, frameSize.height - 210, 100, 25)];
@@ -872,6 +879,8 @@
                 [_logTableView reloadData];
                 [_delegate fileLoading];
                 _fixed = YES;
+                [_fixedButton setState:_fixed];
+
             }
             
             break;
@@ -890,9 +899,7 @@
             break;
             
         case 4:
-            
-            
-            
+  
             if( _logFilter.deviceID != nil && _logFilter.deviceName != nil)
             {
                 processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : @"",  @"date" : @"", @"device" : _logFilter.deviceName, @"deviceID": _logFilter.deviceID}];
@@ -912,6 +919,9 @@
             
             break;
             
+        case 5:
+            _fixed = [_fixedButton state];
+            break;
         default:
             break;
     }
