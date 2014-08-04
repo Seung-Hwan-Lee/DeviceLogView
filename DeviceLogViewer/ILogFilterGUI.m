@@ -119,6 +119,77 @@
 }
 
 
+
+- (void)buttonClicked: (NSButton *)button
+{
+    NSInteger buttonTag = [button tag];
+    LogData *processLogData;
+    
+    switch (buttonTag) {
+        case 0:
+            
+            [_logArrayController removeAllLog];
+            [_logTableView reloadData];
+            [[_processArrayController content] removeAllObjects];
+            [[_deviceArrayController content] removeAllObjects];
+            [_processArrayController addObject:[[LogData alloc] initWithLogDataInfo:@{ @"process": @"All Process"}]];
+            [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
+            
+            break;
+        case 1:
+            if ([_delegate respondsToSelector:@selector(fileLoading)]) {
+                _filtering = NO;
+                [self unbindingLogTable];
+                [_logTableView reloadData];
+                [_delegate fileLoading];
+                _fixed = YES;
+                [_fixedButton setState:_fixed];
+                
+            }
+            
+            break;
+        case 2:
+            if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
+                [_delegate fileSaving:[_logArrayController content]];
+            }
+            break;
+            
+        case 3:
+            if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
+                [_delegate fileSaving:[_logArrayController arrangedObjects]];
+            }
+            break;
+            
+        case 4:
+            
+            if( _logFilter.deviceID != nil && _logFilter.deviceName != nil)
+            {
+                processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : @"",  @"date" : @"", @"device" : _logFilter.deviceName, @"deviceID": _logFilter.deviceID}];
+                
+            }
+            else
+            {
+                processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : @"",  @"date" : @""}];
+                
+            }
+            
+            [_processArrayController addObject: processLogData];
+            NSInteger row = [[_processArrayController arrangedObjects] indexOfObject:processLogData];
+            [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row] byExtendingSelection:NO];
+            [_processTableView scrollRowToVisible:row];
+            [_processTableView editColumn:0 row:row withEvent:nil select:YES];
+            
+            break;
+            
+        case 5:
+            _fixed = [_fixedButton state];
+            break;
+        default:
+            break;
+    }
+}
+
+
 #pragma mark - make GUI
 
 
@@ -613,7 +684,7 @@
         }
         if (row == 0){
             
-            [_window setTitle:@"DeviceLogViewer"];
+            [_window setTitle:@"ILogViewer"];
             [_logFilter setDeviceID:nil];
             [_logFilter setDeviceName:nil];
             _processArrayController.filterPredicate = [_logFilter processPredicate];
@@ -852,80 +923,6 @@
     
 }
 
-
-#pragma mrak - Button Event Function
-
-
-- (void)buttonClicked: (NSButton *)button
-{
-    NSInteger buttonTag = [button tag];
-    LogData *processLogData;
-    
-    switch (buttonTag) {
-        case 0:
-            
-            [_logArrayController removeAllLog];
-            [_logTableView reloadData];
-            [[_processArrayController content] removeAllObjects];
-            [[_deviceArrayController content] removeAllObjects];
-            [_processArrayController addObject:[[LogData alloc] initWithLogDataInfo:@{ @"process": @"All Process"}]];
-            [_deviceArrayController addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"All Source", @"device", nil]];
-            
-            break;
-        case 1:
-            if ([_delegate respondsToSelector:@selector(fileLoading)]) {
-                _filtering = NO;
-                [self unbindingLogTable];
-                [_logTableView reloadData];
-                [_delegate fileLoading];
-                _fixed = YES;
-                [_fixedButton setState:_fixed];
-
-            }
-            
-            break;
-        case 2:
-            if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
-               
-                [_delegate fileSaving:[_logArrayController content]];
-                
-            }
-            break;
-            
-        case 3:
-            if ([_delegate respondsToSelector:@selector(fileSaving:)]) {
-                [_delegate fileSaving:[_logArrayController arrangedObjects]];
-            }
-            break;
-            
-        case 4:
-  
-            if( _logFilter.deviceID != nil && _logFilter.deviceName != nil)
-            {
-                processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : @"",  @"date" : @"", @"device" : _logFilter.deviceName, @"deviceID": _logFilter.deviceID}];
-
-            }
-            else
-            {
-                processLogData = [[LogData alloc] initWithLogDataInfo: @{@"process" : @"",  @"date" : @""}];
-
-            }
-            
-            [_processArrayController addObject: processLogData];
-            NSInteger row = [[_processArrayController arrangedObjects] indexOfObject:processLogData];
-            [_processTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row] byExtendingSelection:NO];
-            [_processTableView scrollRowToVisible:row];
-            [_processTableView editColumn:0 row:row withEvent:nil select:YES];
-            
-            break;
-            
-        case 5:
-            _fixed = [_fixedButton state];
-            break;
-        default:
-            break;
-    }
-}
 
 
 #pragma mark - Log Check function

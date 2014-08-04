@@ -15,8 +15,8 @@
 @interface FileWatch:NSObject
 
 @property id<FileWatchDeleate> delegate;
-- (void)startFileWatch:(NSString *)aPath targetQueue:(dispatch_queue_t)aQueue;
 
+- (void)startFileWatch:(NSString *)aPath targetQueue:(dispatch_queue_t)aQueue;
 
 @end
 

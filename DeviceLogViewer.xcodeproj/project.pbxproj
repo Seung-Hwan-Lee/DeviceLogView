@@ -31,6 +31,7 @@
 		4FBFEF01196E65A7002DF74F /* AnalyzeDeviceLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEF00196E65A7002DF74F /* AnalyzeDeviceLog.m */; };
 		4FBFEF04196E74E6002DF74F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBFEF03196E74E6002DF74F /* CoreFoundation.framework */; };
 		4FBFEF06196E74F2002DF74F /* MobileDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBFEF05196E74F2002DF74F /* MobileDevice.framework */; };
+		4FEF347C198F78D80074067B /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FEF347B198F78D80074067B /* icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +59,7 @@
 		4FB1B254196FC50100F0EB53 /* ILogFilterGUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ILogFilterGUI.m; sourceTree = "<group>"; };
 		4FB69A851986195B0004A51E /* MYArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYArrayController.h; sourceTree = "<group>"; };
 		4FB69A861986195B0004A51E /* MYArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYArrayController.m; sourceTree = "<group>"; };
-		4FBFEEBF196E651D002DF74F /* DeviceLogViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeviceLogViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FBFEEBF196E651D002DF74F /* ILogViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ILogViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FBFEEC2196E651D002DF74F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4FBFEEC5196E651D002DF74F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		4FBFEEC6196E651D002DF74F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -87,6 +88,7 @@
 		4FBFEF02196E74C5002DF74F /* MobileDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MobileDevice.h; sourceTree = "<group>"; };
 		4FBFEF03196E74E6002DF74F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4FBFEF05196E74F2002DF74F /* MobileDevice.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MobileDevice.framework; sourceTree = "<group>"; };
+		4FEF347B198F78D80074067B /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,7 +185,7 @@
 		4FBFEEC0196E651D002DF74F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4FBFEEBF196E651D002DF74F /* DeviceLogViewer.app */,
+				4FBFEEBF196E651D002DF74F /* ILogViewer.app */,
 				4FBFEEE0196E651D002DF74F /* DeviceLogViewerTests.xctest */,
 			);
 			name = Products;
@@ -230,6 +232,7 @@
 		4FBFEEC9196E651D002DF74F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4FEF347B198F78D80074067B /* icon.png */,
 				4FBFEECA196E651D002DF74F /* DeviceLogViewer-Info.plist */,
 				4FBFEECB196E651D002DF74F /* InfoPlist.strings */,
 				4FBFEECE196E651D002DF74F /* main.m */,
@@ -274,7 +277,7 @@
 			);
 			name = DeviceLogViewer;
 			productName = DeviceLogViewer;
-			productReference = 4FBFEEBF196E651D002DF74F /* DeviceLogViewer.app */;
+			productReference = 4FBFEEBF196E651D002DF74F /* ILogViewer.app */;
 			productType = "com.apple.product-type.application";
 		};
 		4FBFEEDF196E651D002DF74F /* DeviceLogViewerTests */ = {
@@ -334,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FBFEECD196E651D002DF74F /* InfoPlist.strings in Resources */,
+				4FEF347C198F78D80074067B /* icon.png in Resources */,
 				4FBFEEDB196E651D002DF74F /* Images.xcassets in Resources */,
 				4FBFEED3196E651D002DF74F /* Credits.rtf in Resources */,
 				4FBFEED9196E651D002DF74F /* MainMenu.xib in Resources */,
@@ -508,7 +512,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeviceLogViewer/DeviceLogViewer-Prefix.pch";
 				INFOPLIST_FILE = "DeviceLogViewer/DeviceLogViewer-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ILogViewer;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -525,7 +529,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeviceLogViewer/DeviceLogViewer-Prefix.pch";
 				INFOPLIST_FILE = "DeviceLogViewer/DeviceLogViewer-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ILogViewer;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -37,6 +37,9 @@
 }
 
 
+#pragma mark - make predicate
+
+
 - (NSPredicate *)processPredicate
 {
     NSPredicate *processPredicate;

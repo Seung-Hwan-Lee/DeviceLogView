@@ -27,6 +27,7 @@
     [_gui makeDeviceTableWithDeviceArrayController:[_logDataStorage deviceArrayController]];
     [_gui makeProcessTable:[_logDataStorage processArrayController]];
     _gui.delegate =self;
+    [_window setTitle:@"ILogViewer"];
     
 }
 
