@@ -57,18 +57,21 @@
 #pragma mark -
 
 
-- (void)fileOpen
-{
-    [_analyzeDeviceLog readLogFromFile];
-}
+
 
 
 #pragma mark -
 
-
-- (void) readFile
+- (void)fileOpenWithType:(NSInteger)aFileType
 {
-    [_analyzeDeviceLog readLogFromFile];
+    if( aFileType == 0)
+    {
+        [_analyzeDeviceLog readLogFromConsoleFile];
+    }
+    else
+    {
+        [_analyzeDeviceLog readLogFromDeviceFile];
+    }
 }
 
 - (void) readDevice
@@ -145,7 +148,7 @@
     {
         sourceType = @"D: ";
     }
-    else if(aSource == 1)
+    else if(aSource == 1 || aSource == 3)
     {
         sourceType = @"F: ";
     }

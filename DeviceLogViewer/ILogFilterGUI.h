@@ -27,6 +27,7 @@
 - (void)checkingCurrentLog;
 - (void)moveNextCheckedLog;
 - (void)movePrevCheckedLog;
+- (void)saveRecentSearch;
 
 
 
@@ -39,7 +40,7 @@
 @protocol ILogFilterGUIDelegate <NSObject>
 
 
-- (void)fileLoading;
+- (void)fileLoadingWithType:(NSInteger) aFileType;
 - (void)fileSaving:(NSArray *)aLogData;
 - (void)changeWindowTitle;
 

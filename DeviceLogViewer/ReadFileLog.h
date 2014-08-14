@@ -15,7 +15,8 @@
 @interface ReadFileLog : NSObject
 
 
--(void)readFile;
+- (void)readConsoleLogFile;
+- (void)readDeviceLogFile;
 
 
 @property id<ReadFileLogDelegate> delegate;

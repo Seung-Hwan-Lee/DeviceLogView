@@ -25,7 +25,8 @@
 
 
 - (void)readLogFromDevice;
-- (void)readLogFromFile;
+- (void)readLogFromConsoleFile;
+- (void)readLogFromDeviceFile;
 - (void)readLogFromSimulator;
 
 

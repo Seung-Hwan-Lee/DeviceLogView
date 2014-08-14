@@ -41,10 +41,10 @@
     [_gui updateTable];
 }
 
-- (void)fileLoading
+- (void)fileLoadingWithType:(NSInteger) aFileType
 {
     // Read File Test
-    [_logDataStorage fileOpen];
+    [_logDataStorage fileOpenWithType:aFileType];
 }
 
 - (void)fileSaving:(NSArray *)aLogData
@@ -72,6 +72,10 @@
 }
 
 
-
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+    [_gui saveRecentSearch];
+    return  NSTerminateNow;
+}
 
 @end

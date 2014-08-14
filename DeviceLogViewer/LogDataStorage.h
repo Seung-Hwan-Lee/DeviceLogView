@@ -26,7 +26,7 @@
 @property NSArrayController *deviceArrayController;
 
 
-- (void)fileOpen;
+- (void)fileOpenWithType:(NSInteger) aFileType;
 - (void)saveFile:(NSArray *)logData;
 - (NSString *)currentFilePath;
 

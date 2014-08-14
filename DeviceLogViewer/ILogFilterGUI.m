@@ -18,11 +18,12 @@
     NSTableView *_processTableView;
     NSTableView *_logLevelTableView;
     NSButton *_clearButton;
-    NSButton *_loadfileButton;
+    NSButton *_loadConsoleFileButton;
     NSButton *_saveallButton;
     NSButton *_savefilteredButton;
     NSButton *_fixedButton;
     NSButton *_addProcess;
+    NSButton *_loadDeviceFileButton;
     NSArrayController *_processArrayController;
     NSArrayController *_deviceArrayController;
     MYArrayController *_logArrayController;
@@ -43,6 +44,9 @@
     NSString *_highlightString;
     BOOL _fixed;
     BOOL _filtering;
+    
+    NSUserDefaults *_prefs;
+
 
 }
 
@@ -61,6 +65,7 @@
         _fixed = NO;
         _checkedPoint= 0;
         _filtering = NO;
+        _prefs = [NSUserDefaults standardUserDefaults];
         
     }
     
@@ -100,6 +105,14 @@
 
 #pragma mark - action
 
+- (void)saveRecentSearch
+{
+    [_prefs setObject:[_logSearchField recentSearches] forKey:@"logSearch"];
+    [_prefs setObject:[_loghighlightField recentSearches] forKey:@"logHighlight"];
+    [_prefs synchronize];
+    
+}
+
 - (void)saveSelectedRow
 {
     NSIndexSet *selectedIndex = [_logTableView selectedRowIndexes];
@@ -137,14 +150,13 @@
             
             break;
         case 1:
-            if ([_delegate respondsToSelector:@selector(fileLoading)]) {
+            if ([_delegate respondsToSelector:@selector(fileLoadingWithType:)]) {
                 _filtering = NO;
                 [self unbindingLogTable];
                 [_logTableView reloadData];
-                [_delegate fileLoading];
+                [_delegate fileLoadingWithType:0];
                 _fixed = YES;
                 [_fixedButton setState:_fixed];
-                
             }
             
             break;
@@ -184,6 +196,18 @@
         case 5:
             _fixed = [_fixedButton state];
             break;
+            
+        case 6:
+            if ([_delegate respondsToSelector:@selector(fileLoadingWithType:)]) {
+                _filtering = NO;
+                [self unbindingLogTable];
+                [_logTableView reloadData];
+                [_delegate fileLoadingWithType:1];
+                _fixed = YES;
+                [_fixedButton setState:_fixed];
+            }
+            
+            break;
         default:
             break;
     }
@@ -198,7 +222,7 @@
     
     NSSize windowSize = _window.frame.size;
     
-    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 210, 100, 25)];
+    _clearButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 210, 120, 25)];
     [_clearButton setIdentifier:@"clearButton"];
     [_clearButton setTag:0];
     [_clearButton setTitle:@"Clear Log"];
@@ -216,7 +240,7 @@
     [_window.contentView addSubview:_fixedButton];
     [_fixedButton setState:_fixed];
     
-    _saveallButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 170, 100, 25)];
+    _saveallButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 180, 120, 25)];
     [_saveallButton setIdentifier:@"saveallButton"];
     [_saveallButton setTag:2];
     [_saveallButton setTitle:@"Save All"];
@@ -224,21 +248,31 @@
     [_saveallButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_saveallButton];
     
-    _savefilteredButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 130, 100, 25)];
+    _savefilteredButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 150, 120, 25)];
     [_savefilteredButton setIdentifier:@"saveFilteredButton"];
     [_savefilteredButton setTag:3];
     [_savefilteredButton setTitle:@"Save Filtered"];
     [_savefilteredButton setTarget:self];
     [_savefilteredButton setAction:@selector(buttonClicked:)];
     [_window.contentView addSubview:_savefilteredButton];
+    
+    _loadDeviceFileButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 120, 120, 25)];
+    [_loadDeviceFileButton setIdentifier:@"loadFileButton"];
+    [_loadDeviceFileButton setTag:6];
+    [_loadDeviceFileButton setTitle:@"Load Device File"];
+    [_loadDeviceFileButton setTarget:self];
+    [_loadDeviceFileButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_loadDeviceFileButton];
 
-    _loadfileButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 90, 100, 25)];
-    [_loadfileButton setIdentifier:@"loadFileButton"];
-    [_loadfileButton setTag:1];
-    [_loadfileButton setTitle:@"Load File"];
-    [_loadfileButton setTarget:self];
-    [_loadfileButton setAction:@selector(buttonClicked:)];
-    [_window.contentView addSubview:_loadfileButton];
+
+    _loadConsoleFileButton = [[NSButton alloc] initWithFrame:NSMakeRect(850, windowSize.height - 90, 120, 25)];
+    [_loadConsoleFileButton setIdentifier:@"loadFileButton"];
+    [_loadConsoleFileButton setTag:1];
+    [_loadConsoleFileButton setTitle:@"Load Console File"];
+    [_loadConsoleFileButton setTarget:self];
+    [_loadConsoleFileButton setAction:@selector(buttonClicked:)];
+    [_window.contentView addSubview:_loadConsoleFileButton];
+    
     
     _addProcess = [[NSButton alloc] initWithFrame:NSMakeRect(405, windowSize.height - 70, 25, 20)];
     [_addProcess setIdentifier:@"loadFileButton"];
@@ -296,10 +330,13 @@
 		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];
 		[searchMenu insertItem:clearItem atIndex:4];
         
+        NSArray *recentSearch = [_prefs arrayForKey:@"logSearch"];
 		id searchCell = [_logSearchField cell];
 		[searchCell setMaximumRecents:20];
+        [searchCell setRecentSearches:recentSearch];
 		[searchCell setSearchMenuTemplate:searchMenu];
-	}
+        
+    }
     
     
     if ([_loghighlightField respondsToSelector: @selector(setRecentSearches:)])
@@ -327,9 +364,12 @@
 		[clearItem setTag:NSSearchFieldClearRecentsMenuItemTag];
 		[searchMenu insertItem:clearItem atIndex:4];
         
+        NSArray *recentSearch = [_prefs arrayForKey:@"logHighlight"];
 		id searchCell = [_loghighlightField cell];
 		[searchCell setMaximumRecents:20];
+        [searchCell setRecentSearches:recentSearch];
 		[searchCell setSearchMenuTemplate:searchMenu];
+
 	}
 
     
@@ -385,6 +425,7 @@
     [_logLevelTableView setIdentifier:@"logLevelTable"];
     [_logLevelTableView setTag:3];
     [_logLevelTableView setHeaderView: nil];
+    
     NSTableColumn *logLevelColumn = [[NSTableColumn alloc] initWithIdentifier:@"logLevel"];
     _logLevelArray = @[@"ALL",@"Debug", @"Info", @"Notice", @"Warning", @"Error", @"Critical", @"Alert", @"Emergency"];
     [_logLevelTableView addTableColumn:logLevelColumn];
@@ -566,19 +607,29 @@
             [cell setAttributedStringValue:cellText];
             return;
         }
-        if((_highlightString != nil) && ([tableColumn.identifier isEqualToString:@"log"]))
+        if([tableColumn.identifier isEqualToString:@"log"])
         {
             NSTextFieldCell *cell = aCell;
-            NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
-            NSRange searchedRange = NSMakeRange(0, [cellText length]);
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[_highlightString stringByReplacingOccurrencesOfString:@"&" withString:@".*"] options:NSRegularExpressionCaseInsensitive error:nil];
-            NSArray *matches = [regex matchesInString:[cellText string] options:0 range:searchedRange];
+            CGFloat width = [cell cellSize].width;
             
-            for (NSTextCheckingResult* match in matches) {
-                [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:[match range]];
-                [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:[match range]];
-                [cell setAttributedStringValue:cellText];
-                //return;
+            if(_logColumn.width < width)
+            {
+                _logColumn.width = width;
+            }
+            
+            if(_highlightString != nil)
+            {
+                NSMutableAttributedString *cellText = [[NSMutableAttributedString alloc] initWithAttributedString:[cell attributedStringValue]];
+                NSRange searchedRange = NSMakeRange(0, [cellText length]);
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[_highlightString stringByReplacingOccurrencesOfString:@"&" withString:@".*"] options:NSRegularExpressionCaseInsensitive error:nil];
+                NSArray *matches = [regex matchesInString:[cellText string] options:0 range:searchedRange];
+                
+                for (NSTextCheckingResult* match in matches) {
+                    [cellText addAttribute:NSBackgroundColorAttributeName value:[NSColor redColor] range:[match range]];
+                    [cellText addAttribute:NSForegroundColorAttributeName value:[NSColor whiteColor] range:[match range]];
+                    [cell setAttributedStringValue:cellText];
+                    //return;
+                }
             }
         }
 
@@ -629,6 +680,7 @@
         {
             [_logFilter logLevel][row] = [value boolValue];
         }
+        [_logLevelTableView reloadData];
         _filtering = YES;
         [_logArrayController updatePredicate];
 
@@ -794,6 +846,7 @@
     if(tag == 5)
     {
         text = [textField stringValue];
+        
         if([text isEqualToString: @""]) {
             [_logFilter setSentence:nil];
         } else {
@@ -862,11 +915,9 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    exit(0);
+    [[NSApplication sharedApplication] terminate:nil];
     return NO;
 }
-
-
 
 
 
@@ -909,10 +960,11 @@
     [_fixedButton setFrame:NSMakeRect(600, frameSize.height - 220, 130, 25)];
     [_logSearchField setFrame:NSMakeRect(600, frameSize.height - 115, 200, 25)];
     [_loghighlightField setFrame:NSMakeRect(600, frameSize.height - 175, 200, 25)];
-    [_clearButton setFrame:NSMakeRect(850, frameSize.height - 210, 100, 25)];
-    [_saveallButton setFrame:NSMakeRect(850, frameSize.height - 170, 100, 25)];
-    [_savefilteredButton setFrame:NSMakeRect(850, frameSize.height - 130, 100, 25)];
-    [_loadfileButton setFrame:NSMakeRect(850, frameSize.height - 90, 100, 25)];
+    [_clearButton setFrame:NSMakeRect(850, frameSize.height - 210, 120, 25)];
+    [_saveallButton setFrame:NSMakeRect(850, frameSize.height - 180, 120, 25)];
+    [_savefilteredButton setFrame:NSMakeRect(850, frameSize.height - 150, 120, 25)];
+    [_loadDeviceFileButton setFrame:NSMakeRect(850, frameSize.height - 120, 120, 25)];
+    [_loadConsoleFileButton setFrame:NSMakeRect(850, frameSize.height - 90, 120, 25)];
     [_searchLog setFrame:NSMakeRect(600, frameSize.height - 90, 200, 20)];
     [_highlightLog setFrame:NSMakeRect(600, frameSize.height - 150, 200, 20)];
     [_dataSource setFrame:NSMakeRect(10, frameSize.height - 70, 100, 20)];
