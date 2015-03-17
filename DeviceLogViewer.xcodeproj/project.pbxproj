@@ -21,7 +21,6 @@
 		4FBFEED6196E651D002DF74F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEED5196E651D002DF74F /* AppDelegate.m */; };
 		4FBFEED9196E651D002DF74F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4FBFEED7196E651D002DF74F /* MainMenu.xib */; };
 		4FBFEEDB196E651D002DF74F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FBFEEDA196E651D002DF74F /* Images.xcassets */; };
-		4FBFEEE2196E651D002DF74F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBFEEE1196E651D002DF74F /* XCTest.framework */; };
 		4FBFEEE3196E651D002DF74F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBFEEC2196E651D002DF74F /* Cocoa.framework */; };
 		4FBFEEEB196E651D002DF74F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FBFEEE9196E651D002DF74F /* InfoPlist.strings */; };
 		4FBFEEED196E651D002DF74F /* DeviceLogViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBFEEEC196E651D002DF74F /* DeviceLogViewerTests.m */; };
@@ -73,7 +72,6 @@
 		4FBFEED8196E651D002DF74F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		4FBFEEDA196E651D002DF74F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4FBFEEE0196E651D002DF74F /* DeviceLogViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeviceLogViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FBFEEE1196E651D002DF74F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		4FBFEEE8196E651D002DF74F /* DeviceLogViewerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DeviceLogViewerTests-Info.plist"; sourceTree = "<group>"; };
 		4FBFEEEA196E651D002DF74F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4FBFEEEC196E651D002DF74F /* DeviceLogViewerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceLogViewerTests.m; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FBFEEE3196E651D002DF74F /* Cocoa.framework in Frameworks */,
-				4FBFEEE2196E651D002DF74F /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,7 +192,6 @@
 			isa = PBXGroup;
 			children = (
 				4FBFEEC2196E651D002DF74F /* Cocoa.framework */,
-				4FBFEEE1196E651D002DF74F /* XCTest.framework */,
 				4FBFEEC4196E651D002DF74F /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -512,7 +508,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeviceLogViewer/DeviceLogViewer-Prefix.pch";
 				INFOPLIST_FILE = "DeviceLogViewer/DeviceLogViewer-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				PRODUCT_NAME = ILogViewer;
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -529,7 +528,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DeviceLogViewer/DeviceLogViewer-Prefix.pch";
 				INFOPLIST_FILE = "DeviceLogViewer/DeviceLogViewer-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				PRODUCT_NAME = ILogViewer;
+				SDKROOT = macosx10.9;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

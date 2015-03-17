@@ -14,9 +14,13 @@
 -(void)startLogging
 {
     NSArray *labraryDirectory  = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-    NSString *simulatorForderPaths = [[labraryDirectory objectAtIndex:0] stringByAppendingString:@"/Logs/iOS Simulator/"];
+    NSString *simulatorForderPaths = [[labraryDirectory objectAtIndex:0] stringByAppendingString:@"/Logs/CoreSimulator/"];
     NSArray *simulatorFolder = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:simulatorForderPaths error:nil];
-  
+    
+    if (simulatorFolder.count == 0) {
+        simulatorForderPaths = [[labraryDirectory objectAtIndex:0] stringByAppendingString:@"/Logs/iOS Simulator/"];
+        simulatorFolder = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:simulatorForderPaths error:nil];
+    }
     
     //_fileHandler = [NSFileHandle fileHandleForReadingAtPath:_path];
 
