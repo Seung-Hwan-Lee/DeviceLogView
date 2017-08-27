@@ -823,12 +823,12 @@
             [_fixedButton setState:_fixed];
 
         }
-        else
-        {
-            _fixed = YES;
-            [_fixedButton setState:_fixed];
-
-        }
+//        else
+//        {
+//            _fixed = YES;
+//            [_fixedButton setState:_fixed];
+//
+//        }
         
     }
     
